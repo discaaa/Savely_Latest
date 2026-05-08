@@ -15,7 +15,7 @@ Route::get('/expense', function () {
 })->name('expense');
 
 Route::get('/goals', function () {
-    return view('goals.create');
+    return view('goals.index');
 })->name('goals');
 
 Route::get('/history', function () {
