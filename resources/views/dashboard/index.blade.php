@@ -10,4 +10,4 @@
 
     <div class="col-md-4">Goals</div>
     <div class="col-md-8">Table</div>
-@endsection
+@endsection 

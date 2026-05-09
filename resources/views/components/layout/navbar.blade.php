@@ -5,13 +5,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
       <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+      <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        .navbar-custom{
+            background-color: #A96CFF;
+        }
+
+        .navbar-custom .nav-link{
+            color: white;
+            transition: 0.3s;
+        }
+
+        .navbar-custom .nav-link:hover{
+            color: #f3e8ff;
+        }
+
+        .navbar-custom .nav-link.active{
+            font-weight: bold;
+            border-bottom: 3px solid white;
+        }
+    </style>
 </head>
 
 <!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4">
+<nav class="navbar navbar-expand-lg navbar-custom px-4">
 
     <!-- Brand -->
-    <a class="navbar-brand fw-bold" href="#">
+    <a class="navbar-brand fw-bold text-white" href="#">
         SaveLy
     </a>
 
