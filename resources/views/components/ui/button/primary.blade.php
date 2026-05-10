@@ -5,6 +5,10 @@
         'primary' => 'btn-primary',
         'danger' => 'btn-danger',
         'success' => 'btn-success',
+        'secondary' => 'btn-secondary',
+        'warning' => 'btn-warning',
+        'info' => 'btn-info',
+        'dark' => 'btn-dark',
     ];
 @endphp
 
