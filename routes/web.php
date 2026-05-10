@@ -12,7 +12,15 @@ Route::get('/dashboard', function () {
 
 Route::get('/expense', function () {
     return view('expense.index');
-})->name('expense');
+})->name('expense.index');
+
+Route::get('/expense/create', function () {
+    return view('expense.create');
+})->name('expense.create');
+
+Route::get('/expense/edit', function () {
+    return view('expense.edit');
+})->name('expense.edit');
 
 Route::get('/saving', function () {
     return view('saving.index');
