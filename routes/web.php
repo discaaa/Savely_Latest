@@ -32,7 +32,7 @@ Route::get('/goals', function () {
 
 Route::get('/challenges', function () {
     return view('challenges.index');
-})->name('challenges');
+})->name('challenges.index');
 
 Route::get('/history', function () {
     return view('history.index');
