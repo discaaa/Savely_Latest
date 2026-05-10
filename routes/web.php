@@ -36,4 +36,4 @@ Route::get('/challenges', function () {
 
 Route::get('/history', function () {
     return view('history.index');
-})->name('history');
+})->name('history.index');
