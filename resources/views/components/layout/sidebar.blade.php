@@ -9,7 +9,7 @@
    
     <style>
         .sidebar-custom{
-            width: 400px;
+            width: 500px;
             min-height: 100vh;
             background-color: #A96CFF;
         }
@@ -31,49 +31,49 @@
     <div class="d-flex flex-column flex-shrink-0 p-3 text-white sidebar-custom">
     
         <a href="/" class="d-flex align-items-center mb-3 text-white text-decoration-none">
-            <span class="fs-4 fw-bold">SaveLy</span>
+            <span class="fs-1 fw-bold">SaveLy</span>
         </a>
 
         <hr>
         <ul class="nav nav-pills flex-column mb-auto">
 
             <li class="nav-item mb-2">
-                <a href="/dashboard" class="nav-link text-white {{ Request::is('dashboard') ? 'active' : '' }}">
+                <a href="/dashboard" class="nav-link text-white fs-2 {{ Request::is('dashboard') ? 'active' : '' }}">
                     <i class="bi bi-house-door me-2"></i>
                     Dashboard
                 </a>
             </li>
 
             <li class="mb-2">
-                <a href="/expense" class="nav-link text-white {{ Request::is('expense') ? 'active' : '' }}">
+                <a href="/expense" class="nav-link text-white fs-2 {{ Request::is('expense') ? 'active' : '' }}">
                     <i class="bi bi-wallet2 me-2"></i>
                     Expense
                 </a>
             </li>
 
             <li class="mb-2">
-                <a href="/saving" class="nav-link text-white {{ Request::is('saving') ? 'active' : '' }}">
+                <a href="/saving" class="nav-link text-white fs-2 {{ Request::is('saving') ? 'active' : '' }}">
                     <i class="bi bi-wallet2 me-2"></i>
                     Saving
                 </a>
             </li>
 
             <li class="mb-2">
-                <a href="/goals" class="nav-link text-white {{ Request::is('goals') ? 'active' : '' }}">
+                <a href="/goals" class="nav-link text-white fs-2 {{ Request::is('goals') ? 'active' : '' }}">
                     <i class="bi bi-bullseye me-2"></i>
                     Goals
                 </a>
             </li>
             
             <li class="mb-2">
-                <a href="/challenges" class="nav-link text-white {{ Request::is('challenges') ? 'active' : '' }}">
+                <a href="/challenges" class="nav-link text-white fs-2 {{ Request::is('challenges') ? 'active' : '' }}">
                     <i class="bi bi-wallet2 me-2"></i>
                     Challenges
                 </a>
             </li>
 
             <li class="mb-2">
-                <a href="/history" class="nav-link text-white {{ Request::is('history') ? 'active' : '' }}">
+                <a href="/history" class="nav-link text-white fs-2 {{ Request::is('history') ? 'active' : '' }}">
                     <i class="bi bi-clock-history me-2"></i>
                     History
                 </a>
@@ -83,7 +83,7 @@
 
         <div class="dropdown">
             <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" data-bs-toggle="dropdown">
-                <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2">
+                <img src="https://github.com/mdo.png" alt="" width="40" height="40" class="rounded-circle me-3">
                 <strong>User</strong>
             </a>
 
