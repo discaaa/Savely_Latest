@@ -1,148 +1,366 @@
-@extends('components.layout.sidebar')
+@extends('layouts.app')
 
 @section('content')
 
-<div class="container-fluid py-4">
+<style>
 
-    {{-- HEADER --}}
-    <div class="d-flex justify-content-between align-items-center mb-4">
+.page-header{
+    background:white;
 
-        <div>
+    padding:30px;
 
-            <h2 class="fw-bold mb-1">
-                Expense
-            </h2>
+    border-radius:28px;
 
-            <p class="text-muted mb-0">
-                Manage and track your expenses
-            </p>
+    margin-bottom:28px;
 
-        </div>
+    box-shadow:0 4px 16px rgba(0,0,0,0.05);
+}
 
-        <a href="{{ route('expense.create') }}">
+.page-header h1{
+    font-size:42px;
+    margin-bottom:10px;
+}
 
-            <x-ui.button.primary>
-                Add Expense
-            </x-ui.button.primary>
+.page-header p{
+    color:#777;
+}
 
-        </a>
+/* SUMMARY */
+.summary-grid{
+    display:grid;
+
+    grid-template-columns:
+        repeat(auto-fit,minmax(240px,1fr));
+
+    gap:20px;
+
+    margin-bottom:28px;
+}
+
+.summary-card{
+    background:white;
+
+    border-radius:24px;
+
+    padding:24px;
+
+    box-shadow:0 4px 14px rgba(0,0,0,0.05);
+
+    transition:0.25s;
+}
+
+.summary-card:hover{
+    transform:translateY(-4px);
+}
+
+.summary-card h3{
+    color:#777;
+    margin-bottom:14px;
+}
+
+.summary-card h2{
+    color:#8b5cf6;
+    font-size:32px;
+}
+
+/* MAIN GRID */
+.main-grid{
+    display:grid;
+
+    grid-template-columns:2fr 1fr;
+
+    gap:24px;
+}
+
+/* CARD */
+.card{
+    background:white;
+
+    border-radius:28px;
+
+    padding:28px;
+
+    box-shadow:0 4px 16px rgba(0,0,0,0.05);
+}
+
+.card-title{
+    font-size:28px;
+    font-weight:700;
+
+    margin-bottom:24px;
+}
+
+/* TABLE */
+.expense-table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+.expense-table thead{
+    background:linear-gradient(
+        135deg,
+        #b266ff,
+        #8b5cf6
+    );
+
+    color:white;
+}
+
+.expense-table thead th{
+    padding:18px;
+    text-align:left;
+}
+
+.expense-table tbody tr{
+    border-bottom:1px solid #eee;
+
+    transition:0.2s;
+}
+
+.expense-table tbody tr:hover{
+    background:#faf7ff;
+}
+
+.expense-table tbody td{
+    padding:18px;
+}
+
+.badge{
+    background:#ede9fe;
+
+    color:#8b5cf6;
+
+    padding:8px 14px;
+
+    border-radius:999px;
+
+    font-size:13px;
+
+    font-weight:700;
+}
+
+/* CHALLENGE */
+.challenge-list{
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+}
+
+.challenge-item{
+    background:linear-gradient(
+        135deg,
+        #f5ecff,
+        #f3e8ff
+    );
+
+    border-radius:22px;
+
+    padding:22px;
+
+    transition:0.25s;
+}
+
+.challenge-item:hover{
+    transform:translateY(-4px);
+}
+
+.challenge-item h3{
+    margin-bottom:10px;
+}
+
+.challenge-item p{
+    color:#666;
+
+    line-height:1.6;
+
+    margin-bottom:18px;
+}
+
+.challenge-footer{
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    flex-wrap:wrap;
+
+    gap:12px;
+}
+
+.reward-points{
+    background:#8b5cf6;
+
+    color:white;
+
+    padding:10px 18px;
+
+    border-radius:14px;
+
+    font-weight:bold;
+}
+
+.challenge-status{
+    background:white;
+
+    color:#8b5cf6;
+
+    padding:10px 18px;
+
+    border-radius:14px;
+
+    font-weight:bold;
+}
+
+/* REWARD */
+.reward-grid{
+    display:grid;
+
+    grid-template-columns:
+        repeat(auto-fit,minmax(180px,1fr));
+
+    gap:18px;
+}
+
+.reward-item{
+    background:linear-gradient(
+        135deg,
+        #faf5ff,
+        #f3e8ff
+    );
+
+    border-radius:22px;
+
+    padding:22px;
+
+    text-align:center;
+
+    transition:0.25s;
+}
+
+.reward-item:hover{
+    transform:translateY(-4px);
+}
+
+.reward-image{
+    width:80px;
+    height:80px;
+
+    margin:auto;
+
+    border-radius:20px;
+
+    background:linear-gradient(
+        135deg,
+        #c084fc,
+        #8b5cf6
+    );
+
+    margin-bottom:18px;
+}
+
+.reward-price{
+    background:#8b5cf6;
+
+    color:white;
+
+    padding:10px;
+
+    border-radius:14px;
+
+    margin-top:14px;
+
+    font-weight:bold;
+}
+
+/* RESPONSIVE */
+@media(max-width:1000px){
+
+    .main-grid{
+        grid-template-columns:1fr;
+    }
+
+}
+
+@media(max-width:768px){
+
+    .expense-table{
+        display:block;
+        overflow-x:auto;
+    }
+
+}
+
+</style>
+
+<!-- HEADER -->
+<div class="page-header">
+
+    <h1>
+        Expense & Rewards
+    </h1>
+
+    <p>
+        Track your expenses and complete challenges to earn rewards
+    </p>
+
+</div>
+
+<!-- SUMMARY -->
+<div class="summary-grid">
+
+    <div class="summary-card">
+
+        <h3>
+            Monthly Expense
+        </h3>
+
+        <h2>
+            Rp 2.500.000
+        </h2>
 
     </div>
 
-    {{-- SUMMARY --}}
-    <div class="row g-4 mb-4">
+    <div class="summary-card">
 
-        <div class="col-md-4">
+        <h3>
+            Highest Category
+        </h3>
 
-            <x-ui.card.default>
-
-                <p class="text-muted mb-2">
-                    Monthly Expense
-                </p>
-
-                <h3 class="fw-bold">
-                    Rp 2.500.000
-                </h3>
-
-            </x-ui.card.default>
-
-        </div>
-
-        <div class="col-md-4">
-
-            <x-ui.card.default>
-
-                <p class="text-muted mb-2">
-                    Highest Category
-                </p>
-
-                <h3 class="fw-bold">
-                    Food
-                </h3>
-
-            </x-ui.card.default>
-
-        </div>
-
-        <div class="col-md-4">
-
-            <x-ui.card.default>
-
-                <p class="text-muted mb-2">
-                    Budget Used
-                </p>
-
-                <h3 class="fw-bold mb-3">
-                    80%
-                </h3>
-
-                <x-ui.progress.progress
-                    value="80"
-                    color="warning"
-                />
-
-            </x-ui.card.default>
-
-        </div>
+        <h2>
+            Food
+        </h2>
 
     </div>
 
-    {{-- FILTER --}}
-    <x-ui.card.default class="mb-4">
+    <div class="summary-card">
 
-        <div class="row g-3">
+        <h3>
+            Reward Points
+        </h3>
 
-            <div class="col-md-4">
+        <h2>
+            3.250 pts
+        </h2>
 
-                <x-ui.input.input
-                    type="text"
-                    placeholder="Search expense..."
-                />
+    </div>
 
+</div>
+
+<!-- MAIN -->
+<div class="main-grid">
+
+    <!-- LEFT -->
+    <div>
+
+        <!-- EXPENSE -->
+        <div class="card">
+
+            <div class="card-title">
+                Expense History
             </div>
 
-            <div class="col-md-4">
-
-                <x-ui.input.select>
-
-                    <option>
-                        All Categories
-                    </option>
-
-                    <option>
-                        Food
-                    </option>
-
-                    <option>
-                        Transport
-                    </option>
-
-                    <option>
-                        Shopping
-                    </option>
-
-                </x-ui.input.select>
-
-            </div>
-
-            <div class="col-md-4">
-
-                <x-ui.input.input
-                    type="month"
-                />
-
-            </div>
-
-        </div>
-
-    </x-ui.card.default>
-
-    {{-- EXPENSE TABLE --}}
-    <x-ui.card.default>
-
-        <div class="table-responsive">
-
-            <table class="table align-middle">
+            <table class="expense-table">
 
                 <thead>
 
@@ -151,7 +369,6 @@
                         <th>Amount</th>
                         <th>Date</th>
                         <th>Notes</th>
-                        <th>Action</th>
                     </tr>
 
                 </thead>
@@ -161,9 +378,9 @@
                     <tr>
 
                         <td>
-                            <x-ui.badge.expense>
+                            <span class="badge">
                                 Food
-                            </x-ui.badge.expense>
+                            </span>
                         </td>
 
                         <td>
@@ -171,27 +388,11 @@
                         </td>
 
                         <td>
-                            10 Mei 2026
+                            10 May 2026
                         </td>
 
                         <td>
                             Lunch with friends
-                        </td>
-
-                        <td>
-
-                            <div class="d-flex gap-2">
-
-                                <a href="{{ route('expense.edit') }}">
-
-                                    <x-ui.button.primary>
-                                        Edit
-                                    </x-ui.button.primary>
-
-                                </a>
-
-                            </div>
-
                         </td>
 
                     </tr>
@@ -199,9 +400,9 @@
                     <tr>
 
                         <td>
-                            <x-ui.badge.expense>
+                            <span class="badge">
                                 Transport
-                            </x-ui.badge.expense>
+                            </span>
                         </td>
 
                         <td>
@@ -209,19 +410,11 @@
                         </td>
 
                         <td>
-                            11 Mei 2026
+                            11 May 2026
                         </td>
 
                         <td>
                             GoRide
-                        </td>
-
-                        <td>
-
-                            <x-ui.button.primary>
-                                Edit
-                            </x-ui.button.primary>
-
                         </td>
 
                     </tr>
@@ -232,7 +425,85 @@
 
         </div>
 
-    </x-ui.card.default>
+        <!-- REWARD -->
+        <div class="card" style="margin-top:24px;">
+
+            <div class="card-title">
+                Reward Store
+            </div>
+
+            <div class="reward-grid">
+
+                @foreach($rewards as $reward)
+
+                <div class="reward-item">
+
+                    <div class="reward-image"></div>
+
+                    <h3>
+                        {{ $reward->name }}
+                    </h3>
+
+                    <div class="reward-price">
+
+                        {{ $reward->price_points }} pts
+
+                    </div>
+
+                </div>
+
+                @endforeach
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- RIGHT -->
+    <div>
+
+        <div class="card">
+
+            <div class="card-title">
+                Active Challenges
+            </div>
+
+            <div class="challenge-list">
+
+                @foreach($challenges as $challenge)
+
+                <div class="challenge-item">
+
+                    <h3>
+                        {{ $challenge->title }}
+                    </h3>
+
+                    <p>
+                        {{ $challenge->description }}
+                    </p>
+
+                    <div class="challenge-footer">
+
+                        <div class="reward-points">
+                            +{{ $challenge->reward_points }} pts
+                        </div>
+
+                        <div class="challenge-status">
+                            {{ $challenge->status }}
+                        </div>
+
+                    </div>
+
+                </div>
+
+                @endforeach
+
+            </div>
+
+        </div>
+
+    </div>
 
 </div>
 
