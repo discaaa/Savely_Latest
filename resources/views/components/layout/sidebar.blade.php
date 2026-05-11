@@ -23,6 +23,9 @@
         .nav-pills .nav-link:hover{
             background-color: rgba(255,255,255,0.2);
         }
+        hr{
+            border-color: rgba(255,255,255,0.5);
+        }
     </style>
 </head>
 <body>
@@ -52,19 +55,19 @@
             </li>
 
             <li class="mb-2">
-                <a href="/saving" class="nav-link text-white fs-2 {{ Request::is('saving') ? 'active' : '' }}">
+                <a href="/saving" class="nav-link text-white fs-2 {{ Request::is('saving*') || Request::is('goalsave') || Request::is('daily') ? 'active' : '' }}">
                     <i class="bi bi-wallet2 me-2"></i>
                     Saving
                 </a>
             </li>
-
+            
             <li class="mb-2">
                 <a href="/goals" class="nav-link text-white fs-2 {{ Request::is('goals') ? 'active' : '' }}">
-                    <i class="bi bi-bullseye me-2"></i>
+                    <i class="bi bi-wallet2 me-2"></i>
                     Goals
                 </a>
             </li>
-            
+
             <li class="mb-2">
                 <a href="/challenges" class="nav-link text-white fs-2 {{ Request::is('challenges') ? 'active' : '' }}">
                     <i class="bi bi-wallet2 me-2"></i>

@@ -175,17 +175,13 @@
 
     <div class="col-2">
         {{-- Buttons Daily atau Goals --}}
-        <div class="d-flex gap-4 align-items-center" style="width: 300px; height: 150px">
-            <div class="btn btn-primary fs-2">
-                Daily Saving
-            </div>
+        <a href="/daily" class="btn btn-outline-primary fs-2" style="width: 150px; height: 120px">
+            Daily Saving
+        </a>
 
-            <div class="d-flex gap-4">
-                <div class="btn btn-outline-primary fs-2">
-                    Goals Saving
-                </div>
-            </div>
-        </div>
+        <a href="/goalsave" class="btn btn-primary fs-2" style="width: 150px; height: 120px">
+            Goals Saving
+        </a>
     </div>
 </div>
 @endsection
