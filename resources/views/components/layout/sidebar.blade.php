@@ -87,7 +87,7 @@
         <div class="dropdown">
             <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" data-bs-toggle="dropdown">
                 <img src="https://github.com/mdo.png" alt="" width="40" height="40" class="rounded-circle me-3">
-                <strong>User</strong>
+                <h5>User</h5>
             </a>
 
             <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
