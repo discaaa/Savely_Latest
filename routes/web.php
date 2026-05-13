@@ -34,6 +34,11 @@ Route::get('/goals', function () {
     return view('goals.index');
 })->name('goals');
 
+Route::view('/goals/create', 'goals.create');
+Route::view('/goals/detail', 'goals.detail');
+Route::view('/goals/edit', 'goals.edit');
+Route::view('/goals/history', 'goals.history');
+
 Route::get('/history', function () {
     return view('history.index');
 })->name('history.index');

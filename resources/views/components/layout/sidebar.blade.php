@@ -83,20 +83,6 @@
             </li>
         </ul>
         <hr>
-
-        <div class="dropdown">
-            <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" data-bs-toggle="dropdown">
-                <img src="https://github.com/mdo.png" alt="" width="40" height="40" class="rounded-circle me-3">
-                <h5>User</h5>
-            </a>
-
-            <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
-                <li><a class="dropdown-item" href="#">Settings</a></li>
-                <li><a class="dropdown-item" href="#">Profile</a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="#">Logout</a></li>
-            </ul>
-        </div>
     </div>
         <!-- Main Content -->
         <div class="flex-grow-1 p-4">

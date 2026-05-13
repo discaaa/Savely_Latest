@@ -5,6 +5,11 @@
         background: white;
         box-shadow: 0 4px 20px rgba(124, 58, 237, 0.2);
     }
+
+    .custom-card:hover{
+        transform: translateY(-3px);
+    }
+
 </style>
 
 <div {{ $attributes->merge(['class' => 'custom-card p-4 mb-3']) }}>
