@@ -23,6 +23,15 @@ Route::get('/expense/edit', function () {
     return view('expense.edit');
 })->name('expense.edit');
 
+Route::get('/budget', function () {
+    return view('budget.index');
+})->name('budget');
+
+Route::view('/budget/create', 'budget.create');
+Route::view('/budget/detail', 'budget.detail');
+Route::view('/budget/edit', 'budget.edit');
+Route::view('/budget/historybudget', 'budget.historybudget');
+
 Route::get('/saving', function () {
     return view('saving.daily');
 })->name('saving');
@@ -37,7 +46,7 @@ Route::get('/goals', function () {
 Route::view('/goals/create', 'goals.create');
 Route::view('/goals/detail', 'goals.detail');
 Route::view('/goals/edit', 'goals.edit');
-Route::view('/goals/history', 'goals.history');
+Route::view('/goals/historygoals', 'goals.historygoals');
 
 Route::get('/history', function () {
     return view('history.index');
