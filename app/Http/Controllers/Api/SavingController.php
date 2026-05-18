@@ -41,23 +41,23 @@ class SavingController extends Controller
         $user = auth()->user();
 
         if ($user->balance < $request->amount) {
-            return response()->json(['message' => 'Saldo tidak cukup'], 400);
+            return response()->json(['message' => 'Insufficient balance'], 400);
         }
 
         return DB::transaction(function () use ($goal, $user, $request) {
             $user->decrement('balance', $request->amount);
-            $goal->increment('collected_amount', $request->amount);
+            $goal->increment('current_amount', $request->amount);
 
             Saving::create([
                 'goal_id' => $goal->id,
                 'amount' => $request->amount,
             ]);
 
-            if ($goal->collected_amount >= $goal->target_amount) {
+            if ($goal->current_amount >= $goal->target_amount) {
                 $goal->update(['status' => 'achieved']);
             }
 
-            return response()->json(['message' => 'Berhasil menabung!', 'data' => $goal]);
+            return response()->json(['message' => 'Congratulations! You have achieved your goal!!', 'data' => $goal]);
         });
     }
 }
