@@ -38,6 +38,10 @@ Route::get('/saving', function () {
 
 Route::view('/goalsave', 'saving.goalsave');
 Route::view('/daily', 'saving.daily');
+Route::view('saving/newsaving', 'saving.newsaving');
+Route::view('saving/detail', 'saving.detail');
+Route::view('saving/edit', 'saving.edit');
+Route::view('saving/historysaving', 'saving.historysaving');
 
 Route::get('/goals', function () {
     return view('goals.index');

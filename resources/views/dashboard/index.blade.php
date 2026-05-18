@@ -89,14 +89,14 @@
                     Add Expense
                 </x-ui.button.primary>
             </a>
-
-            <a href="#">
+{{-- SINI  --}}
+            <a href="saving/cre">
                 <x-ui.button.primary>
                     Add Saving
                 </x-ui.button.primary>
             </a>
 
-            <a href="#">
+            <a href="goals/create">
                 <x-ui.button.primary>
                     Create Goal
                 </x-ui.button.primary>

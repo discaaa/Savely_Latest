@@ -17,12 +17,6 @@
         font-weight: bold;
     }
 
-    .stats-card{
-        background: #f8f6ff;
-        border-radius: 15px;
-        padding: 20px;
-    }
-
     .progress{
         height: 10px;
         border-radius: 20px;
@@ -63,43 +57,64 @@
     <div class="row mb-4">
 
         <div class="col-md-3">
-            <div class="stats-card">
+            <x-ui.card.default>
                 <small>Total Goals</small>
                 <h3 class="fw-bold">8</h3>
-            </div>
+            </x-ui.card.default>
         </div>
 
         <div class="col-md-3">
-            <div class="stats-card">
+            <x-ui.card.default>
                 <small>Total Target</small>
                 <h3 class="fw-bold">Rp 25.300.000</h3>
-            </div>
+            </x-ui.card.default>
         </div>
 
         <div class="col-md-3">
-            <div class="stats-card">
+            <x-ui.card.default>
                 <small>Total Saved</small>
                 <h3 class="fw-bold">Rp 10.350.000</h3>
-            </div>
+            </x-ui.card.default>
         </div>
 
         <div class="col-md-3">
-            <div class="stats-card">
+            <x-ui.card.default>
                 <small>Goals Achieved</small>
                 <h3 class="fw-bold text-success">3</h3>
-            </div>
+            </x-ui.card.default>
         </div>
 
     </div>
+    
+    <hr class="mt-4 mb-4" style="border:5px solid #a855f7; border-radius:10px">
 
-    {{-- tabs --}}
+    {{-- tabs nnti sesuaiin database --}}
     <div class="d-flex gap-4 mb-4 fw-semibold">
-        <span>All Goals</span>
-        <span class="text-primary border-bottom border-3 border-primary pb-2">
+
+        <a href="/goals"
+        class="text-decoration-none
+        {{ request('tab') == null ? 'text-primary border-bottom border-3 border-primary pb-2' : 'text-dark' }}">
+            All Goals
+        </a>
+
+        <a href="/goals?tab=progress"
+        class="text-decoration-none
+        {{ request('tab') == 'progress' ? 'text-primary border-bottom border-3 border-primary pb-2' : 'text-dark' }}">
             In Progress
-        </span>
-        <span>Completed</span>
-        <span>On Hold</span>
+        </a>
+
+        <a href="/goals?tab=completed"
+        class="text-decoration-none
+        {{ request('tab') == 'completed' ? 'text-primary border-bottom border-3 border-primary pb-2' : 'text-dark' }}">
+            Completed
+        </a>
+
+        <a href="/goals?tab=hold"
+        class="text-decoration-none
+        {{ request('tab') == 'hold' ? 'text-primary border-bottom border-3 border-primary pb-2' : 'text-dark' }}">
+            On Hold
+        </a>
+
     </div>
 
     {{-- list goal sesuai database --}}

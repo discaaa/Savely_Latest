@@ -262,7 +262,7 @@
             {{-- Top Priority --}}
             <div class="mb-4">
 
-                <hr style="border:2px solid #a855f7;">
+                <hr class="mt-4" style="border:10px solid #a855f7; border-radius:10px">
 
                 <h1 class="fw-bold">
                     New Laptop
@@ -419,9 +419,9 @@
     </div>
 
     {{-- Button New Goal --}}
-    <button class="goal-btn">
+    <a href="/goals/create" class="goal-btn text-decoration-none">
         + Add New Goal
-    </button>
+    </a>
 
 </div>
 

@@ -27,6 +27,7 @@
 
     .purple-text{
         color: #6f2cff;
+        font-size: 25px;
     }
 
     .progress{
@@ -82,6 +83,19 @@
         border-radius: 10px;
         padding: 4px 12px;
         font-size: 14px;
+    }
+
+    .saving-bottom-btn{
+        position: fixed;
+        bottom: 30px;
+        right: 40px;
+        background: #6f2cff;
+        color: white;
+        border: none;
+        border-radius: 20px;
+        padding: 14px 22px;
+        font-weight: bold;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     }
 
 </style>
@@ -384,6 +398,9 @@
         </div>
 
     </div>
+    <a href="saving/newsaving" class="saving-bottom-btn text-decoration-none">
+        + Add New Saving
+    </a>
 </div>
 
 @endsection
