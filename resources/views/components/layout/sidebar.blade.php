@@ -9,7 +9,7 @@
    
     <style>
         .sidebar-custom{
-            width: 280px;
+            width: 250px;
             min-height: 100vh;
             background-color: #A96CFF;
         }
@@ -42,12 +42,12 @@
 
         <hr>
         
-        <ul class="nav nav-pills flex-column gap-3">
+        <ul class="nav nav-pills flex-column gap-0">
 
             <li class="nav-item mb-1">
-                <a href="/dashboard" class="nav-link text-white fs-3 {{ Request::is('dashboard') ? 'active' : '' }}">
+                <a href="/dashboard" class="nav-link text-white fs-4 {{ Request::is('dashboard') ? 'active' : '' }}">
                     <img src="https://img.pikbest.com/origin/10/13/30/96rpIkbEsTZQz.jpg!sw800"
-                        width="45"
+                        width="35"
                         class="rounded-circle">
                     <i class="bi bi-house-door me-2"></i>
                     Dashboard
@@ -55,9 +55,9 @@
             </li>
 
             <li class="mb-1">
-                <a href="/expense" class="nav-link text-white fs-3 {{ Request::is('expense') ? 'active' : '' }}">
+                <a href="/expense" class="nav-link text-white fs-4 {{ Request::is('expense') ? 'active' : '' }}">
                     <img src="https://img.freepik.com/premium-vector/colored-expense-icon_781202-4250.jpg"
-                        width="45"
+                        width="35"
                         class="rounded-circle">
                     <i class="bi bi-wallet2 me-2"></i>
                     Expense
@@ -65,9 +65,9 @@
             </li>
 
             <li class="mb-1">
-                <a href="/budget" class="nav-link text-white fs-3 {{ Request::is('budget') || Request::is('budget/index') || Request::is('budget/create') || Request::is('budget/detail') || Request::is('budget/edit') || Request::is('budget/historybudget') ? 'active' : '' }}">
+                <a href="/budget" class="nav-link text-white fs-4 {{ Request::is('budget') || Request::is('budget/index') || Request::is('budget/create') || Request::is('budget/detail') || Request::is('budget/edit') || Request::is('budget/historybudget') ? 'active' : '' }}">
                     <img src="https://static.vecteezy.com/system/resources/thumbnails/011/079/483/small/budget-plan-icons-illustration-budget-plan-symbol-for-seo-website-and-mobile-apps-vector.jpg"
-                        width="45"
+                        width="35"
                         class="rounded-circle">
                     <i class="bi bi-wallet2 me-2"></i>
                     Budget
@@ -75,9 +75,9 @@
             </li>
 
             <li class="mb-1">
-                <a href="/saving" class="nav-link text-white fs-3 {{ Request::is('saving') || Request::is('goalsave') || Request::is('daily') || Request::is('saving/newsaving') || Request::is('saving/detail') || Request::is('saving/edit') || Request::is('/saving/histortsaving') ? 'active' : '' }}">
+                <a href="/saving" class="nav-link text-white fs-4 {{ Request::is('saving') || Request::is('goalsave') || Request::is('daily') || Request::is('saving/newsaving') || Request::is('saving/detail') || Request::is('saving/edit') || Request::is('/saving/histortsaving') ? 'active' : '' }}">
                     <img src="https://cdn-icons-png.flaticon.com/512/8079/8079154.png"
-                        width="45"
+                        width="35"
                         class="rounded-circle" style="background: white">
                     <i class="bi bi-wallet2 me-2"></i>
                     Saving
@@ -85,9 +85,9 @@
             </li>
             
             <li class="mb-1">
-                <a href="/goals" class="nav-link text-white fs-3 {{ Request::is('goals') || Request::is('goals/index') || Request::is('goals/create') || Request::is('goals/detail') || Request::is('goals/edit') || Request::is('goals/historygoals') ? 'active' : '' }}">
+                <a href="/goals" class="nav-link text-white fs-4 {{ Request::is('goals') || Request::is('goals/index') || Request::is('goals/create') || Request::is('goals/detail') || Request::is('goals/edit') || Request::is('goals/historygoals') ? 'active' : '' }}">
                     <img src="https://thumbs.dreamstime.com/b/target-goal-icon-trendy-vector-flat-illustration-isolated-white-background-327427002.jpg"
-                        width="45"
+                        width="35"
                         class="rounded-circle">
                     <i class="bi bi-wallet2 me-2"></i>
                     Goals
@@ -95,9 +95,9 @@
             </li>
 
             <li class="mb-1">
-                <a href="/challenges" class="nav-link text-white fs-3 {{ Request::is('challenges') ? 'active' : '' }}">
+                <a href="/challenges" class="nav-link text-white fs-4 {{ Request::is('challenges') ? 'active' : '' }}">
                     <img src="https://static.vecteezy.com/ti/vetor-gratis/t2/27373228-criativamente-projetado-plano-icone-do-trofeu-dentro-editavel-estilo-realizacao-trofeu-projeto-vetor.jpg"
-                        width="45"
+                        width="35"
                         class="rounded-circle">
                     <i class="bi bi-wallet2 me-2"></i>
                     Challenges
@@ -105,9 +105,9 @@
             </li>
 
             <li class="mb-1">
-                <a href="/history" class="nav-link text-white fs-3 {{ Request::is('history') ? 'active' : '' }}">
+                <a href="/history" class="nav-link text-white fs-4 {{ Request::is('history') ? 'active' : '' }}">
                     <img src="https://cdn-icons-png.flaticon.com/512/7554/7554873.png"
-                        width="45"
+                        width="35"
                         class="rounded-circle" style="background: white">
                     <i class="bi bi-clock-history me-2"></i>
                     History
