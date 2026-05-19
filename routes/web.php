@@ -1,67 +1,48 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\ChallengeController;
+use App\Http\Controllers\SavingController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [DashboardController::class, 'index']);
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->name('dashboard');
 
-Route::get('/dashboard', function () {
-    return view('dashboard.index');
-})->name('dashboard');
+Route::get('/expense', [ExpenseController::class, 'index'])
+    ->name('expense.index');
 
-Route::get('/expense', function () {
-    return view('expense.index');
-})->name('expense.index');
+Route::get('/expense/create', [ExpenseController::class, 'create'])
+    ->name('expense.create');
 
-Route::get('/expense/create', function () {
-    return view('expense.create');
-})->name('expense.create');
+Route::post('/expense/store', [ExpenseController::class, 'store'])
+    ->name('expense.store');
 
-Route::get('/expense/edit', function () {
-    return view('expense.edit');
-})->name('expense.edit');
+Route::get('/expense/edit/{id}', [ExpenseController::class, 'edit'])
+    ->name('expense.edit');
 
-Route::get('/budget', function () {
-    return view('budget.index');
-})->name('budget');
+Route::put('/expense/update/{id}', [ExpenseController::class, 'update'])
+    ->name('expense.update');
 
+Route::delete('/expense/delete/{id}', [ExpenseController::class, 'destroy'])
+    ->name('expense.delete');
+
+Route::get('/daily', [SavingController::class, 'index'])->name('saving.daily');
+Route::get('/saving/create', [SavingController::class, 'create'])->name('saving.create');
+Route::post('/saving/store', [SavingController::class, 'store'])->name('saving.store');
+
+Route::view('/budget', 'budget.index')->name('budget');
 Route::view('/budget/create', 'budget.create');
 Route::view('/budget/detail', 'budget.detail');
 Route::view('/budget/edit', 'budget.edit');
 Route::view('/budget/historybudget', 'budget.historybudget');
 
-Route::get('/saving', function () {
-    return view('saving.daily');
-})->name('saving');
+Route::view('/saving', 'saving.daily')->name('saving');
+Route::view('/goals', 'goals.index')->name('goals');
 
-Route::view('/goalsave', 'saving.goalsave');
-Route::view('/daily', 'saving.daily');
-Route::view('saving/newsaving', 'saving.newsaving');
-Route::view('saving/detail', 'saving.detail');
-Route::view('saving/edit', 'saving.edit');
-Route::view('saving/historysaving', 'saving.historysaving');
+Route::view('/history', 'history.index')->name('history.index');
 
-Route::get('/goals', function () {
-    return view('goals.index');
-})->name('goals');
-
-Route::view('/goals/create', 'goals.create');
-Route::view('/goals/detail', 'goals.detail');
-Route::view('/goals/edit', 'goals.edit');
-Route::view('/goals/historygoals', 'goals.historygoals');
-
-Route::get('/history', function () {
-    return view('history.index');
-})->name('history.index');
-
-/* EXPENSE TEST */
-Route::get('/expense-test', function () {
-    return view('expense.create');
-});
-
-/* CHALLENGES */
 Route::get('/challenges', function () {
     return view('challenges.index');
 })->name('challenges.index');

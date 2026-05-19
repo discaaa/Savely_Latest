@@ -20,6 +20,7 @@
     {{-- SUMMARY CARDS --}}
     <div class="row g-4 mb-4">
 
+        {{-- TOTAL EXPENSE --}}
         <div class="col-md-4">
 
             <x-ui.card.default>
@@ -29,13 +30,14 @@
                 </p>
 
                 <h3 class="fw-bold">
-                    Rp 2.500.000
+                    Rp {{ number_format($totalExpense ?? 0, 0, ',', '.') }}
                 </h3>
 
             </x-ui.card.default>
 
         </div>
 
+        {{-- SAVING PROGRESS --}}
         <div class="col-md-4">
 
             <x-ui.card.default>
@@ -45,11 +47,11 @@
                 </p>
 
                 <h3 class="fw-bold">
-                    65%
+                    {{ $savingProgress ?? 0 }}%
                 </h3>
 
                 <x-ui.progress.progress
-                    value="65"
+                    value="{{ $savingProgress ?? 0 }}"
                     color="success"
                 />
 
@@ -57,6 +59,7 @@
 
         </div>
 
+        {{-- ACTIVE CHALLENGES --}}
         <div class="col-md-4">
 
             <x-ui.card.default>
@@ -66,7 +69,7 @@
                 </p>
 
                 <h3 class="fw-bold">
-                    3 Challenges
+                    {{ $activeChallenges ?? 0 }} Challenges
                 </h3>
 
             </x-ui.card.default>
@@ -89,14 +92,14 @@
                     Add Expense
                 </x-ui.button.primary>
             </a>
-{{-- SINI  --}}
-            <a href="saving/newsaving">
+
+            <a href="{{ url('saving/newsaving') }}">
                 <x-ui.button.primary>
                     Add Saving
                 </x-ui.button.primary>
             </a>
 
-            <a href="goals/create">
+            <a href="{{ url('goals/create') }}">
                 <x-ui.button.primary>
                     Create Goal
                 </x-ui.button.primary>
@@ -167,41 +170,43 @@
 
                         <tbody>
 
-                            <tr>
+                            @forelse($recentActivities ?? [] as $activity)
 
-                                <td>
-                                    Added Food Expense
-                                </td>
+                                <tr>
 
-                                <td>
-                                    10 Mei 2026
-                                </td>
+                                    <td>
+                                        {{ $activity['title'] }}
+                                    </td>
 
-                                <td>
-                                    <x-ui.badge.expense>
-                                        Expense
-                                    </x-ui.badge.expense>
-                                </td>
+                                    <td>
+                                        {{ \Carbon\Carbon::parse($activity['date'])->format('d M Y') }}
+                                    </td>
 
-                            </tr>
+                                    <td>
 
-                            <tr>
+                                        @if($activity['type'] == 'expense')
+                                            <x-ui.badge.expense>
+                                                Expense
+                                            </x-ui.badge.expense>
+                                        @else
+                                            <x-ui.badge.saving>
+                                                Saving
+                                            </x-ui.badge.saving>
+                                        @endif
 
-                                <td>
-                                    Saving Added
-                                </td>
+                                    </td>
 
-                                <td>
-                                    9 Mei 2026
-                                </td>
+                                </tr>
 
-                                <td>
-                                    <x-ui.badge.saving>
-                                        Saving
-                                    </x-ui.badge.saving>
-                                </td>
+                            @empty
 
-                            </tr>
+                                <tr>
+                                    <td colspan="3" class="text-center text-muted py-4">
+                                        No recent activity
+                                    </td>
+                                </tr>
+
+                            @endforelse
 
                         </tbody>
 
