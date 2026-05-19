@@ -299,7 +299,7 @@
                                 Detail
                             </a>
 
-                            <a href="budget/history"
+                            <a href="budget/historybudget"
                                 class="btn btn-sm btn-outline-secondary rounded-pill px-3">
                                 History
                             </a>

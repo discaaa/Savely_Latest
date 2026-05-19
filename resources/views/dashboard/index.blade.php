@@ -90,7 +90,7 @@
                 </x-ui.button.primary>
             </a>
 {{-- SINI  --}}
-            <a href="saving/cre">
+            <a href="saving/newsaving">
                 <x-ui.button.primary>
                     Add Saving
                 </x-ui.button.primary>

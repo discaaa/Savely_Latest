@@ -101,9 +101,9 @@
                     Delete Goal
                 </button>
 
-                <button class="purple-btn">
+                <a href="/goals" class="purple-btn text-decoration-none">
                     Update Goal
-                </button>
+                </a>
 
             </div>
 

@@ -125,21 +125,21 @@
 
             {{-- Account Card --}}
             <x-ui.card.default>
-                <h2 class="fw-bold">Account name</h2>
+                <h3 class="fw-bold">Account name</h3>
 
                 <p class="mb-1">January Saving</p>
 
-                <h1 class="fw-bold">
+                <h2 class="fw-bold">
                     Rp 2.400.000
-                </h1>
+                </h2>
             </x-ui.card.default>
 
             {{-- This Month (Integrate Database) --}}
             <x-ui.card.default>
 
-                <h2 class="fw-bold mb-4">
+                <h3 class="fw-bold mb-4">
                     This month 
-                </h2>
+                </h3>
 
                 <h4 class="fw-bold">
                     Rp 1.200.000 / 3.200.000
@@ -177,9 +177,9 @@
             {{-- Contoh : Food - Integrate Database --}}
             <x-ui.card.default>
 
-                <h2 class="fw-bold">
+                <h3 class="fw-bold">
                     Food
-                </h2>
+                </h3>
 
                 <h4 class="fw-bold mb-4">
                     Rp 325.000 / 500.000
@@ -204,9 +204,9 @@
             {{-- Shopping - Integrate Database --}}
             <div class="custom-card p-4">
 
-                <h2 class="fw-bold">
+                <h3 class="fw-bold">
                     Shopping
-                </h2>
+                </h3>
 
                 <h4 class="fw-bold mb-4">
                     Rp 350.000 / 500.000
@@ -332,9 +332,9 @@
 
                     <x-ui.card.default>
 
-                        <h2 class="fw-bold">
+                        <h3 class="fw-bold">
                             Education
-                        </h2>
+                        </h3>
 
                         <h4 class="fw-bold mb-4">
                             Rp 730.900 / 2.000.000
@@ -365,9 +365,9 @@
 
                     <x-ui.card.default>
 
-                        <h2 class="fw-bold">
+                        <h3 class="fw-bold">
                             Transportation
-                        </h2>
+                        </h3>
 
                         <h4 class="fw-bold mb-4">
                             Rp 30.000 / 100.000
