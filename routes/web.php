@@ -1,27 +1,29 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\ChallengeController;
+use App\Http\Controllers\SavingController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [DashboardController::class, 'index']);
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->name('dashboard');
 
-Route::get('/dashboard', function () {
-    return view('dashboard.index');
-})->name('dashboard');
+Route::get('/expense', [ExpenseController::class, 'index'])
+    ->name('expense.index');
 
-Route::get('/expense', function () {
-    return view('expense.index');
-})->name('expense.index');
+Route::get('/expense/create', [ExpenseController::class, 'create'])
+    ->name('expense.create');
 
-Route::get('/expense/create', function () {
-    return view('expense.create');
-})->name('expense.create');
+Route::post('/expense/store', [ExpenseController::class, 'store'])
+    ->name('expense.store');
 
-Route::get('/expense/edit', function () {
-    return view('expense.edit');
-})->name('expense.edit');
+Route::get('/expense/edit/{id}', [ExpenseController::class, 'edit'])
+    ->name('expense.edit');
+
+Route::put('/expense/update/{id}', [ExpenseController::class, 'update'])
+    ->name('expense.update');
 
 Route::get('/budget', function () {
     return view('budget.index');

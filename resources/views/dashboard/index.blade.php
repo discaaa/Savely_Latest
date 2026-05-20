@@ -29,7 +29,7 @@
                 </p>
 
                 <h3 class="fw-bold">
-                    Rp 2.500.000
+                    Rp {{ number_format($totalExpense ?? 0, 0, ',', '.') }}
                 </h3>
 
             </x-ui.card.default>
@@ -45,11 +45,11 @@
                 </p>
 
                 <h3 class="fw-bold">
-                    65%
+                    {{ $savingProgress ?? 0 }}%
                 </h3>
 
                 <x-ui.progress.progress
-                    value="65"
+                    value="{{ $savingProgress ?? 0 }}"
                     color="success"
                 />
 
@@ -66,7 +66,7 @@
                 </p>
 
                 <h3 class="fw-bold">
-                    3 Challenges
+                    {{ $activeChallenges ?? 0 }} Challenges
                 </h3>
 
             </x-ui.card.default>
@@ -89,14 +89,14 @@
                     Add Expense
                 </x-ui.button.primary>
             </a>
-{{-- SINI  --}}
-            <a href="saving/newsaving">
+
+            <a href="{{ url('saving/newsaving') }}">
                 <x-ui.button.primary>
                     Add Saving
                 </x-ui.button.primary>
             </a>
 
-            <a href="goals/create">
+            <a href="{{ url('goals/create') }}">
                 <x-ui.button.primary>
                     Create Goal
                 </x-ui.button.primary>
@@ -167,41 +167,35 @@
 
                         <tbody>
 
-                            <tr>
+                            @forelse($recentActivities ?? [] as $activity)
+                                <tr>
+                                    <td>
+                                        {{ $activity['title'] }}
+                                    </td>
+                                    <td>
+                                        {{ \Carbon\Carbon::parse($activity['date'])->format('d M Y') }}
+                                    </td>
+                                    <td>
+                                        @if($activity['type'] == 'expense')
+                                            <x-ui.badge.expense>
+                                                Expense
+                                            </x-ui.badge.expense>
+                                        @else
+                                            <x-ui.badge.saving>
+                                                Saving
+                                            </x-ui.badge.saving>
+                                        @endif                                    
+                                    </td>
+                                </tr>
+                            @empty
+                                
+                                <tr>
+                                    <td colspan="3" class="text-center text-muted py-4">
+                                        No recent activity
+                                    </td>
+                                </tr>
 
-                                <td>
-                                    Added Food Expense
-                                </td>
-
-                                <td>
-                                    10 Mei 2026
-                                </td>
-
-                                <td>
-                                    <x-ui.badge.expense>
-                                        Expense
-                                    </x-ui.badge.expense>
-                                </td>
-
-                            </tr>
-
-                            <tr>
-
-                                <td>
-                                    Saving Added
-                                </td>
-
-                                <td>
-                                    9 Mei 2026
-                                </td>
-
-                                <td>
-                                    <x-ui.badge.saving>
-                                        Saving
-                                    </x-ui.badge.saving>
-                                </td>
-
-                            </tr>
+                            @endforelse
 
                         </tbody>
 

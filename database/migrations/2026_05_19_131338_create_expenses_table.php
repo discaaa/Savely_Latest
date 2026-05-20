@@ -13,7 +13,7 @@ return new class extends Migration
             $table->string('category');
             $table->text('description')->nullable();
             $table->date('date');
-            $table->decimal('amount', 12, 2);
+            $table->decimal('amount', 10, 2);
             $table->text('purpose')->nullable();
             $table->timestamps();
         });

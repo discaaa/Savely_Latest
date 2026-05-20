@@ -18,91 +18,111 @@
 
     <x-ui.card.default>
 
-        <form>
+        <form action="{{ route('expense.store') }}" method="POST">
 
-            <div class="mb-3">
+    @csrf
 
-                <label class="form-label">
-                    Amount
-                </label>
+    <div class="mb-3">
 
-                <x-ui.input.input
-                    type="number"
-                    placeholder="Enter amount"
-                />
+        <label class="form-label">
+            Amount
+        </label>                
 
-            </div>
+        <x-ui.input.input
+            type="number"
+            name="amount"
+            placeholder="Enter amount"
+        />        
 
-            <div class="mb-3">
+    </div>
 
-                <label class="form-label">
-                    Category
-                </label>
+    <div class="mb-3">
 
-                <x-ui.input.select>
+        <label class="form-label">
+            Category
+        </label>
 
-                    <option>
-                        Food
-                    </option>
+        <x-ui.input.select name="category">
 
-                    <option>
-                        Transport
-                    </option>
+            <option value="Food">
+                Food
+            </option>
 
-                    <option>
-                        Shopping
-                    </option>
+            <option value="Transport">
+                Transport
+            </option>
 
-                </x-ui.input.select>
+            <option value="Shopping">
+                Shopping
+            </option>
 
-            </div>
+        </x-ui.input.select>
+    </div>
 
-            <div class="mb-3">
+    <div class="mb-3">
 
-                <label class="form-label">
-                    Date
-                </label>
+        <label class="form-label">
+            Date
+        </label>
 
-                <x-ui.input.input
-                    type="date"
-                />
+        <x-ui.input.input
+            type="date"
+            name="date"
+        />
 
-            </div>
+    </div>
 
-            <div class="mb-4">
+    <div class="mb-3">
 
-                <label class="form-label">
-                    Notes
-                </label>
+        <label class="form-label">
+            Description
+        </label>
 
-                <textarea
-                    class="form-control"
-                    rows="4"
-                    placeholder="Optional notes..."
-                ></textarea>
+        <textarea
+            class="form-control"
+            rows="3"
+            name="description"
+        ></textarea>        
 
-            </div>
+    </div>
 
-            <div class="d-flex gap-2">
+    <div class="mb-4">
 
-                <x-ui.button.primary>
-                    Save Expense
-                </x-ui.button.primary>
+        <label class="form-label">
+            Purpose
+        </label>
 
-                <a href="{{ route('expense.index') }}">
+        <textarea
+            class="form-control"
+            rows="3"
+            name="purpose"
+        ></textarea>
 
-                    <button
-                        type="button"
-                        class="btn btn-secondary"
-                    >
-                        Cancel
-                    </button>
+    </div>
 
-                </a>
+    <div class="d-flex gap-2">
 
-            </div>
+        <button
+            type="submit"
+            class="btn btn-primary"
+        >
+            Save Expense
+        </button>
 
-        </form>
+        <a href="{{ route('expense.index') }}">
+
+            <button
+                type="button"
+                class="btn btn-secondary"
+            >
+                Cancel
+            </button>
+
+        </a>
+
+    </div>
+
+</form>
 
     </x-ui.card.default>
 

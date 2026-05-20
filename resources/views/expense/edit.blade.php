@@ -11,14 +11,18 @@
         </h2>
 
         <p class="text-muted mb-0">
-            Record your new expense
+            Update your expense data
         </p>
 
     </div>
 
     <x-ui.card.default>
 
-        <form>
+        <form action="{{ route('expense.update', $expense->id) }}"
+              method="POST">
+
+            @csrf
+            @method('PUT')
 
             <div class="mb-3">
 
@@ -28,7 +32,8 @@
 
                 <x-ui.input.input
                     type="number"
-                    placeholder="Enter amount"
+                    name="amount"
+                    value="{{ $expense->amount }}"
                 />
 
             </div>
@@ -39,17 +44,17 @@
                     Category
                 </label>
 
-                <x-ui.input.select>
+                <x-ui.input.select name="category">
 
-                    <option>
+                    <option value="Food" {{ $expense->category == 'Food' ? 'selected' : '' }}>
                         Food
                     </option>
 
-                    <option>
+                    <option value="Transport" {{ $expense->category == 'Transport' ? 'selected' : '' }}>
                         Transport
                     </option>
 
-                    <option>
+                    <option value="Shopping" {{ $expense->category == 'Shopping' ? 'selected' : '' }}>
                         Shopping
                     </option>
 
@@ -65,6 +70,8 @@
 
                 <x-ui.input.input
                     type="date"
+                    name="date"
+                    value="{{$expense->date}}"
                 />
 
             </div>
@@ -75,11 +82,23 @@
                     Notes
                 </label>
 
-                <textarea
-                    class="form-control"
-                    rows="4"
-                    placeholder="Optional notes..."
-                ></textarea>
+                <textarea class="form-control"
+                          name="description"
+                          rows="4">{{ $expense->description }}</textarea>
+
+            </div>
+
+            <div class="mb-4">
+
+                <label class="form-label">
+                    Purpose
+                </label>
+
+                <x-ui.input.input
+                    type="text"
+                    name="purpose"
+                    value="{{ $expense->purpose }}"
+                />
 
             </div>
 
@@ -90,11 +109,7 @@
                 </x-ui.button.primary>
 
                 <a href="{{ route('expense.index') }}">
-
-                    <button
-                        type="button"
-                        class="btn btn-secondary"
-                    >
+                    <button type="button" class="btn btn-secondary">
                         Cancel
                     </button>
 
