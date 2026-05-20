@@ -3,7 +3,6 @@
 @section('content')
 
 <style>
-
     .purple-btn{
         background: #6f2cff;
         color: white;
@@ -12,13 +11,13 @@
         padding: 10px 30px;
         font-weight: bold;
     }
-
 </style>
 
 <div class="container py-4">
 
     <x-ui.card.default>
 
+        {{-- Header --}}
         <div class="d-flex justify-content-between mb-4">
 
             <h2 class="fw-bold">
@@ -30,7 +29,7 @@
 
         </div>
 
-        {{-- icon --}}
+        {{-- Icon --}}
         <div class="text-center mb-4">
 
             <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
@@ -42,15 +41,18 @@
 
         </div>
 
-        <form>
+        {{-- Form --}}
+        <form method="POST" action="{{ route('saving.store') }}">
+            @csrf
 
-            {{-- Saving Title --}}
+            {{-- Saving Name --}}
             <div class="mb-3">
                 <label class="form-label fw-semibold">
                     Saving Name
                 </label>
 
                 <input type="text"
+                       name="name"
                        class="form-control"
                        placeholder="Eg. January Saving">
             </div>
@@ -62,6 +64,7 @@
                 </label>
 
                 <input type="number"
+                       name="amount"
                        class="form-control"
                        placeholder="Rp 0">
             </div>
@@ -73,48 +76,45 @@
                 </label>
 
                 <input type="date"
+                       name="date"
                        class="form-control">
             </div>
 
             {{-- Method --}}
             <div class="mb-3">
-
                 <label class="form-label fw-semibold">
                     Saving Method
                 </label>
 
-                <select class="form-select">
-                    <option>Cash</option>
-                    <option>Bank Transfer</option>
-                    <option>E-Wallet</option>
+                <select name="method" class="form-select">
+                    <option value="Cash">Cash</option>
+                    <option value="Bank Transfer">Bank Transfer</option>
+                    <option value="E-Wallet">E-Wallet</option>
                 </select>
-
             </div>
 
-            {{-- Note --}}
+            {{-- Notes --}}
             <div class="mb-4">
-
                 <label class="form-label fw-semibold">
                     Notes
                 </label>
 
-                <textarea class="form-control"
+                <textarea name="note"
+                          class="form-control"
                           rows="4"
                           placeholder="Write additional notes..."></textarea>
-
             </div>
 
             {{-- Buttons --}}
             <div class="d-flex justify-content-between">
 
-                <a href="/daily"
-                   class="btn btn-outline-secondary">
+                <a href="/daily" class="btn btn-outline-secondary">
                     Cancel
                 </a>
 
-                <a href="/daily" class="purple-btn text-decoration-none">
+                <button type="submit" class="purple-btn">
                     Add Saving
-                </a>
+                </button>
 
             </div>
 

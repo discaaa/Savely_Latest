@@ -2,6 +2,14 @@
 
 @section('content')
 
+@php
+    $savedAmount = $savedAmount ?? 0;
+    $progress = $progress ?? 0;
+
+    // biar tidak lebih dari 100%
+    $progress = min($progress, 100);
+@endphp
+
 <style>
 
     .purple-btn{
@@ -29,7 +37,10 @@
     <div class="d-flex justify-content-between mb-4">
 
         <div>
-            <h2 class="fw-bold">New Laptop</h2>
+            <h2 class="fw-bold">
+                {{ $goal->name ?? 'Goal Detail' }}
+            </h2>
+
             <small class="text-primary">
                 In Progress
             </small>
@@ -56,19 +67,24 @@
             <div class="col-md-7">
 
                 <h6>Target Amount</h6>
-                <h3 class="fw-bold">Rp 10.000.000</h3>
+                <h3 class="fw-bold">
+                    Rp {{ number_format($goal->target_amount ?? 0, 0, ',', '.') }}
+                </h3>
 
                 <h6 class="mt-4">Saved Amount</h6>
-                <h3 class="fw-bold">Rp 6.200.000</h3>
+                <h3 class="fw-bold">
+                    Rp {{ number_format($savedAmount, 0, ',', '.') }}
+                </h3>
 
                 <h6 class="mt-4">Progress</h6>
-                <h3 class="fw-bold">62%</h3>
+                <h3 class="fw-bold">
+                    {{ number_format($progress, 0) }}%
+                </h3>
 
-                <div class="progress mb-3"
-                     style="height:12px;">
+                <div class="progress mb-3" style="height:12px;">
 
                     <div class="progress-bar bg-primary"
-                         style="width:62%">
+                         style="width: {{ $progress }}%">
                     </div>
 
                 </div>

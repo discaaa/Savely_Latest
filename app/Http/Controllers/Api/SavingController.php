@@ -5,59 +5,143 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Goal;
 use App\Models\Saving;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class SavingController extends Controller
 {
-    public function index() {
-        // Mengambil semua goal milik user yang sedang login
-        return response()->json(Goal::where('user_id', auth()->id())->get());
+    /**
+     * Menampilkan semua goal user login
+     */
+    public function index()
+    {
+        $goals = Goal::where('user_id', auth()->id())->get();
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $goals
+        ]);
     }
 
-    public function storeGoal(Request $request) {
+    /**
+     * Membuat goal baru
+     */
+    public function storeGoal(Request $request)
+    {
         $validated = $request->validate([
-            'name' => 'required|string',
-            'target_amount' => 'required|numeric',
+            'name' => 'required|string|max:255',
+            'target_amount' => 'required|numeric|min:1000',
             'target_date' => 'required|date',
-            'category' => 'required|string'
+            'category' => 'required|string|max:255'
         ]);
 
         $goal = Goal::create([
             'user_id' => auth()->id(),
             'name' => $validated['name'],
             'target_amount' => $validated['target_amount'],
+            'current_amount' => 0,
             'target_date' => $validated['target_date'],
-            'category' => $validated['category']
+            'category' => $validated['category'],
+            'status' => 'ongoing'
         ]);
 
-        return response()->json(['status' => 'success', 'data' => $goal], 201);
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Goal created successfully',
+            'data' => $goal
+        ], 201);
     }
 
-    public function addSaving(Request $request, $goalId) {
-        $request->validate(['amount' => 'required|numeric|min:1000']);
-        
-        $goal = Goal::where('user_id', auth()->id())->findOrFail($goalId);
-        $user = auth()->user();
+    /**
+     * Menambahkan saving ke goal
+     */
+    public function addSaving(Request $request, $goalId)
+    {
+        $validated = $request->validate([
+            'amount' => 'required|numeric|min:1000'
+        ]);
 
-        if ($user->balance < $request->amount) {
-            return response()->json(['message' => 'Insufficient balance'], 400);
-        }
+        $amount = (float) $validated['amount'];
 
-        return DB::transaction(function () use ($goal, $user, $request) {
-            $user->decrement('balance', $request->amount);
-            $goal->increment('current_amount', $request->amount);
+        return DB::transaction(function () use ($goalId, $amount) {
 
-            Saving::create([
-                'goal_id' => $goal->id,
-                'amount' => $request->amount,
-            ]);
+            // Lock user agar aman dari race condition
+            $user = User::lockForUpdate()->find(auth()->id());
 
-            if ($goal->current_amount >= $goal->target_amount) {
-                $goal->update(['status' => 'achieved']);
+            // Cari goal milik user
+            $goal = Goal::where('user_id', $user->id)
+                ->lockForUpdate()
+                ->findOrFail($goalId);
+
+            // Cek saldo
+            if ($user->balance < $amount) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Insufficient balance'
+                ], 400);
             }
 
-            return response()->json(['message' => 'Congratulations! You have achieved your goal!!', 'data' => $goal]);
+            /*
+            |--------------------------------------------------------------------------
+            | UPDATE MANUAL (TANPA decrement())
+            |--------------------------------------------------------------------------
+            | Karena decrement() sering bermasalah jika:
+            | - field balance NULL
+            | - cast tidak sesuai
+            | - object belum refresh
+            |--------------------------------------------------------------------------
+            */
+
+            // Kurangi saldo user
+            $user->balance = $user->balance - $amount;
+            $user->save();
+
+            // Tambah current amount goal
+            $goal->current_amount = $goal->current_amount + $amount;
+            $goal->save();
+
+            // Simpan riwayat saving
+            $saving = Saving::create([
+                'user_id' => $user->id,
+                'goal_id' => $goal->id,
+                'amount' => $amount,
+                'type' => 'deposit',
+                'status' => 'success',
+                'date' => now(),
+            ]);
+
+            // Update status goal jika tercapai
+            if ($goal->current_amount >= $goal->target_amount) {
+                $goal->status = 'achieved';
+                $goal->save();
+            }
+
+            return response()->json([
+                'status' => 'success',
+                'message' => $goal->status === 'achieved'
+                    ? 'Congratulations! Goal achieved!'
+                    : 'Saving added successfully',
+                'goal' => $goal,
+                'saving' => $saving,
+                'remaining_balance' => $user->balance
+            ], 200);
         });
+    }
+
+    /**
+     * History saving user
+     */
+    public function history()
+    {
+        $savings = Saving::with('goal')
+            ->where('user_id', auth()->id())
+            ->latest()
+            ->get();
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $savings
+        ]);
     }
 }

@@ -41,67 +41,83 @@
 
         </div>
 
-        <form>
+        {{-- FORM CONNECT DATABASE --}}
+        <form method="POST" action="{{ route('goals.update', $goal->id) }}">
+            @csrf
+            @method('PUT')
 
             <div class="mb-3">
-                <label class="form-label">
-                    Goal Name
-                </label>
+                <label class="form-label">Goal Name</label>
 
                 <input type="text"
+                       name="name"
                        class="form-control"
-                       value="New Laptop">
+                       value="{{ $goal->name }}">
             </div>
 
             <div class="mb-3">
-                <label class="form-label">
-                    Target Amount
-                </label>
+                <label class="form-label">Target Amount</label>
 
                 <input type="number"
+                       name="target_amount"
                        class="form-control"
-                       value="10000000">
+                       value="{{ $goal->target_amount }}">
             </div>
 
             <div class="mb-3">
-                <label class="form-label">
-                    Target Date
-                </label>
+                <label class="form-label">Target Date</label>
 
                 <input type="date"
-                       class="form-control">
+                       name="target_date"
+                       class="form-control"
+                       value="{{ $goal->target_date }}">
             </div>
 
             <div class="mb-3">
 
-                <label class="form-label">
-                    Category
-                </label>
+                <label class="form-label">Category</label>
 
-                <select class="form-select">
-                    <option>Electronics</option>
+                <select class="form-select" name="category">
+                    <option value="Electronics"
+                        {{ $goal->category == 'Electronics' ? 'selected' : '' }}>
+                        Electronics
+                    </option>
+
+                    <option value="Travel"
+                        {{ $goal->category == 'Travel' ? 'selected' : '' }}>
+                        Travel
+                    </option>
+
+                    <option value="Other"
+                        {{ $goal->category == 'Other' ? 'selected' : '' }}>
+                        Other
+                    </option>
                 </select>
 
             </div>
 
             <div class="mb-4">
 
-                <label class="form-label">
-                    Description
-                </label>
+                <label class="form-label">Description</label>
 
                 <textarea class="form-control"
-                          rows="5">I want to buy a new laptop for work and study.</textarea>
+                          name="description"
+                          rows="5">{{ $goal->description }}</textarea>
 
             </div>
 
             <div class="d-flex justify-content-between">
 
-                <button class="btn btn-outline-danger">
-                    Delete Goal
-                </button>
+                <form method="POST" action="{{ route('goals.destroy', $goal->id) }}">
+                    @csrf
+                    @method('DELETE')
 
-                <button class="purple-btn">
+                    <button class="btn btn-outline-danger">
+                        Delete Goal
+                    </button>
+                </form>
+
+                <button type="submit" class="purple-btn">
                     Update Goal
                 </button>
 

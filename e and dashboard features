@@ -1,0 +1,10 @@
+app/Http/Controllers/DashboardController.php
+app/Http/Controllers/ExpenseController.php
+app/Models/Expense.php
+database/migrations/2026_05_15_153501_create_expense_categories_table.php
+database/migrations/2026_05_19_131338_create_expenses_table.php
+resources/views/dashboard/index.blade.php
+resources/views/expense/create.blade.php
+resources/views/expense/edit.blade.php
+resources/views/expense/index.blade.php
+routes/web.php

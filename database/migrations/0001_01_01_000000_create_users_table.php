@@ -6,28 +6,19 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
-            $table->id();
-            $table->string('username', 50)->unique();
-            $table->string('password', 100);
-            $table->enum('role', ['user', 'admin'])->default('user');
-            $table->string('email', 100)->unique();
-            $table->integer('current_streak')->default(0);
-            $table->date('last_saving_date')->nullable();
-            $table->timestamps();
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('username')->unique()->after('id');
+            $table->enum('role', ['user', 'admin'])->default('user')->after('password');
+            // email sudah ada di users table default Laravel
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn(['username', 'role']);
+        });
     }
 };

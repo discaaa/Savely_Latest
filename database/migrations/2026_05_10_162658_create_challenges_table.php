@@ -9,19 +9,21 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('challenges', function (Blueprint $table) {
-
             $table->id();
-
-            $table->string('title');
-
-            $table->text('description');
-
-            $table->integer('reward_points');
-
-            $table->string('status')->default('ongoing');
-
+            $table->string('title', 100);
+            $table->text('description')->nullable();
+            $table->integer('points_reward');
+            $table->integer('target_value');
             $table->timestamps();
+        });
 
+        Schema::create('user_challenges', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('challenge_id')->constrained()->onDelete('cascade');
+            $table->integer('progress')->default(0);
+            $table->enum('status', ['ongoing', 'completed'])->default('ongoing');
+            $table->timestamps();
         });
     }
 

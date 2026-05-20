@@ -2,58 +2,64 @@
 
 namespace App\Models;
 
-use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<UserFactory> */
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
     protected $fillable = [
-        'username',
-        'email',
-        'password',
-        'role',
-        'current_streak',
-        'last_saving_date',
+        'name', 'username', 'email', 'password', 'role'
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
     protected $hidden = [
         'password',
+        'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
+            'email_verified_at' => 'datetime',
             'password' => 'hashed',
-            'last_saving_date' => 'date',
         ];
     }
 
-    /**
-     * Cek apakah user memiliki role admin.
-     */
-    public function isAdmin(): bool
+    // Relationships
+    public function expenses()
     {
-        return $this->role === 'admin';
+        return $this->hasMany(Expense::class);
+    }
+
+    public function budgets()
+    {
+        return $this->hasMany(Budget::class);
+    }
+
+    public function goals()
+    {
+        return $this->hasMany(Goal::class);
+    }
+
+    public function savings()
+    {
+        return $this->hasMany(Saving::class);
+    }
+
+    public function userPoints()
+    {
+        return $this->hasOne(UserPoint::class);
+    }
+
+    public function userChallenges()
+    {
+        return $this->hasMany(UserChallenge::class);
+    }
+
+    public function rewardClaims()
+    {
+        return $this->hasMany(RewardClaim::class);
     }
 }

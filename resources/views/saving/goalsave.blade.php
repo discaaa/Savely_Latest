@@ -131,14 +131,14 @@
         <img src="https://cdn-icons-png.flaticon.com/512/616/616408.png"
              width="55"
              class="rounded-circle border p-1">
+
     </div>
 
     <div class="row g-4">
 
-        {{-- Section Kiri --}}
+        {{-- LEFT --}}
         <div class="col-lg-5">
 
-            {{-- Account Card --}}
             <x-ui.card.default>
 
                 <h2 class="fw-bold">
@@ -150,29 +150,37 @@
                 </p>
 
                 <h1 class="fw-bold">
-                    Rp 6.300.000
+                    Rp {{ number_format($totalGoals ?? 0, 0, ',', '.') }}
                 </h1>
 
             </x-ui.card.default>
 
-            {{-- In Progress --}}
-            <div class="d-flex align-items-center gap-3 mb-4">
-
-                <h1 class="fw-bold text-primary">
+            <div class="mb-4">
+                <h3 class="fw-bold text-primary">
                     Your Goals Progress
-                </h1>
-
+                </h3>
             </div>
 
-            {{-- Example : Bali Trip - Integrate Database --}}
+            {{-- LOOP GOALS --}}
+            @foreach($goals as $goal)
+
+            @php
+                $saved = $goal->saved_amount ?? 0;
+                $target = $goal->target_amount ?? 0;
+                $progress = $target > 0 ? ($saved / $target) * 100 : 0;
+                $progress = min($progress, 100);
+            @endphp
+
             <x-ui.card.default>
 
                 <h2 class="fw-bold">
-                    Bali Trip
+                    {{ $goal->name }}
                 </h2>
 
                 <h3 class="fw-bold mb-4">
-                    Rp 3.500.000 / 5.000.000
+                    Rp {{ number_format($saved, 0, ',', '.') }}
+                    /
+                    Rp {{ number_format($target, 0, ',', '.') }}
                 </h3>
 
                 <div class="d-flex align-items-center gap-3">
@@ -180,101 +188,49 @@
                     <div class="progress flex-grow-1" style="height:25px;">
 
                         <div class="progress-bar progress-green"
-                             style="width:70%">
-                            70%
+                             style="width: {{ $progress }}%">
+                            {{ number_format($progress, 0) }}%
                         </div>
 
                     </div>
 
                     <span class="days-badge">
-                        35 days left
+                        {{ $goal->days_left ?? '-' }} days left
                     </span>
 
                 </div>
 
             </x-ui.card.default>
 
-            {{-- Gaming Chair --}}
-            <x-ui.card.default>
-
-                <h2 class="fw-bold">
-                    Gaming Chair
-                </h2>
-
-                <h3 class="fw-bold mb-4">
-                    Rp 800.000 / 2.000.000
-                </h3>
-
-                <div class="d-flex align-items-center gap-3">
-
-                    <div class="progress flex-grow-1" style="height:25px;">
-
-                        <div class="progress-bar progress-red"
-                             style="width:40%">
-                            40%
-                        </div>
-
-                    </div>
-
-                    <span class="days-badge">
-                        20 days left
-                    </span>
-
-                </div>
-
-            </x-ui.card.default>
-
-            {{-- New Laptop --}}
-            <x-ui.card.default>
-
-                <h2 class="fw-bold">
-                    New Laptop
-                </h2>
-
-                <h3 class="fw-bold mb-4">
-                    Rp 2.000.000 / 10.000.000
-                </h3>
-
-                <div class="d-flex align-items-center gap-3">
-
-                    <div class="progress flex-grow-1" style="height:25px;">
-
-                        <div class="progress-bar progress-red"
-                             style="width:20%">
-                            20%
-                        </div>
-
-                    </div>
-
-                    <span class="days-badge">
-                        99 days left
-                    </span>
-
-                </div>
-
-            </x-ui.card.default>
+            @endforeach
 
         </div>
 
-        {{-- Section Kanan --}}
+        {{-- RIGHT --}}
         <div class="col-lg-7">
 
-            {{-- Top Priority --}}
             <div class="mb-4">
 
                 <hr class="mt-4" style="border:10px solid #a855f7; border-radius:10px">
 
                 <h1 class="fw-bold">
-                    New Laptop
+                    {{ $goals[0]->name ?? 'No Goal Selected' }}
                 </h1>
 
                 <h4 class="text-secondary fw-semibold">
-                    For my new laptop
+                    {{ $goals[0]->description ?? '' }}
                 </h4>
 
             </div>
 
-            {{-- Saved Card - Integrate Database --}}
+            {{-- SELECTED GOAL --}}
+            @php
+                $selected = $goals[0] ?? null;
+                $saved = $selected->saved_amount ?? 0;
+                $target = $selected->target_amount ?? 0;
+                $progress = $target > 0 ? ($saved / $target) * 100 : 0;
+            @endphp
+
             <x-ui.card.default>
 
                 <h3 class="fw-bold">
@@ -282,17 +238,17 @@
                 </h3>
 
                 <h1 class="fw-bold mb-3">
-                    Rp 2.000.000
+                    Rp {{ number_format($saved, 0, ',', '.') }}
                 </h1>
 
                 <h3 class="fw-bold">
-                    Out of Rp 10.000.000
+                    Out of Rp {{ number_format($target, 0, ',', '.') }}
                 </h3>
 
                 <div class="progress mt-4 mb-3" style="height:10px;">
 
                     <div class="progress-bar progress-purple"
-                         style="width:20%">
+                         style="width: {{ min($progress,100) }}%">
                     </div>
 
                 </div>
@@ -300,125 +256,21 @@
                 <div class="d-flex justify-content-end gap-3">
 
                     <span class="completed-badge">
-                        20% completed
+                        {{ number_format($progress, 0) }}% completed
                     </span>
 
                     <span class="days-badge">
-                        99 days left
+                        {{ $selected->days_left ?? '-' }} days left
                     </span>
 
                 </div>
 
             </x-ui.card.default>
 
-            {{-- Transaction Goal Input / Output History - Integrate Database --}}
-            <h4 class="fw-bold text-primary mt-4 mb-4">
-                All transactions
-            </h4>
-
-            <div class="position-relative ps-4">
-
-                <div class="timeline-line position-absolute top-0 start-0"></div>
-                
-                {{-- Transaction Goal 1 --}}
-                <div class="position-relative">
-
-                    <div class="timeline-dot"></div>
-
-                    <h5 class="fw-bold ms-4">
-                        21 January 2026
-                    </h5>
-
-                    <x-ui.card.default>
-
-                        <h4 class="text-success fw-bold mb-1">
-                            +Rp 500.000
-                        </h4>
-
-                        <p class="fw-bold mb-0">
-                            New Laptop
-                        </p>
-
-                    </x-ui.card.default>
-
-                </div>
-
-                {{-- Goal 2 --}}
-                <div class="position-relative mb-4">
-
-                    <div class="timeline-dot"></div>
-
-                    <h5 class="fw-bold ms-4">
-                        18 January 2026
-                    </h5>
-
-                    <x-ui.card.default>
-
-                        <h4 class="text-success fw-bold mb-1">
-                            +Rp 150.000
-                        </h4>
-
-                        <p class="fw-bold mb-0">
-                            Gaming Chair
-                        </p>
-
-                    </x-ui.card.default>
-
-                </div>
-
-                {{-- Goal 3 --}}
-                <div class="position-relative mb-4">
-
-                    <div class="timeline-dot"></div>
-
-                    <h5 class="fw-bold ms-4">
-                        10 January 2026
-                    </h5>
-
-                    <x-ui.card.default>
-
-                        <h4 class="text-success fw-bold mb-1">
-                            +Rp 200.000
-                        </h4>
-
-                        <p class="fw-bold mb-0">
-                            Bali Trip
-                        </p>
-
-                    </x-ui.card.default>
-
-                </div>
-
-                {{--Goal 4 --}}
-                <div class="position-relative">
-
-                    <div class="timeline-dot"></div>
-
-                    <h5 class="fw-bold ms-4">
-                        05 January 2026
-                    </h5>
-
-                    <x-ui.card.default>
-
-                        <h4 class="text-danger fw-bold mb-1">
-                            -Rp 100.000
-                        </h4>
-
-                        <p class="fw-bold mb-0">
-                            Gaming Chair
-                        </p>
-
-                    </x-ui.card.default>
-
-                </div>
-
-            </div>
-
         </div>
 
     </div>
 
-    {{-- Button New Goal --}}
     <a href="/goals/create" class="goal-btn text-decoration-none">
         + Add New Goal
     </a>

@@ -57,29 +57,14 @@
         display: inline-block;
     }
 
-    .dot-green{
-        background-color: #0db14b;
-    }
+    .dot-green{ background-color: #0db14b; }
+    .dot-red{ background-color: red; }
 
-    .dot-red{
-        background-color: red;
-    }
-
-    .small-progress{
-        height: 22px;
-    }
+    .small-progress{ height: 22px; }
 
     .badge-soft{
         background-color: #b8f28b;
         color: #3b3b3b;
-        border-radius: 10px;
-        padding: 4px 12px;
-        font-size: 14px;
-    }
-
-    .danger-soft{
-        background-color: #ff8f8f;
-        color: #912020;
         border-radius: 10px;
         padding: 4px 12px;
         font-size: 14px;
@@ -97,7 +82,6 @@
         font-weight: bold;
         box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     }
-
 </style>
 
 <div class="container-fluid">
@@ -105,41 +89,33 @@
     {{-- Button Atas --}}
     <div class="d-flex justify-content-end align-items-center gap-3 mb-4">
 
-        <a href="/daily" class="btn saving-btn active-saving">
-            Daily Saving
-        </a>
+        <a href="/daily" class="btn saving-btn active-saving">Daily Saving</a>
 
-        <a href="/goalsave" class="btn saving-btn inactive-saving">
-            Goals Saving
-        </a>
+        <a href="/goalsave" class="btn saving-btn inactive-saving">Goals Saving</a>
 
         <img src="https://cdn-icons-png.flaticon.com/512/616/616408.png"
              width="55"
              class="rounded-circle border p-1">
+
     </div>
 
     <div class="row g-4">
 
-        {{-- Section Kiri --}}
+        {{-- ================= LEFT ================= --}}
         <div class="col-lg-5">
 
             {{-- Account Card --}}
             <x-ui.card.default>
                 <h3 class="fw-bold">Account name</h3>
-
                 <p class="mb-1">January Saving</p>
-
                 <h2 class="fw-bold">
-                    Rp 2.400.000
+                    Rp {{ number_format($totalSaving ?? 0, 0, ',', '.') }}
                 </h2>
             </x-ui.card.default>
 
-            {{-- This Month (Integrate Database) --}}
+            {{-- This Month --}}
             <x-ui.card.default>
-
-                <h3 class="fw-bold mb-4">
-                    This month 
-                </h3>
+                <h3 class="fw-bold mb-4">This month</h3>
 
                 <h4 class="fw-bold">
                     Rp 1.200.000 / 3.200.000
@@ -152,8 +128,7 @@
                     </span>
 
                     <div class="progress flex-grow-1" style="height:20px;">
-                        <div class="progress-bar purple-bar"
-                             style="width:65%">
+                        <div class="progress-bar purple-bar" style="width:65%">
                             65%
                         </div>
                     </div>
@@ -164,9 +139,7 @@
             {{-- Used Saving --}}
             <div class="d-flex justify-content-between align-items-center mb-3">
 
-                <h2 class="fw-bold">
-                    Used Saving
-                </h2>
+                <h2 class="fw-bold">Used Saving</h2>
 
                 <x-ui.button.primary>
                     Add Used Saving +
@@ -174,84 +147,49 @@
 
             </div>
 
-            {{-- Contoh : Food - Integrate Database --}}
-            <x-ui.card.default>
+            {{-- DATA SAVING --}}
+            @foreach($savings as $saving)
+                <x-ui.card.default>
+                    <h3 class="fw-bold">
+                        {{ $saving->name ?? 'Saving' }}
+                    </h3>
 
-                <h3 class="fw-bold">
-                    Food
-                </h3>
+                    <h4 class="fw-bold mb-4">
+                        Rp {{ number_format($saving->amount, 0, ',', '.') }}
+                    </h4>
 
-                <h4 class="fw-bold mb-4">
-                    Rp 325.000 / 500.000
-                </h4>
+                    <div class="d-flex align-items-center gap-3">
 
-                <div class="d-flex align-items-center gap-3">
-
-                    <div class="progress flex-grow-1 small-progress">
-                        <div class="progress-bar bg-danger"
-                             style="width:65%">
-                            +5% per day
+                        <div class="progress flex-grow-1 small-progress">
+                            <div class="progress-bar bg-danger" style="width:65%">
+                                {{ $saving->method ?? 'Saving' }}
+                            </div>
                         </div>
+
+                        <span>🟡 Medium</span>
+
                     </div>
+                </x-ui.card.default>
+            @endforeach
 
-                    <span>
-                        🟡 Medium
-                    </span>
-
-                </div>
-            </x-ui.card.default>
-
-            {{-- Shopping - Integrate Database --}}
-            <div class="custom-card p-4">
-
-                <h3 class="fw-bold">
-                    Shopping
-                </h3>
-
-                <h4 class="fw-bold mb-4">
-                    Rp 350.000 / 500.000
-                </h4>
-
-                <div class="d-flex align-items-center gap-3">
-
-                    <div class="progress flex-grow-1 small-progress">
-                        <div class="progress-bar bg-danger"
-                             style="width:85%">
-                            +30% per day
-                        </div>
-                    </div>
-
-                    <span class="text-danger fw-bold">
-                        🔴 High Spending
-                    </span>
-
-                </div>
-            </div>
         </div>
 
-        {{-- Section Kanan --}}
+        {{-- ================= RIGHT ================= --}}
         <div class="col-lg-7">
 
-            {{-- January Spending Card --}}
             <x-ui.card.default>
 
-                <h2 class="fw-bold mb-5">
-                    January 2026
-                </h2>
+                <h2 class="fw-bold mb-5">January 2026</h2>
 
-                {{-- Week1 --}}
+                {{-- Week 1 --}}
                 <div class="row align-items-center mb-4">
-
                     <div class="col-2">
-                        <h3 class="purple-text fw-bold">
-                            Week 1
-                        </h3>
+                        <h3 class="purple-text fw-bold">Week 1</h3>
                     </div>
 
                     <div class="col-9">
                         <div class="progress" style="height:32px;">
-                            <div class="progress-bar green-bar"
-                                 style="width:100%">
+                            <div class="progress-bar green-bar" style="width:100%">
                                 100%
                             </div>
                         </div>
@@ -264,17 +202,13 @@
 
                 {{-- Week 2 --}}
                 <div class="row align-items-center mb-4">
-
                     <div class="col-2">
-                        <h3 class="purple-text fw-bold">
-                            Week 2
-                        </h3>
+                        <h3 class="purple-text fw-bold">Week 2</h3>
                     </div>
 
                     <div class="col-9">
                         <div class="progress" style="height:32px;">
-                            <div class="progress-bar green-bar"
-                                 style="width:80%">
+                            <div class="progress-bar green-bar" style="width:80%">
                                 80%
                             </div>
                         </div>
@@ -287,17 +221,13 @@
 
                 {{-- Week 3 --}}
                 <div class="row align-items-center mb-4">
-
                     <div class="col-2">
-                        <h3 class="purple-text fw-bold">
-                            Week 3
-                        </h3>
+                        <h3 class="purple-text fw-bold">Week 3</h3>
                     </div>
 
                     <div class="col-9">
                         <div class="progress" style="height:32px;">
-                            <div class="progress-bar purple-bar"
-                                 style="width:85%">
+                            <div class="progress-bar purple-bar" style="width:85%">
                                 On Progress 85%
                             </div>
                         </div>
@@ -306,101 +236,27 @@
 
                 {{-- Week 4 --}}
                 <div class="row align-items-center">
-
                     <div class="col-2">
-                        <h3 class="purple-text fw-bold">
-                            Week 4
-                        </h3>
+                        <h3 class="purple-text fw-bold">Week 4</h3>
                     </div>
 
                     <div class="col-9">
                         <div class="progress" style="height:32px;">
-                            <div class="progress-bar bg-secondary"
-                                 style="width:10%">
-                            </div>
+                            <div class="progress-bar bg-secondary" style="width:10%"></div>
                         </div>
                     </div>
                 </div>
 
             </x-ui.card.default>
 
-            {{-- Card Edu + Transport --}}
-            <div class="row g-4">
-
-                {{-- Edu --}}
-                <div class="col-md-6">
-
-                    <x-ui.card.default>
-
-                        <h3 class="fw-bold">
-                            Education
-                        </h3>
-
-                        <h4 class="fw-bold mb-4">
-                            Rp 730.900 / 2.000.000
-                        </h4>
-
-                        <div class="d-flex align-items-center gap-3">
-
-                            <div class="progress flex-grow-1 small-progress">
-
-                                <div class="progress-bar bg-success"
-                                     style="width:60%">
-                                    normal
-                                </div>
-
-                            </div>
-
-                            <span class="text-success fw-bold">
-                                🟢 Low Spending
-                            </span>
-
-                        </div>
-
-                    </x-ui.card.default>
-                </div>
-
-                {{-- Transport --}}
-                <div class="col-md-6">
-
-                    <x-ui.card.default>
-
-                        <h3 class="fw-bold">
-                            Transportation
-                        </h3>
-
-                        <h4 class="fw-bold mb-4">
-                            Rp 30.000 / 100.000
-                        </h4>
-
-                        <div class="d-flex align-items-center gap-3">
-
-                            <div class="progress flex-grow-1 small-progress">
-
-                                <div class="progress-bar bg-success"
-                                     style="width:40%">
-                                    normal
-                                </div>
-
-                            </div>
-
-                            <span class="text-success fw-bold">
-                                🟢 Low Spending
-                            </span>
-
-                        </div>
-
-                    </x-ui.card.default>
-                </div>
-
-            </div>
-
         </div>
 
     </div>
+
     <a href="saving/newsaving" class="saving-bottom-btn text-decoration-none">
         + Add New Saving
     </a>
+
 </div>
 
 @endsection
