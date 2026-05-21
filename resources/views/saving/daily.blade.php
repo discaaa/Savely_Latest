@@ -3,6 +3,7 @@
 @section('content')
 
 <style>
+
     body{
         background-color: #f5f5f5;
     }
@@ -40,29 +41,9 @@
         font-weight: bold;
     }
 
-    .green-bar{
-        background-color: #63ff00;
-        color: black;
-    }
-
     .purple-bar{
         background-color: #9b5cff;
-        color: black;
-    }
-
-    .status-dot{
-        width: 18px;
-        height: 18px;
-        border-radius: 50%;
-        display: inline-block;
-    }
-
-    .dot-green{
-        background-color: #0db14b;
-    }
-
-    .dot-red{
-        background-color: red;
+        color: white;
     }
 
     .small-progress{
@@ -72,14 +53,6 @@
     .badge-soft{
         background-color: #b8f28b;
         color: #3b3b3b;
-        border-radius: 10px;
-        padding: 4px 12px;
-        font-size: 14px;
-    }
-
-    .danger-soft{
-        background-color: #ff8f8f;
-        color: #912020;
         border-radius: 10px;
         padding: 4px 12px;
         font-size: 14px;
@@ -100,307 +73,369 @@
 
 </style>
 
+@php
+
+    $totalTarget = $goals->sum('target_amount');
+
+    $overallPercentage = 0;
+
+    if($totalTarget > 0){
+
+        $overallPercentage = round(
+            ($totalSaving / $totalTarget) * 100
+        );
+    }
+
+@endphp
+
 <div class="container-fluid">
 
-    {{-- Button Atas --}}
+    {{-- TOP BUTTON --}}
     <div class="d-flex justify-content-end align-items-center gap-3 mb-4">
 
-        <a href="/daily" class="btn saving-btn active-saving">
+        <a href="{{ route('saving.daily') }}"
+           class="btn saving-btn active-saving">
+
             Daily Saving
+
         </a>
 
-        <a href="/goalsave" class="btn saving-btn inactive-saving">
+        <a href="{{ route('saving.goalsave') }}"
+           class="btn saving-btn inactive-saving">
+
             Goals Saving
+
         </a>
 
         <img src="https://cdn-icons-png.flaticon.com/512/616/616408.png"
              width="55"
              class="rounded-circle border p-1">
+
     </div>
 
     <div class="row g-4">
 
-        {{-- Section Kiri --}}
+        {{-- LEFT SECTION --}}
         <div class="col-lg-5">
 
-            {{-- Account Card --}}
+            {{-- TOTAL SAVING --}}
             <x-ui.card.default>
-                <h3 class="fw-bold">Account name</h3>
 
-                <p class="mb-1">January Saving</p>
+                <h3 class="fw-bold">
+                    Total Saving
+                </h3>
+
+                <p class="mb-1">
+                    All Goals
+                </p>
 
                 <h2 class="fw-bold">
-                    Rp 2.400.000
+
+                    Rp {{ number_format($totalSaving,0,',','.') }}
+
                 </h2>
+
             </x-ui.card.default>
 
-            {{-- This Month (Integrate Database) --}}
+            {{-- OVERALL PROGRESS --}}
             <x-ui.card.default>
 
                 <h3 class="fw-bold mb-4">
-                    This month 
+                    Overall Progress
                 </h3>
 
                 <h4 class="fw-bold">
-                    Rp 1.200.000 / 3.200.000
+
+                    Rp {{ number_format($totalSaving,0,',','.') }}
+
+                    /
+
+                    Rp {{ number_format($totalTarget,0,',','.') }}
+
                 </h4>
 
                 <div class="d-flex align-items-center gap-2 mt-4">
 
                     <span class="badge-soft">
-                        +20% from last week
+
+                        {{ $overallPercentage }}% Completed
+
                     </span>
 
-                    <div class="progress flex-grow-1" style="height:20px;">
+                    <div class="progress flex-grow-1"
+                         style="height:20px;">
+
                         <div class="progress-bar purple-bar"
-                             style="width:65%">
-                            65%
+                             style="width: {{ $overallPercentage }}%">
+
+                            {{ $overallPercentage }}%
+
                         </div>
+
                     </div>
 
                 </div>
+
             </x-ui.card.default>
 
-            {{-- Used Saving --}}
+            {{-- GOALS --}}
             <div class="d-flex justify-content-between align-items-center mb-3">
 
                 <h2 class="fw-bold">
-                    Used Saving
+                    Saving Goals
                 </h2>
 
                 <x-ui.button.primary>
-                    Add Used Saving +
+
+                    {{ $goals->count() }} Goals
+
                 </x-ui.button.primary>
 
             </div>
 
-            {{-- Contoh : Food - Integrate Database --}}
-            <x-ui.card.default>
+            @forelse ($goals as $goal)
 
-                <h3 class="fw-bold">
-                    Food
-                </h3>
+                @php
 
-                <h4 class="fw-bold mb-4">
-                    Rp 325.000 / 500.000
-                </h4>
+                    $percentage = 0;
 
-                <div class="d-flex align-items-center gap-3">
+                    if($goal->target_amount > 0){
 
-                    <div class="progress flex-grow-1 small-progress">
-                        <div class="progress-bar bg-danger"
-                             style="width:65%">
-                            +5% per day
+                        $percentage = min(
+                            100,
+                            round(
+                                ($goal->current_amount /
+                                $goal->target_amount) * 100
+                            )
+                        );
+                    }
+
+                @endphp
+
+                <x-ui.card.default>
+
+                    <div class="d-flex justify-content-between">
+
+                        <div>
+
+                            <h3 class="fw-bold">
+
+                                {{ $goal->title }}
+
+                            </h3>
+
+                            <p class="text-muted mb-0">
+
+                                {{ $goal->status }}
+
+                            </p>
+
                         </div>
+
+                        <div class="text-end">
+
+                            <small class="text-muted">
+
+                                Deadline
+
+                            </small>
+
+                            <p class="fw-bold">
+
+                                {{ $goal->deadline }}
+
+                            </p>
+
+                        </div>
+
                     </div>
 
-                    <span>
-                        🟡 Medium
-                    </span>
+                    <h4 class="fw-bold my-4">
 
-                </div>
-            </x-ui.card.default>
+                        Rp {{ number_format($goal->current_amount,0,',','.') }}
 
-            {{-- Shopping - Integrate Database --}}
-            <div class="custom-card p-4">
+                        /
 
-                <h3 class="fw-bold">
-                    Shopping
-                </h3>
+                        Rp {{ number_format($goal->target_amount,0,',','.') }}
 
-                <h4 class="fw-bold mb-4">
-                    Rp 350.000 / 500.000
-                </h4>
+                    </h4>
 
-                <div class="d-flex align-items-center gap-3">
+                    <div class="d-flex align-items-center gap-3">
 
-                    <div class="progress flex-grow-1 small-progress">
-                        <div class="progress-bar bg-danger"
-                             style="width:85%">
-                            +30% per day
+                        <div class="progress flex-grow-1 small-progress">
+
+                            <div class="progress-bar purple-bar"
+                                 style="width: {{ $percentage }}%">
+
+                                {{ $percentage }}%
+
+                            </div>
+
                         </div>
+
+                        <span class="fw-bold text-primary">
+
+                            {{ $percentage }}%
+
+                        </span>
+
                     </div>
 
-                    <span class="text-danger fw-bold">
-                        🔴 High Spending
-                    </span>
+                </x-ui.card.default>
 
-                </div>
-            </div>
+            @empty
+
+                <x-ui.card.default>
+
+                    <h4 class="fw-bold">
+                        No Saving Goals Yet
+                    </h4>
+
+                    <p class="text-muted mb-0">
+                        Create your first saving goal.
+                    </p>
+
+                </x-ui.card.default>
+
+            @endforelse
+
         </div>
 
-        {{-- Section Kanan --}}
+        {{-- RIGHT SECTION --}}
         <div class="col-lg-7">
 
-            {{-- January Spending Card --}}
+            {{-- MONTHLY SUMMARY --}}
             <x-ui.card.default>
 
                 <h2 class="fw-bold mb-5">
-                    January 2026
+                    Saving Summary
                 </h2>
 
-                {{-- Week1 --}}
-                <div class="row align-items-center mb-4">
+                @foreach($goals as $goal)
 
-                    <div class="col-2">
-                        <h3 class="purple-text fw-bold">
-                            Week 1
-                        </h3>
-                    </div>
+                    @php
 
-                    <div class="col-9">
-                        <div class="progress" style="height:32px;">
-                            <div class="progress-bar green-bar"
-                                 style="width:100%">
-                                100%
-                            </div>
+                        $percentage = 0;
+
+                        if($goal->target_amount > 0){
+
+                            $percentage = min(
+                                100,
+                                round(
+                                    ($goal->current_amount /
+                                    $goal->target_amount) * 100
+                                )
+                            );
+                        }
+
+                    @endphp
+
+                    <div class="row align-items-center mb-4">
+
+                        <div class="col-3">
+
+                            <h5 class="purple-text fw-bold">
+
+                                {{ $goal->title }}
+
+                            </h5>
+
                         </div>
-                    </div>
 
-                    <div class="col-1">
-                        <span class="status-dot dot-green"></span>
-                    </div>
-                </div>
+                        <div class="col-7">
 
-                {{-- Week 2 --}}
-                <div class="row align-items-center mb-4">
+                            <div class="progress"
+                                 style="height:30px;">
 
-                    <div class="col-2">
-                        <h3 class="purple-text fw-bold">
-                            Week 2
-                        </h3>
-                    </div>
+                                <div class="progress-bar purple-bar"
+                                     style="width: {{ $percentage }}%">
 
-                    <div class="col-9">
-                        <div class="progress" style="height:32px;">
-                            <div class="progress-bar green-bar"
-                                 style="width:80%">
-                                80%
+                                    {{ $percentage }}%
+
+                                </div>
+
                             </div>
+
                         </div>
-                    </div>
 
-                    <div class="col-1">
-                        <span class="status-dot dot-red"></span>
-                    </div>
-                </div>
+                        <div class="col-2 text-end">
 
-                {{-- Week 3 --}}
-                <div class="row align-items-center mb-4">
+                            <span class="fw-bold text-primary">
 
-                    <div class="col-2">
-                        <h3 class="purple-text fw-bold">
-                            Week 3
-                        </h3>
-                    </div>
+                                {{ $goal->status }}
 
-                    <div class="col-9">
-                        <div class="progress" style="height:32px;">
-                            <div class="progress-bar purple-bar"
-                                 style="width:85%">
-                                On Progress 85%
-                            </div>
+                            </span>
+
                         </div>
-                    </div>
-                </div>
 
-                {{-- Week 4 --}}
-                <div class="row align-items-center">
-
-                    <div class="col-2">
-                        <h3 class="purple-text fw-bold">
-                            Week 4
-                        </h3>
                     </div>
 
-                    <div class="col-9">
-                        <div class="progress" style="height:32px;">
-                            <div class="progress-bar bg-secondary"
-                                 style="width:10%">
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                @endforeach
 
             </x-ui.card.default>
 
-            {{-- Card Edu + Transport --}}
-            <div class="row g-4">
+            {{-- RECENT GOALS --}}
+            <x-ui.card.default>
 
-                {{-- Edu --}}
-                <div class="col-md-6">
+                <h2 class="fw-bold mb-4">
+                    Recent Saving Activity
+                </h2>
 
-                    <x-ui.card.default>
+                @foreach($goals->take(5) as $goal)
 
-                        <h3 class="fw-bold">
-                            Education
-                        </h3>
+                    <div class="d-flex justify-content-between align-items-center mb-4">
 
-                        <h4 class="fw-bold mb-4">
-                            Rp 730.900 / 2.000.000
-                        </h4>
+                        <div>
 
-                        <div class="d-flex align-items-center gap-3">
+                            <h5 class="fw-bold mb-1">
 
-                            <div class="progress flex-grow-1 small-progress">
+                                {{ $goal->title }}
 
-                                <div class="progress-bar bg-success"
-                                     style="width:60%">
-                                    normal
-                                </div>
+                            </h5>
 
-                            </div>
+                            <small class="text-muted">
 
-                            <span class="text-success fw-bold">
-                                🟢 Low Spending
-                            </span>
+                                Target:
+                                Rp {{ number_format($goal->target_amount,0,',','.') }}
+
+                            </small>
 
                         </div>
 
-                    </x-ui.card.default>
-                </div>
+                        <div class="text-end">
 
-                {{-- Transport --}}
-                <div class="col-md-6">
+                            <h5 class="fw-bold text-primary">
 
-                    <x-ui.card.default>
+                                Rp {{ number_format($goal->current_amount,0,',','.') }}
 
-                        <h3 class="fw-bold">
-                            Transportation
-                        </h3>
+                            </h5>
 
-                        <h4 class="fw-bold mb-4">
-                            Rp 30.000 / 100.000
-                        </h4>
+                            <small>
 
-                        <div class="d-flex align-items-center gap-3">
+                                {{ $goal->status }}
 
-                            <div class="progress flex-grow-1 small-progress">
-
-                                <div class="progress-bar bg-success"
-                                     style="width:40%">
-                                    normal
-                                </div>
-
-                            </div>
-
-                            <span class="text-success fw-bold">
-                                🟢 Low Spending
-                            </span>
+                            </small>
 
                         </div>
 
-                    </x-ui.card.default>
-                </div>
+                    </div>
 
-            </div>
+                @endforeach
+
+            </x-ui.card.default>
 
         </div>
 
     </div>
-    <a href="saving/newsaving" class="saving-bottom-btn text-decoration-none">
+
+    {{-- FLOATING BUTTON --}}
+    <a href="{{ route('saving.create') }}"
+       class="saving-bottom-btn text-decoration-none">
+
         + Add New Saving
+
     </a>
+
 </div>
 
 @endsection

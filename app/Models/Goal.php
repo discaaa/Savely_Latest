@@ -5,14 +5,23 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 class Goal extends Model {
-    protected $fillable = ['user_id', 'name', 'target_amount', 'current_amount', 'target_date', 'category', 'status'];
-    protected $appends = ['achievement_percentage'];
+    protected $table = 'goals';
 
-    public function getAchievementPercentageAttribute() {
-        return $this->target_amount > 0 ? ($this->current_amount / $this->target_amount) * 100 : 0;
+    protected $fillable = [
+        'user_id',
+        'title',
+        'description',
+        'target_amount',
+        'current_amount',
+        'deadline',
+        'status',
+    ];
+
+    public function user(){
+        return $this->belongsTo(User::class);
     }
-
-    public function savings() {
-        return $this->hasMany(Saving::class);
+    
+    public function transactions(){
+        return $this->hasMany(SavingTransaction::class);
     }
 }

@@ -25,5 +25,9 @@ class DatabaseSeeder extends Seeder
         $this->call([
             ChallengeSeeder::class,
         ]);
+
+        $this->call([
+            SavingCategorySeeder::class,
+        ]);
     }
 }

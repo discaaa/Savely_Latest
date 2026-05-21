@@ -4,7 +4,11 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\ChallengeController;
-use App\Http\Controllers\SavingController;
+use App\Http\Controllers\DailySavingController;
+use App\Http\Controllers\GoalController;
+use App\Http\Controllers\GoalSavingController;
+use App\Http\Controllers\SavingTransactionController;
+use App\Http\Controllers\HistoryController;
 
 Route::get('/', [DashboardController::class, 'index']);
 Route::get('/dashboard', [DashboardController::class, 'index'])
@@ -34,25 +38,65 @@ Route::view('/budget/detail', 'budget.detail');
 Route::view('/budget/edit', 'budget.edit');
 Route::view('/budget/historybudget', 'budget.historybudget');
 
-Route::get('/saving', function () {
-    return view('saving.daily');
-})->name('saving');
+Route::prefix('saving')->group(function () {
+    // Daily Saving
+    Route::get('/', [DailySavingController::class, 'index'])
+        ->name('saving.daily');
 
-Route::view('/goalsave', 'saving.goalsave');
-Route::view('/daily', 'saving.daily');
-Route::view('saving/newsaving', 'saving.newsaving');
-Route::view('saving/detail', 'saving.detail');
-Route::view('saving/edit', 'saving.edit');
-Route::view('saving/historysaving', 'saving.historysaving');
+    // Goal Saving
+    Route::get('/goalsave', [GoalSavingController::class, 'index'])
+        ->name('saving.goalsave');
 
-Route::get('/goals', function () {
-    return view('goals.index');
-})->name('goals');
+    // CRUD Daily Saving
+    Route::get('/create', [DailySavingController::class, 'create'])
+        ->name('saving.create');
 
-Route::view('/goals/create', 'goals.create');
-Route::view('/goals/detail', 'goals.detail');
-Route::view('/goals/edit', 'goals.edit');
-Route::view('/goals/historygoals', 'goals.historygoals');
+    Route::post('/store', [DailySavingController::class, 'store'])
+        ->name('saving.store');
+
+    Route::get('/detail/{id}', [DailySavingController::class, 'show'])
+        ->name('saving.detail');
+
+    Route::get('/edit/{id}', [DailySavingController::class, 'edit'])
+        ->name('saving.edit');
+
+    Route::put('/update/{id}', [DailySavingController::class, 'update'])
+        ->name('saving.update');
+
+    Route::delete('/delete/{id}', [DailySavingController::class, 'destroy'])
+        ->name('saving.destroy');
+
+    // Saving History
+    Route::get('/history', [DailySavingController::class, 'history'])
+        ->name('saving.history');
+});
+
+Route::prefix('goals')->group(function () {
+
+    Route::get('/', [GoalController::class, 'index'])
+        ->name('goals.index');
+
+    Route::get('/create', [GoalController::class, 'create'])
+        ->name('goals.create');
+
+    Route::post('/store', [GoalController::class, 'store'])
+        ->name('goals.store');
+
+    Route::get('/detail/{id}', [GoalController::class, 'show'])
+        ->name('goals.detail');
+
+    Route::get('/edit/{id}', [GoalController::class, 'edit'])
+        ->name('goals.edit');
+
+    Route::put('/update/{id}', [GoalController::class, 'update'])
+        ->name('goals.update');
+
+    Route::delete('/delete/{id}', [GoalController::class, 'destroy'])
+        ->name('goals.destroy');
+
+    Route::get('/history', [GoalController::class, 'history'])
+        ->name('goals.history');
+});
 
 Route::get('/history', function () {
     return view('history.index');

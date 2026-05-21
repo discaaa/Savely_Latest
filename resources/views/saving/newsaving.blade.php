@@ -42,63 +42,103 @@
 
         </div>
 
-        <form>
+        <form action="{{ route('saving.store') }}"
+              method="POST">
 
-            {{-- Saving Title --}}
+            @csrf
+
+            {{-- Goal --}}
             <div class="mb-3">
+
                 <label class="form-label fw-semibold">
-                    Saving Name
+                    Saving Goal
                 </label>
 
-                <input type="text"
-                       class="form-control"
-                       placeholder="Eg. January Saving">
+                <select name="goal_id"
+                        class="form-select"
+                        required>
+
+                    <option value="">
+                        Choose Your Goal
+                    </option>
+
+                    @foreach($goals as $goal)
+
+                        <option value="{{ $goal->id }}">
+                            {{ $goal->title }}
+                        </option>
+
+                    @endforeach
+
+                </select>
+
             </div>
 
             {{-- Amount --}}
             <div class="mb-3">
+
                 <label class="form-label fw-semibold">
                     Amount
                 </label>
 
                 <input type="number"
+                       name="amount"
                        class="form-control"
-                       placeholder="Rp 0">
+                       placeholder="Rp 0"
+                       required>
+
             </div>
 
-            {{-- Date --}}
+            {{-- Saving Date --}}
             <div class="mb-3">
+
                 <label class="form-label fw-semibold">
                     Saving Date
                 </label>
 
                 <input type="date"
-                       class="form-control">
+                       name="saving_date"
+                       class="form-control"
+                       required>
+
             </div>
 
-            {{-- Method --}}
+            {{-- Saving Method --}}
             <div class="mb-3">
 
                 <label class="form-label fw-semibold">
                     Saving Method
                 </label>
 
-                <select class="form-select">
-                    <option>Cash</option>
-                    <option>Bank Transfer</option>
-                    <option>E-Wallet</option>
+                <select name="method"
+                        class="form-select"
+                        required>
+
+                    <option value="Cash">
+                        Cash
+                    </option>
+
+                    <option value="Bank Transfer">
+                        Bank Transfer
+                    </option>
+
+                    <option value="E-Wallet">
+                        E-Wallet
+                    </option>
+
                 </select>
 
             </div>
 
-            {{-- Note --}}
+            {{-- Notes --}}
             <div class="mb-4">
 
                 <label class="form-label fw-semibold">
                     Notes
                 </label>
 
-                <textarea class="form-control"
+                <textarea name="note"
+                          class="form-control"
                           rows="4"
                           placeholder="Write additional notes..."></textarea>
 
@@ -107,14 +147,19 @@
             {{-- Buttons --}}
             <div class="d-flex justify-content-between">
 
-                <a href="/daily"
+                <a href="{{ route('saving.daily') }}"
                    class="btn btn-outline-secondary">
+
                     Cancel
+
                 </a>
 
-                <a href="/daily" class="purple-btn text-decoration-none">
+                <button type="submit"
+                        class="purple-btn">
+
                     Add Saving
-                </a>
+
+                </button>
 
             </div>
 
