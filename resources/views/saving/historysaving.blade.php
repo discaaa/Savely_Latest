@@ -3,14 +3,12 @@
 @section('content')
 
 <style>
-
     .history-card{
         border: 2px solid #a855f7;
         border-radius: 18px;
         background: white;
         padding: 18px;
     }
-
 </style>
 
 <div class="container">
@@ -21,41 +19,53 @@
             Goal History
         </h2>
 
-        <select class="form-select"
-                style="width:220px;">
+        <select class="form-select" style="width:220px;">
             <option>All Transactions</option>
         </select>
 
     </div>
 
-    @for($i = 0; $i < 5; $i++)
+    @forelse($transactions->groupBy(function($item) {
+        return \Carbon\Carbon::parse($item->created_at)->format('d F Y');
+    }) as $date => $items)
 
-    <div class="mb-4">
+        <div class="mb-4">
 
-        <h6 class="fw-bold">
-            21 January 2026
-        </h6>
+            <h6 class="fw-bold">
+                {{ $date }}
+            </h6>
 
-        <div class="history-card">
+            @foreach($items as $trx)
 
-            <h5 class="text-success fw-bold">
-                + Rp 500.000
-            </h5>
+                <div class="history-card mb-2">
 
-            <small>Weekly saving</small>
+                    <h5 class="fw-bold {{ $trx->type == 'income' ? 'text-success' : 'text-danger' }}">
+                        {{ $trx->type == 'income' ? '+' : '-' }}
+                        Rp {{ number_format($trx->amount, 0, ',', '.') }}
+                    </h5>
+
+                    <small>
+                        {{ $trx->note ?? 'Saving transaction' }}
+                    </small>
+
+                </div>
+
+            @endforeach
 
         </div>
 
-    </div>
+    @empty
 
-    @endfor
+        <div class="text-center text-muted">
+            No transaction history yet.
+        </div>
+
+    @endforelse
 
     <div class="text-center mt-5">
-
         <button class="btn btn-outline-primary px-5">
             Load More
         </button>
-
     </div>
 
 </div>

@@ -44,7 +44,7 @@ Route::prefix('saving')->group(function () {
         ->name('saving.daily');
 
     // Goal Saving
-    Route::get('/goalsave', [GoalSavingController::class, 'index'])
+    Route::get('/goalsave', [GoalSavingController::class, 'goalSaving'])
         ->name('saving.goalsave');
 
     // CRUD Daily Saving

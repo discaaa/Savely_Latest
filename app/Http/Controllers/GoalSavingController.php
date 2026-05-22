@@ -2,31 +2,40 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\GoalSavingService;
+use App\Models\Goal;
+use App\Models\SavingTransaction;
 
 class GoalSavingController extends Controller
 {
-    protected $goalSavingService;
-
-    public function __construct(
-        GoalSavingService $goalSavingService
-    ) {
-        $this->goalSavingService = $goalSavingService;
-    }
-
-    public function index()
+    public function goalSaving()
     {
-        $goals = $this->goalSavingService
-            ->getGoalSavings();
+        $goals = Goal::all();
 
-        return view('saving.goalsave', compact('goals'));
-    }
+        $transactions = SavingTransaction::with('goal')
+            ->latest()
+            ->get();
 
-    public function show($id)
-    {
-        $goal = $this->goalSavingService
-            ->getGoalDetail($id);
+        $totalGoalSaving = Goal::sum('current_amount');
 
-        return view('saving.detail', compact('goal'));
+        $topGoal = Goal::orderByDesc('target_amount')
+            ->first();
+
+        $topPercentage = 0;
+
+        if($topGoal && $topGoal->target_amount > 0){
+
+            $topPercentage = round(
+                ($topGoal->current_amount /
+                $topGoal->target_amount) * 100
+            );
+        }
+
+        return view('saving.goalsave', compact(
+            'goals',
+            'transactions',
+            'totalGoalSaving',
+            'topGoal',
+            'topPercentage'
+        ));
     }
 }

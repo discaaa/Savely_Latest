@@ -3,7 +3,6 @@
 @section('content')
 
 <style>
-
     .purple-btn{
         background: #6f2cff;
         color: white;
@@ -21,17 +20,22 @@
         background: white;
         font-weight: bold;
     }
-
 </style>
+
+@php
+    $target = $goal->target_amount ?? 0;
+    $saved = $goal->saved_amount ?? 0;
+    $progress = $target > 0 ? round(($saved / $target) * 100) : 0;
+@endphp
 
 <div class="container">
 
     <div class="d-flex justify-content-between mb-4">
 
         <div>
-            <h2 class="fw-bold">New Laptop</h2>
+            <h2 class="fw-bold">{{ $goal->name ?? 'No Title' }}</h2>
             <small class="text-primary">
-                In Progress
+                {{ $goal->status ?? 'In Progress' }}
             </small>
         </div>
 
@@ -56,21 +60,22 @@
             <div class="col-md-7">
 
                 <h6>Target Amount</h6>
-                <h3 class="fw-bold">Rp 10.000.000</h3>
+                <h3 class="fw-bold">
+                    Rp {{ number_format($target, 0, ',', '.') }}
+                </h3>
 
                 <h6 class="mt-4">Saved Amount</h6>
-                <h3 class="fw-bold">Rp 6.200.000</h3>
+                <h3 class="fw-bold">
+                    Rp {{ number_format($saved, 0, ',', '.') }}
+                </h3>
 
                 <h6 class="mt-4">Progress</h6>
-                <h3 class="fw-bold">62%</h3>
+                <h3 class="fw-bold">{{ $progress }}%</h3>
 
-                <div class="progress mb-3"
-                     style="height:12px;">
-
+                <div class="progress mb-3" style="height:12px;">
                     <div class="progress-bar bg-primary"
-                         style="width:62%">
+                         style="width: {{ $progress }}%">
                     </div>
-
                 </div>
 
                 <div class="d-flex gap-3">

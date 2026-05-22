@@ -75,7 +75,7 @@
             </li>
 
             <li class="mb-1">
-                <a href="/saving" class="nav-link text-white fs-4 {{ Request::is('saving') || Request::is('goalsave') || Request::is('daily') || Request::is('saving/newsaving') || Request::is('saving/detail') || Request::is('saving/edit') || Request::is('/saving/histortsaving') ? 'active' : '' }}">
+                <a href="/saving" class="nav-link text-white fs-4 {{ Request::is('saving*') || Request::is('goalsave') || Request::is('daily') || Request::is('saving/newsaving') || Request::is('saving/detail') || Request::is('saving/edit') || Request::is('/saving/histortsaving') ? 'active' : '' }}">
                     <img src="https://cdn-icons-png.flaticon.com/512/8079/8079154.png"
                         width="35"
                         class="rounded-circle" style="background: white">

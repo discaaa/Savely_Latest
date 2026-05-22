@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 class SavingTransaction extends Model {
-    protected $table = 'saving_transactions';
+    protected $table = 'saving_transaction';
     
     protected $fillable = [
         'goal_id',

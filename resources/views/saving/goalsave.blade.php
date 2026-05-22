@@ -120,11 +120,11 @@
     {{-- Button Atas --}}
     <div class="d-flex justify-content-end align-items-center gap-3 mb-4">
 
-        <a href="/daily" class="btn saving-btn inactive-saving">
+        <a href="{{ route ('saving.daily') }}" class="btn saving-btn inactive-saving">
             Daily Saving
         </a>
 
-        <a href="/goalsave" class="btn saving-btn active-saving">
+        <a href="{{ route('saving.goalsave') }}" class="btn saving-btn active-saving">
             Goals Saving
         </a>
 
@@ -150,7 +150,7 @@
                 </p>
 
                 <h1 class="fw-bold">
-                    Rp 6.300.000
+                    Rp {{ number_format($totalGoalSaving,0,',','.') }}
                 </h1>
 
             </x-ui.card.default>
@@ -164,96 +164,72 @@
 
             </div>
 
-            {{-- Example : Bali Trip - Integrate Database --}}
-            <x-ui.card.default>
+            @foreach($goals as $goal)
 
-                <h2 class="fw-bold">
-                    Bali Trip
-                </h2>
+                @php
 
-                <h3 class="fw-bold mb-4">
-                    Rp 3.500.000 / 5.000.000
-                </h3>
+                    $percentage = 0;
 
-                <div class="d-flex align-items-center gap-3">
+                    if($goal->target_amount > 0){
 
-                    <div class="progress flex-grow-1" style="height:25px;">
+                        $percentage = min(
+                            100,
+                            round(
+                                ($goal->current_amount /
+                                $goal->target_amount) * 100
+                            )
+                        );
+                    }
 
-                        <div class="progress-bar progress-green"
-                             style="width:70%">
-                            70%
+                @endphp
+
+                <x-ui.card.default>
+
+                    <h2 class="fw-bold">
+                        {{ $goal->title }}
+                    </h2>
+
+                    <h3 class="fw-bold mb-4">
+
+                        Rp {{ number_format($goal->current_amount,0,',','.') }}
+
+                        /
+
+                        Rp {{ number_format($goal->target_amount,0,',','.') }}
+
+                    </h3>
+
+                    <div class="d-flex align-items-center gap-3">
+
+                        <div class="progress flex-grow-1"
+                            style="height:25px;">
+
+                            <div class="progress-bar progress-purple"
+                                style="width:{{ $percentage }}%">
+
+                                {{ $percentage }}%
+
+                            </div>
+
                         </div>
+
+                        <span class="
+                            {{ $goal->status == 'completed'
+                                ? 'completed-badge'
+                                : 'days-badge'
+                            }}
+                        ">
+
+                            {{ ucfirst($goal->status) }}
+
+                        </span>
 
                     </div>
 
-                    <span class="days-badge">
-                        35 days left
-                    </span>
+                </x-ui.card.default>
 
-                </div>
-
-            </x-ui.card.default>
-
-            {{-- Gaming Chair --}}
-            <x-ui.card.default>
-
-                <h2 class="fw-bold">
-                    Gaming Chair
-                </h2>
-
-                <h3 class="fw-bold mb-4">
-                    Rp 800.000 / 2.000.000
-                </h3>
-
-                <div class="d-flex align-items-center gap-3">
-
-                    <div class="progress flex-grow-1" style="height:25px;">
-
-                        <div class="progress-bar progress-red"
-                             style="width:40%">
-                            40%
-                        </div>
-
-                    </div>
-
-                    <span class="days-badge">
-                        20 days left
-                    </span>
-
-                </div>
-
-            </x-ui.card.default>
-
-            {{-- New Laptop --}}
-            <x-ui.card.default>
-
-                <h2 class="fw-bold">
-                    New Laptop
-                </h2>
-
-                <h3 class="fw-bold mb-4">
-                    Rp 2.000.000 / 10.000.000
-                </h3>
-
-                <div class="d-flex align-items-center gap-3">
-
-                    <div class="progress flex-grow-1" style="height:25px;">
-
-                        <div class="progress-bar progress-red"
-                             style="width:20%">
-                            20%
-                        </div>
-
-                    </div>
-
-                    <span class="days-badge">
-                        99 days left
-                    </span>
-
-                </div>
-
-            </x-ui.card.default>
-
+            @endforeach            
+            
         </div>
 
         {{-- Section Kanan --}}
@@ -265,11 +241,11 @@
                 <hr class="mt-4" style="border:10px solid #a855f7; border-radius:10px">
 
                 <h1 class="fw-bold">
-                    New Laptop
+                    {{ $topGoal->title ?? '-' }}
                 </h1>
 
                 <h4 class="text-secondary fw-semibold">
-                    For my new laptop
+                    Top Saving Priority
                 </h4>
 
             </div>
@@ -282,17 +258,16 @@
                 </h3>
 
                 <h1 class="fw-bold mb-3">
-                    Rp 2.000.000
+                    Rp {{ number_format($topGoal->current_amount ?? 0,0,',','.') }}
                 </h1>
 
                 <h3 class="fw-bold">
-                    Out of Rp 10.000.000
+                    Out of Rp {{ number_format($topGoal->target_amount ?? 0,0,',','.') }}
                 </h3>
 
                 <div class="progress mt-4 mb-3" style="height:10px;">
 
-                    <div class="progress-bar progress-purple"
-                         style="width:20%">
+                    <div class="progress-bar progress-purple" style="width:{{ $topPercentage }}%">
                     </div>
 
                 </div>
@@ -300,7 +275,7 @@
                 <div class="d-flex justify-content-end gap-3">
 
                     <span class="completed-badge">
-                        20% completed
+                        {{ $topPercentage }}% completed
                     </span>
 
                     <span class="days-badge">
@@ -320,97 +295,55 @@
 
                 <div class="timeline-line position-absolute top-0 start-0"></div>
                 
-                {{-- Transaction Goal 1 --}}
-                <div class="position-relative">
+                @foreach($transactions as $transaction)
 
-                    <div class="timeline-dot"></div>
-
-                    <h5 class="fw-bold ms-4">
-                        21 January 2026
-                    </h5>
-
-                    <x-ui.card.default>
-
-                        <h4 class="text-success fw-bold mb-1">
-                            +Rp 500.000
-                        </h4>
-
-                        <p class="fw-bold mb-0">
-                            New Laptop
-                        </p>
-
-                    </x-ui.card.default>
-
-                </div>
-
-                {{-- Goal 2 --}}
                 <div class="position-relative mb-4">
 
                     <div class="timeline-dot"></div>
 
                     <h5 class="fw-bold ms-4">
-                        18 January 2026
+
+                        {{ \Carbon\Carbon::parse(
+                            $transaction->saving_date
+                        )->format('d F Y') }}
+
                     </h5>
 
                     <x-ui.card.default>
 
                         <h4 class="text-success fw-bold mb-1">
-                            +Rp 150.000
+
+                            @if($transaction->amount > 0)
+
+                                <h4 class="text-success fw-bold mb-1">
+
+                                    +Rp {{ number_format($transaction->amount,0,',','.') }}
+
+                                </h4>
+
+                            @else
+
+                                <h4 class="text-danger fw-bold mb-1">
+
+                                    -Rp {{ number_format(abs($transaction->amount),0,',','.') }}
+
+                                </h4>
+
+                            @endif
+
                         </h4>
 
                         <p class="fw-bold mb-0">
-                            Gaming Chair
+
+                            {{ $transaction->goal->title ?? '-' }}
+
                         </p>
 
                     </x-ui.card.default>
 
                 </div>
 
-                {{-- Goal 3 --}}
-                <div class="position-relative mb-4">
-
-                    <div class="timeline-dot"></div>
-
-                    <h5 class="fw-bold ms-4">
-                        10 January 2026
-                    </h5>
-
-                    <x-ui.card.default>
-
-                        <h4 class="text-success fw-bold mb-1">
-                            +Rp 200.000
-                        </h4>
-
-                        <p class="fw-bold mb-0">
-                            Bali Trip
-                        </p>
-
-                    </x-ui.card.default>
-
-                </div>
-
-                {{--Goal 4 --}}
-                <div class="position-relative">
-
-                    <div class="timeline-dot"></div>
-
-                    <h5 class="fw-bold ms-4">
-                        05 January 2026
-                    </h5>
-
-                    <x-ui.card.default>
-
-                        <h4 class="text-danger fw-bold mb-1">
-                            -Rp 100.000
-                        </h4>
-
-                        <p class="fw-bold mb-0">
-                            Gaming Chair
-                        </p>
-
-                    </x-ui.card.default>
-
-                </div>
+                @endforeach
 
             </div>
 
