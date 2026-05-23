@@ -10,17 +10,61 @@ class GoalController extends Controller
 {
     protected $goalService;
 
-    public function __construct(GoalService $goalService)
-    {
+    public function __construct(
+        GoalService $goalService
+    ){
         $this->goalService = $goalService;
     }
 
     public function index()
     {
-        $goals = $this->goalService
-            ->getAllGoals();
+        $query = Goal::query();
 
-        return view('goals.index', compact('goals'));
+        if(request('tab') == 'ongoing'){
+
+            $query->where(
+                'status',
+                'ongoing'
+            );
+        }
+
+        if(request('tab') == 'completed'){
+
+            $query->where(
+                'status',
+                'completed'
+            );
+        }
+
+        $goals = $query
+            ->latest()
+            ->get();
+
+        $totalGoals = Goal::count();
+
+        $totalTarget = Goal::sum(
+            'target_amount'
+        );
+
+        $totalSaved = Goal::sum(
+            'current_amount'
+        );
+
+        $completedGoals = Goal::where(
+            'status',
+            'completed'
+        )->count();
+
+        return view(
+            'goals.index',
+            compact(
+                'goals',
+                'totalGoals',
+                'totalTarget',
+                'totalSaved',
+                'completedGoals'
+            )
+        );
     }
 
     public function create()
@@ -30,6 +74,11 @@ class GoalController extends Controller
 
     public function store(Request $request)
     {
+        $request->validate([
+            'title' => 'required|max:100',
+            'target_amount' => 'required|numeric|min:1',
+        ]);
+
         $this->goalService
             ->createGoal($request->all());
 
@@ -41,22 +90,33 @@ class GoalController extends Controller
     {
         $goal = Goal::findOrFail($id);
 
-        return view('goals.detail', compact('goal'));
+        return view(
+            'goals.detail',
+            compact('goal')
+        );
     }
 
     public function edit($id)
     {
         $goal = Goal::findOrFail($id);
 
-        return view('goals.edit', compact('goal'));
+        return view(
+            'goals.edit',
+            compact('goal')
+        );
     }
 
-    public function update(Request $request, $id)
-    {
+    public function update(
+        Request $request,
+        $id
+    ){
         $goal = Goal::findOrFail($id);
 
         $this->goalService
-            ->updateGoal($goal, $request->all());
+            ->updateGoal(
+                $goal,
+                $request->all()
+            );
 
         return redirect()
             ->route('goals.index');

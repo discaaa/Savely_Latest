@@ -3,34 +3,42 @@
 namespace App\Services;
 
 use App\Models\Goal;
+use Illuminate\Support\Facades\Auth;
 
-class GoalService {
-    public function getAllGoals() {
+class GoalService
+{
+    public function getAllGoals()
+    {
         return Goal::latest()->get();
     }
 
-    public function createGoal($data) {
+    public function createGoal($data)
+    {
         return Goal::create([
-            'user_id' => 1,
+            'user_id' => Auth::id(),
+
             'title' => $data['title'],
-            'description' => $data['description'] ?? null,
+
             'target_amount' => $data['target_amount'],
+
             'current_amount' => 0,
-            'deadline' => $data['deadline'],
-            'status' => 'In Progress',
+
+            'status' => 'ongoing'
         ]);
     }
 
-    public function updateGoal($goal, $data) {
+    public function updateGoal($goal, $data)
+    {
         return $goal->update([
+
             'title' => $data['title'],
-            'description' => $data['description'] ?? null,
-            'target_amount' => $data['target_amount'],
-            'deadline' => $data['deadline'],
+
+            'target_amount' => $data['target_amount']
         ]);
     }
 
-    public function deleteGoal($goal) {
+    public function deleteGoal($goal)
+    {
         return $goal->delete();
     }
 }

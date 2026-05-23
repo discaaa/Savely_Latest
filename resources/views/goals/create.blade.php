@@ -37,60 +37,133 @@
                  width="120">
 
             <p class="text-primary fw-bold mt-2">
-                Upload Goal Image
+                Create Your Saving Goal
             </p>
 
         </div>
 
-        <form>
+        {{-- error --}}
+        @if ($errors->any())
 
-            <div class="mb-3">
-                <label class="form-label">Goal Name</label>
-                <input type="text"
-                       class="form-control"
-                       placeholder="Eg. New Laptop">
+            <div class="alert alert-danger">
+
+                <ul class="mb-0">
+
+                    @foreach ($errors->all() as $error)
+
+                        <li>
+                            {{ $error }}
+                        </li>
+
+                    @endforeach
+
+                </ul>
+
             </div>
 
+        @endif
+
+        <form action="{{ route('goals.store') }}"
+              method="POST">
+
+            @csrf
+
+            {{-- Goal Name --}}
             <div class="mb-3">
-                <label class="form-label">Target Amount</label>
+
+                <label class="form-label fw-semibold">
+                    Goal Name
+                </label>
+
+                <input type="text"
+                       name="title"
+                       class="form-control"
+                       placeholder="Eg. New Laptop"
+                       required>
+
+            </div>
+
+            {{-- Target Amount --}}
+            <div class="mb-3">
+
+                <label class="form-label fw-semibold">
+                    Target Amount
+                </label>
+
                 <input type="number"
+                       name="target_amount"
+                       class="form-control"
+                       placeholder="Rp 0"
+                       required>
+
+            </div>
+
+            {{-- Current Amount --}}
+            <div class="mb-3">
+
+                <label class="form-label fw-semibold">
+                    Initial Saving
+                </label>
+
+                <input type="number"
+                       name="current_amount"
                        class="form-control"
                        placeholder="Rp 0">
+
             </div>
 
+            {{-- Status --}}
             <div class="mb-3">
-                <label class="form-label">Target Date</label>
-                <input type="date"
-                       class="form-control">
-            </div>
 
-            <div class="mb-3">
-                <label class="form-label">Category</label>
+                <label class="form-label fw-semibold">
+                    Status
+                </label>
 
-                <select class="form-select">
-                    <option>Electronics</option>
-                    <option>Travel</option>
-                    <option>Education</option>
+                <select name="status"
+                        class="form-select">
+
+                    <option value="ongoing">
+                        Ongoing
+                    </option>
+
+                    <option value="completed">
+                        Completed
+                    </option>
+
                 </select>
+
             </div>
 
+            {{-- Description --}}
             <div class="mb-4">
-                <label class="form-label">Description</label>
 
-                <textarea class="form-control"
-                          rows="5"></textarea>
+                <label class="form-label fw-semibold">
+                    Description
+                </label>
+
+                <textarea name="description"
+                          class="form-control"
+                          rows="5"
+                          placeholder="Write your goal description..."></textarea>
+
             </div>
 
+            {{-- Buttons --}}
             <div class="d-flex justify-content-between">
 
-                <a href="/goals" class="btn btn-outline-secondary">
-                    Cancel
-                </button>
+                <a href="{{ route('goals.index') }}"
+                   class="btn btn-outline-secondary">
 
-                <a href="/goals" class="purple-btn text-decoration-none">
-                    Create Goal
+                    Cancel
+
                 </a>
-                {{-- abis itu keupdate --}}
+
+                <button type="submit"
+                        class="purple-btn">
+
+                    Create Goal
+
+                </button>
 
             </div>
 

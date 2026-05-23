@@ -9,105 +9,138 @@ use App\Http\Controllers\GoalController;
 use App\Http\Controllers\GoalSavingController;
 use App\Http\Controllers\SavingTransactionController;
 use App\Http\Controllers\HistoryController;
+use App\Http\Controllers\AuthController;
 
-Route::get('/', [DashboardController::class, 'index']);
-Route::get('/dashboard', [DashboardController::class, 'index'])
-    ->name('dashboard');
+Route::view('/home', 'landing.home')
+    ->name('home');
 
-Route::get('/expense', [ExpenseController::class, 'index'])
-    ->name('expense.index');
+Route::view('/features', 'landing.features')
+    ->name('features');
 
-Route::get('/expense/create', [ExpenseController::class, 'create'])
-    ->name('expense.create');
+Route::view('/aboutus', 'landing.aboutus')
+    ->name('aboutus');
 
-Route::post('/expense/store', [ExpenseController::class, 'store'])
-    ->name('expense.store');
+Route::view('/faq', 'landing.faq')
+    ->name('faq');
 
-Route::get('/expense/edit/{id}', [ExpenseController::class, 'edit'])
-    ->name('expense.edit');
+// Auth
+Route::get('/login', [AuthController::class, 'login'])
+    ->name('login');
 
-Route::put('/expense/update/{id}', [ExpenseController::class, 'update'])
-    ->name('expense.update');
+Route::post('/login/store', [AuthController::class, 'loginStore'])
+    ->name('login.store');
 
-Route::get('/budget', function () {
-    return view('budget.index');
-})->name('budget');
+Route::get('/register', [AuthController::class, 'register'])
+    ->name('register');
 
-Route::view('/budget/create', 'budget.create');
-Route::view('/budget/detail', 'budget.detail');
-Route::view('/budget/edit', 'budget.edit');
-Route::view('/budget/historybudget', 'budget.historybudget');
+Route::post('/register/store', [AuthController::class, 'registerStore'])
+    ->name('register.store');
 
-Route::prefix('saving')->group(function () {
-    // Daily Saving
-    Route::get('/', [DailySavingController::class, 'index'])
-        ->name('saving.daily');
+Route::post('/logout', [AuthController::class, 'logout'])
+    ->name('logout');
 
-    // Goal Saving
-    Route::get('/goalsave', [GoalSavingController::class, 'goalSaving'])
-        ->name('saving.goalsave');
+Route::middleware('auth')->group(function () {
 
-    // CRUD Daily Saving
-    Route::get('/create', [DailySavingController::class, 'create'])
-        ->name('saving.create');
+    // Dashboard
+    Route::get('/dashboard', [DashboardController::class, 'index'])
+        ->name('dashboard');
 
-    Route::post('/store', [DailySavingController::class, 'store'])
-        ->name('saving.store');
+    Route::get('/expense', [ExpenseController::class, 'index'])
+        ->name('expense.index');
 
-    Route::get('/detail/{id}', [DailySavingController::class, 'show'])
-        ->name('saving.detail');
+    Route::get('/expense/create', [ExpenseController::class, 'create'])
+        ->name('expense.create');
 
-    Route::get('/edit/{id}', [DailySavingController::class, 'edit'])
-        ->name('saving.edit');
+    Route::post('/expense/store', [ExpenseController::class, 'store'])
+        ->name('expense.store');
 
-    Route::put('/update/{id}', [DailySavingController::class, 'update'])
-        ->name('saving.update');
+    Route::get('/expense/edit/{id}', [ExpenseController::class, 'edit'])
+        ->name('expense.edit');
 
-    Route::delete('/delete/{id}', [DailySavingController::class, 'destroy'])
-        ->name('saving.destroy');
+    Route::put('/expense/update/{id}', [ExpenseController::class, 'update'])
+        ->name('expense.update');
 
-    // Saving History
-    Route::get('/history', [DailySavingController::class, 'history'])
-        ->name('saving.history');
+    Route::get('/budget', function () {
+        return view('budget.index');
+    })->name('budget');
+
+    Route::view('/budget/create', 'budget.create');
+    Route::view('/budget/detail', 'budget.detail');
+    Route::view('/budget/edit', 'budget.edit');
+    Route::view('/budget/historybudget', 'budget.historybudget');
+
+    Route::prefix('saving')->group(function () {
+        // Daily Saving
+        Route::get('/', [DailySavingController::class, 'index'])
+            ->name('saving.daily');
+
+        // Goal Saving
+        Route::get('/goalsave', [GoalSavingController::class, 'goalSaving'])
+            ->name('saving.goalsave');
+
+        // CRUD Daily Saving
+        Route::get('/create', [DailySavingController::class, 'create'])
+            ->name('saving.create');
+
+        Route::post('/store', [DailySavingController::class, 'store'])
+            ->name('saving.store');
+
+        Route::get('/detail/{id}', [DailySavingController::class, 'show'])
+            ->name('saving.detail');
+
+        Route::get('/edit/{id}', [DailySavingController::class, 'edit'])
+            ->name('saving.edit');
+
+        Route::put('/update/{id}', [DailySavingController::class, 'update'])
+            ->name('saving.update');
+
+        Route::delete('/delete/{id}', [DailySavingController::class, 'destroy'])
+            ->name('saving.destroy');
+
+        // Saving History
+        Route::get('/history', [DailySavingController::class, 'history'])
+            ->name('saving.history');
+    });
+
+    Route::prefix('goals')->group(function () {
+
+        Route::get('/', [GoalController::class, 'index'])
+            ->name('goals.index');
+
+        Route::get('/create', [GoalController::class, 'create'])
+            ->name('goals.create');
+
+        Route::post('/store', [GoalController::class, 'store'])
+            ->name('goals.store');
+
+        Route::get('/detail/{id}', [GoalController::class, 'show'])
+            ->name('goals.detail');
+
+        Route::get('/edit/{id}', [GoalController::class, 'edit'])
+            ->name('goals.edit');
+
+        Route::put('/update/{id}', [GoalController::class, 'update'])
+            ->name('goals.update');
+
+        Route::delete('/delete/{id}', [GoalController::class, 'destroy'])
+            ->name('goals.destroy');
+
+        Route::get('/history', [GoalController::class, 'history'])
+            ->name('goals.history');
+    });
+
+    Route::get('/history', function () {
+        return view('history.index');
+    })->name('history.index');
+
+    /* EXPENSE TEST */
+    Route::get('/expense-test', function () {
+        return view('expense.create');
+    });
+
+    /* CHALLENGES */
+    Route::get('/challenges', function () {
+        return view('challenges.index');
+    })->name('challenges.index');
+
 });
-
-Route::prefix('goals')->group(function () {
-
-    Route::get('/', [GoalController::class, 'index'])
-        ->name('goals.index');
-
-    Route::get('/create', [GoalController::class, 'create'])
-        ->name('goals.create');
-
-    Route::post('/store', [GoalController::class, 'store'])
-        ->name('goals.store');
-
-    Route::get('/detail/{id}', [GoalController::class, 'show'])
-        ->name('goals.detail');
-
-    Route::get('/edit/{id}', [GoalController::class, 'edit'])
-        ->name('goals.edit');
-
-    Route::put('/update/{id}', [GoalController::class, 'update'])
-        ->name('goals.update');
-
-    Route::delete('/delete/{id}', [GoalController::class, 'destroy'])
-        ->name('goals.destroy');
-
-    Route::get('/history', [GoalController::class, 'history'])
-        ->name('goals.history');
-});
-
-Route::get('/history', function () {
-    return view('history.index');
-})->name('history.index');
-
-/* EXPENSE TEST */
-Route::get('/expense-test', function () {
-    return view('expense.create');
-});
-
-/* CHALLENGES */
-Route::get('/challenges', function () {
-    return view('challenges.index');
-})->name('challenges.index');

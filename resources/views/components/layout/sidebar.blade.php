@@ -114,7 +114,15 @@
                 </a>
             </li>
         </ul>
-        <hr>
+    <hr>
+
+    <form action="{{ route('logout') }}" method="POST" class="mt-auto d-flex justify-content-center">
+        @csrf
+        <button type="submit" class="btn btn-danger">
+            Logout
+        </button>
+    </form>
+    
     </div>
         <!-- Main Content -->
         <div class="flex-grow-1 p-4">
