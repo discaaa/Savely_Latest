@@ -22,6 +22,10 @@ Route::view('/aboutus', 'landing.aboutus')
 
 Route::view('/faq', 'landing.faq')
     ->name('faq');
+    
+Route::get('/home', function () {
+    return view('landing.home');
+})->name('home');
 
 // Auth
 Route::get('/login', [AuthController::class, 'login'])

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Goal;
 use Illuminate\Http\Request;
 use App\Services\GoalService;
+use Illuminate\Support\Facades\Auth;
 
 class GoalController extends Controller
 {
@@ -18,7 +19,10 @@ class GoalController extends Controller
 
     public function index()
     {
-        $query = Goal::query();
+        $query = Goal::where(
+            'user_id',
+            Auth::id()
+        );
 
         if(request('tab') == 'ongoing'){
 
@@ -40,17 +44,29 @@ class GoalController extends Controller
             ->latest()
             ->get();
 
-        $totalGoals = Goal::count();
+        $totalGoals = Goal::where(
+            'user_id',
+            Auth::id()
+        )->count();
 
-        $totalTarget = Goal::sum(
+        $totalTarget = Goal::where(
+            'user_id',
+            Auth::id()
+        )->sum(
             'target_amount'
         );
 
-        $totalSaved = Goal::sum(
+        $totalSaved = Goal::where(
+            'user_id',
+            Auth::id()
+        )->sum(
             'current_amount'
         );
 
         $completedGoals = Goal::where(
+            'user_id',
+            Auth::id()
+        )->where(
             'status',
             'completed'
         )->count();
@@ -75,12 +91,19 @@ class GoalController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+
             'title' => 'required|max:100',
+
             'target_amount' => 'required|numeric|min:1',
+
         ]);
 
+        $data = $request->all();
+
+        $data['user_id'] = Auth::id();
+
         $this->goalService
-            ->createGoal($request->all());
+            ->createGoal($data);
 
         return redirect()
             ->route('goals.index');
@@ -88,7 +111,10 @@ class GoalController extends Controller
 
     public function show($id)
     {
-        $goal = Goal::findOrFail($id);
+        $goal = Goal::where(
+            'user_id',
+            Auth::id()
+        )->findOrFail($id);
 
         return view(
             'goals.detail',
@@ -98,7 +124,10 @@ class GoalController extends Controller
 
     public function edit($id)
     {
-        $goal = Goal::findOrFail($id);
+        $goal = Goal::where(
+            'user_id',
+            Auth::id()
+        )->findOrFail($id);
 
         return view(
             'goals.edit',
@@ -110,7 +139,11 @@ class GoalController extends Controller
         Request $request,
         $id
     ){
-        $goal = Goal::findOrFail($id);
+
+        $goal = Goal::where(
+            'user_id',
+            Auth::id()
+        )->findOrFail($id);
 
         $this->goalService
             ->updateGoal(
@@ -124,7 +157,10 @@ class GoalController extends Controller
 
     public function destroy($id)
     {
-        $goal = Goal::findOrFail($id);
+        $goal = Goal::where(
+            'user_id',
+            Auth::id()
+        )->findOrFail($id);
 
         $this->goalService
             ->deleteGoal($goal);
