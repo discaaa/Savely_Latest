@@ -5,65 +5,107 @@
 <style>
 
     body{
-        background-color: #f7f7f7;
+        background: #f5f3ff;
+    }
+
+    .page-title{
+        font-weight: 800;
+        color: #5b21b6;
+    }
+
+    .page-subtitle{
+        color: #6b7280;
+    }
+
+    .filter-select{
+        border-radius: 14px;
+        border: 1px solid #ddd6fe;
+        padding: 12px;
+        box-shadow: none;
     }
 
     .history-card{
-        border: 2px solid #a855f7;
-        border-radius: 18px;
         background: white;
-        padding: 18px;
+        border-radius: 24px;
+        padding: 24px;
+        border: 1px solid #ede9fe;
+        box-shadow: 0 8px 24px rgba(111,44,255,0.08);
         transition: 0.3s;
     }
 
     .history-card:hover{
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        transform: translateY(-4px);
     }
 
-    .badge-income{
-        background: #d1fae5;
-        color: #065f46;
-        padding: 5px 12px;
-        border-radius: 20px;
-        font-size: 12px;
+    .amount-text{
+        color: #16a34a;
+        font-weight: 800;
+        font-size: 24px;
+    }
+
+    .goal-badge{
+        background: #f3e8ff;
+        color: #6f2cff;
+        padding: 8px 14px;
+        border-radius: 999px;
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    .saving-badge{
+        background: #dcfce7;
+        color: #15803d;
+        padding: 10px 16px;
+        border-radius: 999px;
+        font-size: 13px;
         font-weight: bold;
     }
 
-    .badge-outcome{
-        background: #fee2e2;
-        color: #991b1b;
-        padding: 5px 12px;
-        border-radius: 20px;
-        font-size: 12px;
-        font-weight: bold;
+    .transaction-date{
+        font-size: 14px;
+        color: #6b7280;
+        font-weight: 600;
+    }
+
+    .empty-img{
+        width: 180px;
+    }
+
+    .pagination .page-link{
+        border-radius: 12px !important;
+        margin: 0 4px;
+        border: none;
+        color: #6f2cff;
+    }
+
+    .pagination .active .page-link{
+        background: #6f2cff;
+        color: white;
     }
 
 </style>
 
-<div class="container py-4">
+<div class="container-fluid py-4">
 
-    {{-- Header --}}
     <div class="d-flex justify-content-between align-items-center mb-5">
 
         <div>
 
-            <h2 class="fw-bold mb-1">
-                Goal History
+            <h2 class="page-title">
+                Goal Saving History
             </h2>
 
-            <p class="text-secondary mb-0">
-                Track all saving transactions from your goals.
+            <p class="page-subtitle mb-0">
+                Track all saving transactions from your goals
             </p>
 
         </div>
 
-        {{-- Filter --}}
         <form method="GET">
 
             <select name="goal"
-                    class="form-select"
-                    style="width:220px;"
+                    class="form-select filter-select"
+                    style="width:240px;"
                     onchange="this.form.submit()">
 
                 <option value="">
@@ -87,75 +129,76 @@
 
     </div>
 
-    {{-- Transaction List --}}
-    @forelse($transactions as $transaction)
+    <div class="row g-4">
 
-        <div class="mb-4">
+        @forelse($transactions as $transaction)
 
-            {{-- Date --}}
-            <h6 class="fw-bold mb-3">
+            <div class="col-lg-6">
 
-                {{ \Carbon\Carbon::parse(
-                    $transaction->saving_date
-                )->format('d F Y') }}
+                <div class="history-card h-100">
 
-            </h6>
+                    <div class="d-flex justify-content-between align-items-start mb-4">
 
-            {{-- Card --}}
-            <div class="history-card">
+                        <div>
 
-                <div class="d-flex justify-content-between align-items-center">
+                            <div class="transaction-date mb-2">
 
-                    <div>
+                                {{ \Carbon\Carbon::parse(
+                                    $transaction->saving_date
+                                )->format('d F Y') }}
 
-                        {{-- Amount --}}
-                        <h5 class="fw-bold text-success mb-2">
+                            </div>
 
-                            + Rp {{ number_format(
-                                $transaction->amount,
-                                0,
-                                ',',
-                                '.'
-                            ) }}
+                            <h3 class="amount-text">
 
-                        </h5>
+                                + Rp {{ number_format(
+                                    $transaction->amount,
+                                    0,
+                                    ',',
+                                    '.'
+                                ) }}
 
-                        {{-- Goal --}}
-                        <small class="text-secondary d-block">
+                            </h3>
 
-                            Goal :
-                            {{ $transaction->goal->title ?? '-' }}
+                        </div>
 
-                        </small>
+                        <span class="saving-badge">
 
-                        {{-- Method --}}
-                        <small class="text-secondary d-block">
+                            Saving
 
-                            Method :
-                            {{ $transaction->method }}
-
-                        </small>
-
-                        {{-- Note --}}
-                        @if($transaction->note)
-
-                            <small class="text-secondary d-block mt-1">
-
-                                Note :
-                                {{ $transaction->note }}
-
-                            </small>
-
-                        @endif
+                        </span>
 
                     </div>
 
-                    {{-- Status Badge --}}
-                    <div>
+                    <div class="mb-3">
 
-                        <span class="badge-income">
-                            Saving
+                        <span class="goal-badge">
+
+                            {{ $transaction->goal->title ?? '-' }}
+
                         </span>
+
+                    </div>
+
+                    <div class="text-secondary">
+
+                        <div class="mb-2">
+
+                            <strong>Method :</strong>
+                            {{ $transaction->method }}
+
+                        </div>
+
+                        @if($transaction->note)
+
+                            <div>
+
+                                <strong>Note :</strong>
+                                {{ $transaction->note }}
+
+                            </div>
+
+                        @endif
 
                     </div>
 
@@ -163,33 +206,33 @@
 
             </div>
 
-        </div>
+        @empty
 
-    @empty
+            <div class="col-12">
 
-        <x-ui.card.default>
+                <div class="history-card text-center py-5">
 
-            <div class="text-center py-5">
+                    <img src="https://cdn-icons-png.flaticon.com/512/4076/4076478.png"
+                         class="empty-img mb-4">
 
-                <img src="https://cdn-icons-png.flaticon.com/512/4076/4076478.png"
-                     width="120"
-                     class="mb-3">
+                    <h4 class="fw-bold">
+                        No Transactions Yet
+                    </h4>
 
-                <h4 class="fw-bold">
-                    No Transactions Yet
-                </h4>
+                    <p class="text-muted">
 
-                <p class="text-secondary">
-                    Start saving money to see your history here.
-                </p>
+                        Start saving money to see your history here.
+
+                    </p>
+
+                </div>
 
             </div>
 
-        </x-ui.card.default>
+        @endforelse
 
-    @endforelse
+    </div>
 
-    {{-- Pagination --}}
     <div class="d-flex justify-content-center mt-5">
 
         {{ $transactions->links() }}

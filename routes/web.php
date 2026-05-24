@@ -10,6 +10,7 @@ use App\Http\Controllers\GoalSavingController;
 use App\Http\Controllers\SavingTransactionController;
 use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BudgetController;
 
 Route::view('/home', 'landing.home')
     ->name('home');
@@ -67,14 +68,32 @@ Route::middleware('auth')->group(function () {
     Route::delete('/expense/delete/{id}', [ExpenseController::class, 'destroy'])
     ->name('expense.delete');
     
-    Route::get('/budget', function () {
-        return view('budget.index');
-    })->name('budget');
 
-    Route::view('/budget/create', 'budget.create');
-    Route::view('/budget/detail', 'budget.detail');
-    Route::view('/budget/edit', 'budget.edit');
-    Route::view('/budget/historybudget', 'budget.historybudget');
+    Route::prefix('budget')->group(function () {
+        Route::get('/', [BudgetController::class, 'index'])
+            ->name('budget.index');
+
+        Route::get('/create', [BudgetController::class, 'create'])
+            ->name('budget.create');
+
+        Route::post('/store', [BudgetController::class, 'store'])
+            ->name('budget.store');
+
+        Route::get('/detail/{id}', [BudgetController::class, 'show'])
+            ->name('budget.detail');
+
+        Route::get('/edit/{id}', [BudgetController::class, 'edit'])
+            ->name('budget.edit');
+
+        Route::put('/update/{id}', [BudgetController::class, 'update'])
+            ->name('budget.update');
+
+        Route::delete('/delete/{id}', [BudgetController::class, 'destroy'])
+            ->name('budget.destroy');
+
+        Route::get('/history', [BudgetController::class, 'history'])
+            ->name('budget.history');
+    });
 
     Route::prefix('saving')->group(function () {
         // Daily Saving

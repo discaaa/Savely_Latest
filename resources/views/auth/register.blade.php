@@ -100,21 +100,23 @@
     }
 
     .form-label{
-        font-weight: 600;
+        font-weight: 700;
         color: #374151;
-        margin-bottom: 8px;
+        margin-bottom: 10px;
     }
 
-    .form-control{
+    .form-control,
+    .form-select{
         border-radius: 16px;
-        padding: 14px;
-        border: 1px solid #ddd;
-        transition: 0.3s;
+        padding: 14px 18px;
+        border: 1px solid #ddd6fe;
+        background: #fafaff;
     }
 
-    .form-control:focus{
+    .form-control:focus,
+    .form-select:focus{
         border-color: #6f2cff;
-        box-shadow: 0 0 0 0.2rem rgba(111,44,255,0.15);
+        box-shadow: 0 0 0 0.2rem rgba(111,44,255,0.12);
     }
 
     .register-btn{

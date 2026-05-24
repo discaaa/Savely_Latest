@@ -4,54 +4,205 @@
 
 <style>
 
+    body{
+        background: #f5f3ff;
+    }
+
+    .detail-header{
+        margin-bottom: 30px;
+    }
+
+    .page-title{
+        font-weight: 800;
+        color: #5b21b6;
+    }
+
+    .goal-status{
+        background: #ede9fe;
+        color: #6f2cff;
+        padding: 8px 18px;
+        border-radius: 999px;
+        font-size: 13px;
+        font-weight: 700;
+        display: inline-block;
+        margin-top: 8px;
+    }
+
+    .action-icon{
+        width: 42px;
+        height: 42px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        transition: 0.2s;
+        border: none;
+    }
+
+    .edit-icon{
+        background: #ede9fe;
+        color: #6f2cff;
+    }
+
+    .delete-icon{
+        background: #fee2e2;
+        color: #dc2626;
+    }
+
+    .action-icon:hover{
+        transform: translateY(-2px);
+    }
+
+    .detail-card{
+        background: white;
+        border-radius: 30px;
+        padding: 35px;
+        box-shadow: 0 10px 30px rgba(111,44,255,0.08);
+        border: 1px solid #ede9fe;
+    }
+
+    .goal-img{
+        width: 230px;
+        height: 230px;
+        object-fit: cover;
+        border-radius: 28px;
+        box-shadow: 0 10px 20px rgba(111,44,255,0.12);
+    }
+
+    .label-title{
+        color: #6b7280;
+        font-size: 15px;
+        margin-bottom: 6px;
+    }
+
+    .main-value{
+        font-size: 30px;
+        font-weight: 800;
+        color: #111827;
+    }
+
+    .remaining-value{
+        color: #dc2626;
+        font-weight: 800;
+        font-size: 24px;
+    }
+
+    .progress{
+        height: 14px;
+        border-radius: 999px;
+        background: #ede9fe;
+    }
+
+    .progress-bar{
+        background: linear-gradient(
+            90deg,
+            #7c3aed,
+            #a855f7
+        );
+        border-radius: 999px;
+    }
+
     .purple-btn{
         background: #6f2cff;
         color: white;
-        border-radius: 12px;
-        padding: 10px 25px;
         border: none;
+        border-radius: 16px;
+        padding: 12px 28px;
         font-weight: bold;
+        transition: 0.3s;
+        box-shadow: 0 8px 20px rgba(111,44,255,0.18);
+    }
+
+    .purple-btn:hover{
+        background: #5b21b6;
+        transform: translateY(-2px);
     }
 
     .outline-btn{
         border: 2px solid #6f2cff;
         color: #6f2cff;
-        border-radius: 12px;
-        padding: 10px 25px;
+        border-radius: 16px;
+        padding: 13px 24px;
         background: white;
-        font-weight: bold;
+        font-weight: 700;
+        text-decoration: none;
+        transition: 0.3s;
     }
 
-    .goal-img{
-        width: 180px;
-        height: 180px;
-        object-fit: cover;
+    .outline-btn:hover{
+        background: #f3e8ff;
+        color: #6f2cff;
+    }
+
+    .section-card{
+        background: white;
+        border-radius: 28px;
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(111,44,255,0.08);
+        border: 1px solid #ede9fe;
+    }
+
+    .section-title{
+        font-weight: 800;
+        color: #111827;
+        margin-bottom: 24px;
+    }
+
+    .history-item{
+        padding-bottom: 20px;
+        margin-bottom: 20px;
+        border-bottom: 1px solid #f1f1f1;
+    }
+
+    .history-item:last-child{
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+
+    .history-date{
+        font-weight: 700;
+        color: #111827;
+    }
+
+    .history-method{
+        color: #6b7280;
+        font-size: 14px;
+    }
+
+    .history-amount{
+        color: #16a34a;
+        font-weight: 800;
+        font-size: 22px;
     }
 
 </style>
 
-<div class="container">
+<div class="container py-4">
 
-    <div class="d-flex justify-content-between mb-4">
+    <div class="d-flex justify-content-between align-items-center detail-header">
 
         <div>
 
-            <h2 class="fw-bold">
+            <h2 class="page-title">
+
                 {{ $goal->title }}
+
             </h2>
 
-            <small class="text-primary">
+            <span class="goal-status">
 
                 {{ ucfirst($goal->status) }}
 
-            </small>
+            </span>
 
         </div>
 
-        <div class="d-flex gap-3 align-items-center">
+        <div class="d-flex gap-3">
 
             <a href="{{ route('goals.edit', $goal->id) }}"
-               class="text-dark">
+               class="action-icon edit-icon">
 
                 <i class="bi bi-pencil-square"></i>
 
@@ -64,7 +215,7 @@
                 @method('DELETE')
 
                 <button type="submit"
-                        class="border-0 bg-transparent text-danger">
+                        class="action-icon delete-icon">
 
                     <i class="bi bi-trash"></i>
 
@@ -95,17 +246,16 @@
 
     @endphp
 
-    <x-ui.card.default>
+    <div class="detail-card mb-4">
 
-        <div class="row align-items-center">
+        <div class="row align-items-center g-5">
 
-            {{-- Goal Image --}}
-            <div class="col-md-5 text-center">
+            <div class="col-lg-5 text-center">
 
                 @if($goal->image)
 
                     <img src="{{ asset('storage/' . $goal->image) }}"
-                         class="goal-img rounded">
+                         class="goal-img">
 
                 @else
 
@@ -116,80 +266,98 @@
 
             </div>
 
-            {{-- Goal Detail --}}
-            <div class="col-md-7">
+            <div class="col-lg-7">
 
-                <h6>
-                    Target Amount
-                </h6>
+                <div class="mb-4">
 
-                <h3 class="fw-bold">
+                    <p class="label-title">
+                        Target Amount
+                    </p>
 
-                    Rp {{ number_format($goal->target_amount,0,',','.') }}
+                    <h3 class="main-value">
 
-                </h3>
+                        Rp {{ number_format($goal->target_amount,0,',','.') }}
 
-                <h6 class="mt-4">
-                    Saved Amount
-                </h6>
+                    </h3>
 
-                <h3 class="fw-bold">
+                </div>
 
-                    Rp {{ number_format($goal->current_amount,0,',','.') }}
+                <div class="mb-4">
 
-                </h3>
+                    <p class="label-title">
+                        Saved Amount
+                    </p>
 
-                <h6 class="mt-4">
-                    Remaining
-                </h6>
+                    <h3 class="main-value">
 
-                <h5 class="fw-bold text-danger">
+                        Rp {{ number_format($goal->current_amount,0,',','.') }}
 
-                    Rp {{ number_format($remaining,0,',','.') }}
+                    </h3>
 
-                </h5>
+                </div>
 
-                <h6 class="mt-4">
-                    Progress
-                </h6>
+                <div class="mb-4">
 
-                <h3 class="fw-bold">
+                    <p class="label-title">
+                        Remaining
+                    </p>
 
-                    {{ $percentage }}%
+                    <h4 class="remaining-value">
 
-                </h3>
+                        Rp {{ number_format($remaining,0,',','.') }}
 
-                <div class="progress mb-3"
-                     style="height:12px;">
+                    </h4>
 
-                    <div class="progress-bar bg-primary"
-                         style="width:{{ $percentage }}%">
+                </div>
+
+                <div class="mb-3">
+
+                    <div class="d-flex justify-content-between mb-2">
+
+                        <span class="label-title">
+                            Progress
+                        </span>
+
+                        <span class="fw-bold text-primary">
+
+                            {{ $percentage }}%
+
+                        </span>
+
+                    </div>
+
+                    <div class="progress">
+
+                        <div class="progress-bar"
+                             style="width:{{ $percentage }}%">
+                        </div>
+
                     </div>
 
                 </div>
 
                 @if($goal->target_date)
 
-                    <small class="text-secondary d-block mb-4">
+                    <p class="text-secondary mb-4">
 
                         Target Date :
                         {{ \Carbon\Carbon::parse($goal->target_date)->format('d F Y') }}
 
-                    </small>
+                    </p>
 
                 @endif
 
-                <div class="d-flex gap-3">
+                <div class="d-flex gap-3 flex-wrap">
 
                     <a href="{{ route('saving.create') }}"
-                       class="purple-btn text-decoration-none">
+                       class="purple-btn">
 
-                        Add Saving
+                        + Add Saving
 
                     </a>
 
                     <a href="{{ route('goals.edit', $goal->id) }}"
-                       class="outline-btn text-decoration-none">
+                       class="outline-btn">
 
                         Edit Goal
 
@@ -201,12 +369,11 @@
 
         </div>
 
-    </x-ui.card.default>
+    </div>
 
-    {{-- Description --}}
-    <x-ui.card.default class="mt-4">
+    <div class="section-card mb-4">
 
-        <h4 class="fw-bold mb-3">
+        <h4 class="section-title">
             Description
         </h4>
 
@@ -216,22 +383,21 @@
 
         </p>
 
-    </x-ui.card.default>
+    </div>
 
-    {{-- Transaction History --}}
-    <x-ui.card.default class="mt-4">
+    <div class="section-card">
 
-        <h4 class="fw-bold mb-4">
+        <h4 class="section-title">
             Saving History
         </h4>
 
         @forelse($transactions as $transaction)
 
-            <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-3">
+            <div class="history-item d-flex justify-content-between align-items-center">
 
                 <div>
 
-                    <h6 class="fw-bold mb-1">
+                    <h6 class="history-date mb-1">
 
                         {{ \Carbon\Carbon::parse(
                             $transaction->saving_date
@@ -239,7 +405,7 @@
 
                     </h6>
 
-                    <small class="text-secondary">
+                    <small class="history-method">
 
                         {{ $transaction->method }}
 
@@ -247,18 +413,14 @@
 
                 </div>
 
-                <div class="text-end">
+                <div class="history-amount">
 
-                    <h5 class="fw-bold text-success">
-
-                        + Rp {{ number_format(
-                            $transaction->amount,
-                            0,
-                            ',',
-                            '.'
-                        ) }}
-
-                    </h5>
+                    + Rp {{ number_format(
+                        $transaction->amount,
+                        0,
+                        ',',
+                        '.'
+                    ) }}
 
                 </div>
 
@@ -266,13 +428,25 @@
 
         @empty
 
-            <p class="text-secondary">
-                No saving transaction yet.
-            </p>
+            <div class="text-center py-5">
+
+                <img src="https://cdn-icons-png.flaticon.com/512/4076/4076478.png"
+                     width="120"
+                     class="mb-3">
+
+                <h5 class="fw-bold">
+                    No Saving History
+                </h5>
+
+                <p class="text-secondary mb-0">
+                    Start adding savings to track your progress.
+                </p>
+
+            </div>
 
         @endforelse
 
-    </x-ui.card.default>
+    </div>
 
 </div>
 

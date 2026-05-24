@@ -9,10 +9,12 @@ class Expense extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'user_id',
+        'budget_id',
         'category',
-        'description',
-        'date',
         'amount',
+        'date',
+        'description',
         'purpose'
     ];
 
@@ -21,14 +23,13 @@ class Expense extends Model
         'amount' => 'decimal:2'
     ];    
 
-        public function user()
+    public function user()
     {
         return $this->belongsTo(User::class);
     }
-
-    // public function category()
-    // {
-    //     return $this->belongsTo(ExpenseCategory::class, 'category');
-    // }
-
+    
+    public function budget()
+    {
+        return $this->belongsTo(Budget::class);
+    }
 }

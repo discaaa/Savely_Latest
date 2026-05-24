@@ -125,18 +125,18 @@
         margin-bottom: 10px;
     }
 
-    .form-control{
-        border-radius: 18px;
-        padding: 15px 18px;
-        border: 1px solid #e5e7eb;
-        font-size: 15px;
-        transition: 0.3s;
-        background: rgba(255,255,255,0.8);
+    .form-control,
+    .form-select{
+        border-radius: 16px;
+        padding: 14px 18px;
+        border: 1px solid #ddd6fe;
+        background: #fafaff;
     }
 
-    .form-control:focus{
+    .form-control:focus,
+    .form-select:focus{
         border-color: #6f2cff;
-        box-shadow: 0 0 0 0.2rem rgba(111,44,255,0.14);
+        box-shadow: 0 0 0 0.2rem rgba(111,44,255,0.12);
     }
 
     .verify-btn{

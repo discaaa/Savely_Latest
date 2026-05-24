@@ -8,10 +8,11 @@ use App\Models\SavingTransaction;
 class SavingTransactionService {
     public function createTransaction($data) {
         SavingTransaction::create([
+            'user_id' => auth()->id(),
             'goal_id' => $data['goal_id'],
             'amount' => $data['amount'],
             'saving_date' => $data['saving_date'],
-            'method' => $data['method'],
+            'method' => $data['method'] ?? 'Manual',
             'note' => $data['note'] ?? null
         ]);
 

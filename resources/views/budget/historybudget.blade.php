@@ -2,46 +2,170 @@
 
 @section('content')
 
-<div class="container">
+<style>
 
-    <div class="d-flex justify-content-between mb-5">
+    body{
+        background: #f5f3ff;
+    }
 
-        <h2 class="fw-bold">
-            Budget History
-        </h2>
+    .history-card{
+        background: white;
+        border-radius: 24px;
+        padding: 24px;
+        border: 1px solid #ede9fe;
+        box-shadow: 0 8px 24px rgba(111,44,255,0.08);
+        transition: 0.3s;
+    }
 
-        <select class="form-select"
-                style="width:200px;">
-            <option>All Categories</option>
+    .history-card:hover{
+        transform: translateY(-3px);
+    }
+
+    .section-title{
+        font-weight: 800;
+        color: #5b21b6;
+    }
+
+    .filter-select{
+        border-radius: 14px;
+        border: 1px solid #ddd6fe;
+        padding: 10px 16px;
+        font-weight: 600;
+        box-shadow: none;
+    }
+
+    .amount-expense{
+        color: #ef4444;
+        font-weight: 800;
+    }
+
+    .category-badge{
+        background: #f3e8ff;
+        color: #6f2cff;
+        padding: 7px 16px;
+        border-radius: 999px;
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    .date-title{
+        color: #6b7280;
+        font-weight: 700;
+    }
+
+    .empty-img{
+        width: 170px;
+    }
+
+</style>
+
+<div class="container-fluid py-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-5">
+
+        <div>
+
+            <h2 class="section-title mb-1">
+                {{ $budget->budget_name }} History
+            </h2>
+
+            <p class="text-muted mb-0">
+                Track all your budget transactions and expenses.
+            </p>
+
+        </div>
+
+        <select class="form-select filter-select"
+                style="width:220px;">
+
+            <option>
+                {{ ucfirst($budget->period) }}
+            </option>
+
         </select>
 
     </div>
 
-    @for($i = 0; $i < 5; $i++)
+    @forelse($transactions->groupBy(function($item){
+        return \Carbon\Carbon::parse($item->created_at)->format('d F Y');
+    }) as $date => $items)
 
-    <div class="card rounded-4 shadow-sm border-0 p-3 mb-3">
+        <div class="mb-5">
 
-        <div class="d-flex justify-content-between">
+            <h5 class="date-title mb-4">
 
-            <div>
+                {{ $date }}
 
-                <h5 class="text-danger fw-bold">
-                    - Rp 50.000
-                </h5>
+            </h5>
 
-                <small>Lunch</small>
+            <div class="row g-4">
+
+                @foreach($items as $trx)
+
+                    <div class="col-lg-6">
+
+                        <div class="history-card">
+
+                            <div class="d-flex justify-content-between align-items-start">
+
+                                <div>
+
+                                    <h4 class="amount-expense mb-2">
+
+                                        - Rp {{ number_format($trx->amount,0,',','.') }}
+
+                                    </h4>
+
+                                    <h6 class="fw-bold mb-1">
+
+                                        {{ $trx->note ?? 'Expense Transaction' }}
+
+                                    </h6>
+
+                                    <small class="text-muted">
+
+                                        {{ \Carbon\Carbon::parse($trx->created_at)->format('H:i') }}
+
+                                    </small>
+
+                                </div>
+
+                                <span class="category-badge">
+
+                                    {{ $budget->budget_name }}
+
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                @endforeach
 
             </div>
 
-            <span class="badge bg-danger">
-                Food
-            </span>
+        </div>
+
+    @empty
+
+        <div class="history-card text-center py-5">
+
+            <img src="https://cdn-icons-png.flaticon.com/512/4076/4076549.png"
+                 class="empty-img mb-4">
+
+            <h4 class="fw-bold">
+                No Budget History Yet
+            </h4>
+
+            <p class="text-muted mb-0">
+                Your expense transactions will appear here.
+            </p>
 
         </div>
 
-    </div>
-
-    @endfor
+    @endforelse
 
 </div>
 

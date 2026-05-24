@@ -8,6 +8,7 @@ class SavingTransaction extends Model {
     protected $table = 'saving_transaction';
     
     protected $fillable = [
+        'user_id',
         'goal_id',
         'amount',
         'saving_date',

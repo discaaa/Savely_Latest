@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use App\Models\Challenge;
 use App\Models\Reward;
 use App\Models\Activity;

@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('saving_transaction', function (Blueprint $table) {
             $table->id();
             $table->foreignId('goal_id')->constrained('goals')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->double('amount', 15, 2);
             $table->date('saving_date');
             $table->string('method');

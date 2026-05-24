@@ -4,48 +4,138 @@
 
 <style>
 
+    body{
+        background: #f5f3ff;
+    }
+
+    .goal-card{
+        background: white;
+        border-radius: 28px;
+        padding: 35px;
+        box-shadow: 0 10px 30px rgba(111,44,255,0.08);
+        border: 1px solid #ede9fe;
+    }
+
+    .page-title{
+        font-weight: 800;
+        color: #5b21b6;
+    }
+
+    .page-subtitle{
+        color: #6b7280;
+    }
+
+    .goal-icon{
+        width: 120px;
+        height: 120px;
+        object-fit: contain;
+        animation: floatAnim 4s ease-in-out infinite;
+    }
+
+    @keyframes floatAnim{
+
+        0%{
+            transform: translateY(0px);
+        }
+
+        50%{
+            transform: translateY(-10px);
+        }
+
+        100%{
+            transform: translateY(0px);
+        }
+
+    }
+
+    .form-label{
+        font-weight: 700;
+        color: #374151;
+        margin-bottom: 10px;
+    }
+
+    .form-control,
+    .form-select{
+        border-radius: 16px;
+        padding: 14px 18px;
+        border: 1px solid #ddd6fe;
+        background: #fafaff;
+    }
+
+    .form-control:focus,
+    .form-select:focus{
+        border-color: #6f2cff;
+        box-shadow: 0 0 0 0.2rem rgba(111,44,255,0.12);
+    }
+
     .purple-btn{
         background: #6f2cff;
         color: white;
         border: none;
-        border-radius: 15px;
-        padding: 10px 30px;
+        border-radius: 16px;
+        padding: 12px 28px;
         font-weight: bold;
+        transition: 0.3s;
+        box-shadow: 0 8px 20px rgba(111,44,255,0.18);
+    }
+
+    .purple-btn:hover{
+        background: #5b21b6;
+        transform: translateY(-2px);
+    }
+
+    .cancel-btn{
+        background: #ede9fe;
+        color: #6f2cff;
+        padding: 14px 28px;
+        border-radius: 16px;
+        font-weight: bold;
+        text-decoration: none;
+        transition: 0.3s;
+    }
+
+    .cancel-btn:hover{
+        background: #ddd6fe;
+        color: #5b21b6;
+    }
+
+    .error-box{
+        border-radius: 18px;
+        border: none;
     }
 
 </style>
 
 <div class="container py-4">
 
-    <x-ui.card.default>
+    <div class="mb-4">
 
-        <div class="d-flex justify-content-between mb-4">
+        <h2 class="page-title">
+            Create New Goal
+        </h2>
 
-            <h2 class="fw-bold">
-                Create New Goal
-            </h2>
+        <p class="page-subtitle mb-0">
+            Start planning your future and achieve your dream goals.
+        </p>
 
-            <img src="https://cdn-icons-png.flaticon.com/512/616/616408.png"
-                 width="50">
+    </div>
 
-        </div>
+    <div class="goal-card">
 
-        {{-- image icon --}}
         <div class="text-center mb-4">
 
             <img src="https://cdn-icons-png.flaticon.com/512/1829/1829586.png"
-                 width="120">
+                 class="goal-icon">
 
-            <p class="text-primary fw-bold mt-2">
+            <h5 class="fw-bold text-primary mt-3">
                 Create Your Saving Goal
-            </p>
+            </h5>
 
         </div>
 
-        {{-- error --}}
         @if ($errors->any())
 
-            <div class="alert alert-danger">
+            <div class="alert alert-danger error-box mb-4">
 
                 <ul class="mb-0">
 
@@ -68,91 +158,93 @@
 
             @csrf
 
-            {{-- Goal Name --}}
-            <div class="mb-3">
+            <div class="row">
 
-                <label class="form-label fw-semibold">
-                    Goal Name
-                </label>
+                <div class="col-md-6 mb-3">
 
-                <input type="text"
-                       name="title"
-                       class="form-control"
-                       placeholder="Eg. New Laptop"
-                       required>
+                    <label class="form-label">
+                        Goal Name
+                    </label>
 
-            </div>
+                    <input type="text"
+                           name="title"
+                           class="form-control"
+                           placeholder="Example : New Laptop"
+                           required>
 
-            {{-- Target Amount --}}
-            <div class="mb-3">
+                </div>
 
-                <label class="form-label fw-semibold">
-                    Target Amount
-                </label>
+                <div class="col-md-6 mb-3">
 
-                <input type="number"
-                       name="target_amount"
-                       class="form-control"
-                       placeholder="Rp 0"
-                       required>
+                    <label class="form-label">
+                        Target Amount
+                    </label>
 
-            </div>
+                    <input type="number"
+                           name="target_amount"
+                           class="form-control"
+                           placeholder="Rp 0"
+                           required>
 
-            {{-- Current Amount --}}
-            <div class="mb-3">
-
-                <label class="form-label fw-semibold">
-                    Initial Saving
-                </label>
-
-                <input type="number"
-                       name="current_amount"
-                       class="form-control"
-                       placeholder="Rp 0">
+                </div>
 
             </div>
 
-            {{-- Status --}}
-            <div class="mb-3">
+            <div class="row">
 
-                <label class="form-label fw-semibold">
-                    Status
-                </label>
+                <div class="col-md-6 mb-3">
 
-                <select name="status"
-                        class="form-select">
+                    <label class="form-label">
+                        Initial Saving
+                    </label>
 
-                    <option value="ongoing">
-                        Ongoing
-                    </option>
+                    <input type="number"
+                           name="current_amount"
+                           class="form-control"
+                           placeholder="Rp 0">
 
-                    <option value="completed">
-                        Completed
-                    </option>
+                </div>
 
-                </select>
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label">
+                        Status
+                    </label>
+
+                    <select name="status"
+                            class="form-select">
+
+                        <option value="ongoing">
+                            Ongoing
+                        </option>
+
+                        <option value="completed">
+                            Completed
+                        </option>
+
+                    </select>
+
+                </div>
 
             </div>
 
-            {{-- Description --}}
             <div class="mb-4">
 
-                <label class="form-label fw-semibold">
+                <label class="form-label">
                     Description
                 </label>
 
                 <textarea name="description"
                           class="form-control"
                           rows="5"
-                          placeholder="Write your goal description..."></textarea>
+                          placeholder="Write your goal description here..."></textarea>
 
             </div>
 
-            {{-- Buttons --}}
-            <div class="d-flex justify-content-between">
+            <div class="d-flex justify-content-between align-items-center mt-4">
 
                 <a href="{{ route('goals.index') }}"
-                   class="btn btn-outline-secondary">
+                   class="btn btn-outline-secondary cancel-btn">
 
                     Cancel
 
@@ -169,7 +261,7 @@
 
         </form>
 
-    </x-ui.card.default>
+    </div>
 
 </div>
 

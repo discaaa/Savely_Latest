@@ -5,19 +5,31 @@
 <style>
 
     body{
-        background-color: #f5f5f5;
+        background: #f5f3ff;
+    }
+
+    .section-title{
+        font-weight: 800;
+        color: #5b21b6;
+    }
+
+    .section-subtitle{
+        color: #6b7280;
+        font-size: 15px;
     }
 
     .saving-btn{
-        border-radius: 30px;
-        padding: 10px 25px;
-        font-weight: 600;
+        border-radius: 16px;
+        padding: 12px 24px;
+        font-weight: 700;
+        transition: 0.3s;
     }
 
     .active-saving{
-        background-color: #6f2cff;
+        background: #6f2cff;
         color: white;
         border: none;
+        box-shadow: 0 8px 20px rgba(111,44,255,0.18);
     }
 
     .inactive-saving{
@@ -26,141 +38,199 @@
         background: white;
     }
 
-    .purple-btn{
-        background-color: #6f2cff;
-        color: white;
-        border-radius: 30px;
-        padding: 10px 24px;
-        font-weight: bold;
-        border: none;
+    .inactive-saving:hover{
+        background: #f3e8ff;
+        color: #6f2cff;
     }
 
-    .outline-btn{
-        border: 2px solid #6f2cff;
-        color: #6f2cff;
-        border-radius: 30px;
-        padding: 10px 24px;
-        font-weight: bold;
+    .summary-card{
         background: white;
+        border-radius: 28px;
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(111,44,255,0.08);
+        border: 1px solid #ede9fe;
+    }
+
+    .goal-card{
+        background: white;
+        border-radius: 26px;
+        padding: 28px;
+        box-shadow: 0 10px 30px rgba(111,44,255,0.08);
+        border: 1px solid #ede9fe;
+        transition: 0.3s;
+    }
+
+    .goal-card:hover{
+        transform: translateY(-3px);
     }
 
     .progress{
+        height: 12px;
         border-radius: 20px;
+        background: #ede9fe;
         overflow: hidden;
-        background-color: #ececec;
     }
 
     .progress-purple{
-        background-color: #6f2cff;
+        background: #6f2cff;
     }
 
-    .progress-green{
-        background-color: #52ff33;
-        color: black;
-        font-weight: bold;
-    }
-
-    .progress-red{
-        background-color: #ff8b8b;
-        color: black;
-        font-weight: bold;
-    }
-
-    .days-badge{
-        background-color: #b16cff;
-        color: white;
-        padding: 6px 15px;
-        border-radius: 20px;
-        font-size: 12px;
-        font-weight: bold;
+    .status-badge{
+        background: #f3e8ff;
+        color: #6f2cff;
+        padding: 8px 16px;
+        border-radius: 999px;
+        font-size: 13px;
+        font-weight: 700;
     }
 
     .completed-badge{
-        background-color: #ff8b8b;
-        color: black;
-        padding: 6px 15px;
-        border-radius: 20px;
-        font-size: 12px;
-        font-weight: bold;
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .transaction-title{
+        font-size: 15px;
+        color: #6b7280;
+        font-weight: 600;
     }
 
     .timeline-line{
-        border-left: 2px solid #7c3aed;
-        margin-left: 12px;
-        height: 100%;
+        position: absolute;
+        left: 7px;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: #c084fc;
     }
 
     .timeline-dot{
         width: 16px;
         height: 16px;
-        background-color: #6f2cff;
         border-radius: 50%;
+        background: #6f2cff;
         position: absolute;
-        left: -8px;
-        top: 8px;
+        left: 0;
+        top: 6px;
+    }
+
+    .transaction-card{
+        background: white;
+        border-radius: 22px;
+        padding: 22px;
+        border: 1px solid #ede9fe;
+        box-shadow: 0 8px 24px rgba(111,44,255,0.06);
     }
 
     .goal-btn{
         position: fixed;
         bottom: 30px;
-        right: 40px;
+        right: 35px;
         background: #6f2cff;
         color: white;
-        border: none;
+        padding: 14px 24px;
+        border-radius: 18px;
+        text-decoration: none;
+        font-weight: 700;
+        box-shadow: 0 8px 24px rgba(111,44,255,0.2);
+        transition: 0.3s;
+    }
+
+    .goal-btn:hover{
+        background: #5b21b6;
+        color: white;
+        transform: translateY(-3px);
+        scale: 1.02;
+    }
+
+    .top-progress-card{
+        background: linear-gradient(
+            135deg,
+            #7c3aed,
+            #6f2cff
+        );
+        border-radius: 30px;
+        padding: 35px;
+        color: white;
+        box-shadow: 0 12px 35px rgba(111,44,255,0.2);
+    }
+
+    .top-progress{
+        height: 12px;
+        background: rgba(255,255,255,0.2);
         border-radius: 20px;
-        padding: 14px 22px;
-        font-weight: bold;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        overflow: hidden;
+    }
+
+    .top-progress .progress-bar{
+        background: white;
     }
 
 </style>
 
-<div class="container-fluid">
+<div class="container-fluid py-4">
 
-    {{-- Button Atas --}}
-    <div class="d-flex justify-content-end align-items-center gap-3 mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-5">
 
-        <a href="{{ route ('saving.daily') }}" class="btn saving-btn inactive-saving">
-            Daily Saving
-        </a>
+        <div>
 
-        <a href="{{ route('saving.goalsave') }}" class="btn saving-btn active-saving">
-            Goals Saving
-        </a>
+            <h2 class="section-title mb-1">
+                Goals Saving
+            </h2>
 
-        <img src="https://cdn-icons-png.flaticon.com/512/616/616408.png"
-             width="55"
-             class="rounded-circle border p-1">
+            <p class="section-subtitle mb-0">
+                Manage and track all your saving goals
+            </p>
+
+        </div>
+
+        <div class="d-flex align-items-center gap-3">
+
+            <a href="{{ route('saving.daily') }}"
+               class="btn saving-btn inactive-saving">
+
+                Daily Saving
+
+            </a>
+
+            <a href="{{ route('saving.goalsave') }}"
+               class="btn saving-btn active-saving">
+
+                Goals Saving
+
+            </a>
+
+            <img src="https://cdn-icons-png.flaticon.com/512/616/616408.png"
+                 width="55"
+                 class="rounded-circle border p-1 bg-white">
+
+        </div>
+
     </div>
 
     <div class="row g-4">
 
-        {{-- Section Kiri --}}
         <div class="col-lg-5">
 
-            {{-- Account Card --}}
-            <x-ui.card.default>
+            <div class="summary-card mb-4">
 
-                <h2 class="fw-bold">
-                    Account name
-                </h2>
-
-                <p class="fw-semibold mb-1">
+                <p class="section-subtitle mb-2">
                     Total Goals Saving
                 </p>
 
                 <h1 class="fw-bold">
+
                     Rp {{ number_format($totalGoalSaving,0,',','.') }}
+
                 </h1>
 
-            </x-ui.card.default>
+            </div>
 
-            {{-- In Progress --}}
-            <div class="d-flex align-items-center gap-3 mb-4">
+            <div class="mb-4">
 
-                <h1 class="fw-bold text-primary">
+                <h3 class="section-title">
                     Your Goals Progress
-                </h1>
+                </h3>
 
             </div>
 
@@ -183,42 +253,32 @@
 
                 @endphp
 
-                <x-ui.card.default>
+                <div class="goal-card mb-4">
 
-                    <h2 class="fw-bold">
-                        {{ $goal->title }}
-                    </h2>
+                    <div class="d-flex justify-content-between mb-3">
 
-                    <h3 class="fw-bold mb-4">
+                        <div>
 
-                        Rp {{ number_format($goal->current_amount,0,',','.') }}
+                            <h4 class="fw-bold mb-1">
 
-                        /
+                                {{ $goal->title }}
 
-                        Rp {{ number_format($goal->target_amount,0,',','.') }}
+                            </h4>
 
-                    </h3>
+                            <small class="text-secondary">
 
-                    <div class="d-flex align-items-center gap-3">
+                                Target
+                                Rp {{ number_format($goal->target_amount,0,',','.') }}
 
-                        <div class="progress flex-grow-1"
-                            style="height:25px;">
-
-                            <div class="progress-bar progress-purple"
-                                style="width:{{ $percentage }}%">
-
-                                {{ $percentage }}%
-
-                            </div>
+                            </small>
 
                         </div>
 
-                        <span class="
+                        <span class="status-badge
                             {{ $goal->status == 'completed'
                                 ? 'completed-badge'
-                                : 'days-badge'
-                            }}
-                        ">
+                                : ''
+                            }}">
 
                             {{ ucfirst($goal->status) }}
 
@@ -226,120 +286,161 @@
 
                     </div>
 
-                </x-ui.card.default>
+                    <div class="progress mb-3">
 
-            @endforeach            
-            
-        </div>
+                        <div class="progress-bar progress-purple"
+                             style="width:{{ $percentage }}%">
+                        </div>
 
-        {{-- Section Kanan --}}
-        <div class="col-lg-7">
+                    </div>
 
-            {{-- Top Priority --}}
-            <div class="mb-4">
+                    <div class="d-flex justify-content-between align-items-center">
 
-                <hr class="mt-4" style="border:10px solid #a855f7; border-radius:10px">
+                        <small class="text-secondary">
 
-                <h1 class="fw-bold">
-                    {{ $topGoal->title ?? '-' }}
-                </h1>
+                            Saved
+                            Rp {{ number_format($goal->current_amount,0,',','.') }}
 
-                <h4 class="text-secondary fw-semibold">
-                    Top Saving Priority
-                </h4>
+                        </small>
 
-            </div>
+                        <small class="fw-bold text-primary">
 
-            {{-- Saved Card - Integrate Database --}}
-            <x-ui.card.default>
+                            {{ $percentage }}%
 
-                <h3 class="fw-bold">
-                    You've saved
-                </h3>
+                        </small>
 
-                <h1 class="fw-bold mb-3">
-                    Rp {{ number_format($topGoal->current_amount ?? 0,0,',','.') }}
-                </h1>
-
-                <h3 class="fw-bold">
-                    Out of Rp {{ number_format($topGoal->target_amount ?? 0,0,',','.') }}
-                </h3>
-
-                <div class="progress mt-4 mb-3" style="height:10px;">
-
-                    <div class="progress-bar progress-purple" style="width:{{ $topPercentage }}%">
                     </div>
 
                 </div>
 
-                <div class="d-flex justify-content-end gap-3">
+            @endforeach
 
-                    <span class="completed-badge">
-                        {{ $topPercentage }}% completed
+        </div>
+
+        <div class="col-lg-7">
+
+            <div class="mb-4">
+
+                <p class="section-subtitle mb-2">
+                    Top Saving Priority
+                </p>
+
+                <h1 class="section-title">
+
+                    {{ $topGoal->title ?? '-' }}
+
+                </h1>
+
+            </div>
+
+            <div class="top-progress-card mb-5">
+
+                <h5 class="fw-semibold mb-3">
+                    You've Saved
+                </h5>
+
+                <h1 class="fw-bold mb-3">
+
+                    Rp {{ number_format($topGoal->current_amount ?? 0,0,',','.') }}
+
+                </h1>
+
+                <p class="mb-4">
+
+                    Out of
+                    Rp {{ number_format($topGoal->target_amount ?? 0,0,',','.') }}
+
+                </p>
+
+                <div class="top-progress mb-4">
+
+                    <div class="progress-bar"
+                         style="width:{{ $topPercentage }}%">
+                    </div>
+
+                </div>
+
+                <div class="d-flex justify-content-between">
+
+                    <span>
+
+                        {{ $topPercentage }}% Completed
+
                     </span>
 
-                    <span class="days-badge">
-                        99 days left
+                    <span>
+
+                        {{ ucfirst($topGoal->status ?? '-') }}
+
                     </span>
 
                 </div>
 
-            </x-ui.card.default>
+            </div>
 
-            {{-- Transaction Goal Input / Output History - Integrate Database --}}
-            <h4 class="fw-bold text-primary mt-4 mb-4">
-                All transactions
-            </h4>
+            <div class="mb-4">
 
-            <div class="position-relative ps-4">
+                <h3 class="section-title">
+                    All Transactions
+                </h3>
 
-                <div class="timeline-line position-absolute top-0 start-0"></div>
-                
+            </div>
+
+            <div class="position-relative ps-4 pe-2">
+
+                <div class="timeline-line"></div>
+
                 @foreach($transactions as $transaction)
 
                 <div class="position-relative mb-4">
 
                     <div class="timeline-dot"></div>
 
-                    <h5 class="fw-bold ms-4">
+                    <div class="ms-4">
 
-                        {{ \Carbon\Carbon::parse(
-                            $transaction->saving_date
-                        )->format('d F Y') }}
+                        <p class="transaction-title mb-2">
 
-                    </h5>
+                            {{ \Carbon\Carbon::parse(
+                                $transaction->saving_date
+                            )->format('d F Y') }}
 
-                    <x-ui.card.default>
+                        </p>
 
-                        <h4 class="text-success fw-bold mb-1">
+                        <div class="transaction-card">
 
                             @if($transaction->amount > 0)
 
-                                <h4 class="text-success fw-bold mb-1">
+                                <h4 class="fw-bold text-success mb-2">
 
-                                    +Rp {{ number_format($transaction->amount,0,',','.') }}
+                                    + Rp {{ number_format($transaction->amount,0,',','.') }}
 
                                 </h4>
 
                             @else
 
-                                <h4 class="text-danger fw-bold mb-1">
+                                <h4 class="fw-bold text-danger mb-2">
 
-                                    -Rp {{ number_format(abs($transaction->amount),0,',','.') }}
+                                    - Rp {{ number_format(abs($transaction->amount),0,',','.') }}
 
                                 </h4>
 
                             @endif
 
-                        </h4>
+                            <p class="fw-bold mb-1">
 
-                        <p class="fw-bold mb-0">
+                                {{ $transaction->goal->title ?? '-' }}
 
-                            {{ $transaction->goal->title ?? '-' }}
+                            </p>
 
-                        </p>
+                            <small class="text-secondary">
 
-                    </x-ui.card.default>
+                                {{ $transaction->method }}
+
+                            </small>
+
+                        </div>
+
+                    </div>
 
                 </div>
 
@@ -351,9 +452,11 @@
 
     </div>
 
-    {{-- Button New Goal --}}
-    <a href="/goals/create" class="goal-btn text-decoration-none">
+    <a href="{{ route('goals.create') }}"
+       class="goal-btn">
+
         + Add New Goal
+
     </a>
 
 </div>

@@ -55,7 +55,7 @@ class DailySavingController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-
+            
             'goal_id' => 'required|exists:goals,id',
 
             'amount' => 'required|numeric|min:1',

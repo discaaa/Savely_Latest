@@ -14,10 +14,12 @@ return new class extends Migration
         Schema::create('budgets', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('category_id')->constrained('expense_categories')->onDelete('cascade');
+            $table->string('budget_name');
             $table->decimal('limit_amount', 15, 2);
-            $table->integer('month');
-            $table->integer('year');
+            $table->decimal('spent', 15, 2)->default(0);
+            $table->enum('period', ['weekly', 'monthly', 'yearly']);
+            $table->date('start_date');
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }

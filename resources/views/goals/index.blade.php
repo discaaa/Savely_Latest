@@ -5,171 +5,325 @@
 <style>
 
     body{
-        background: #f7f7f7;
+        background: #f5f3ff;
     }
 
-    .purple-btn{
+    .page-title{
+        font-size: 34px;
+        font-weight: 800;
+        color: #5b21b6;
+    }
+
+    .page-subtitle{
+        color: #6b7280;
+        font-size: 15px;
+    }
+
+    .goal-btn{
         background: #6f2cff;
         color: white;
-        border-radius: 20px;
         border: none;
-        padding: 10px 20px;
-        font-weight: bold;
+        border-radius: 16px;
+        padding: 14px 24px;
+        font-weight: 700;
+        text-decoration: none;
+        transition: 0.3s;
+        box-shadow: 0 8px 20px rgba(111,44,255,0.2);
+    }
+
+    .goal-btn:hover{
+        background: #5b21b6;
+        color: white;
+        transform: translateY(-2px);
+    }
+
+    .summary-card{
+        background: white;
+        border-radius: 28px;
+        padding: 28px;
+        box-shadow: 0 8px 25px rgba(111,44,255,0.08);
+        border: 1px solid #ede9fe;
+        transition: 0.3s;
+    }
+
+    .summary-card:hover{
+        transform: translateY(-4px);
+    }
+
+    .summary-title{
+        color: #6b7280;
+        font-size: 14px;
+    }
+
+    .summary-value{
+        font-size: 28px;
+        font-weight: 800;
+        color: #111827;
+    }
+
+    .tabs-wrapper{
+        display: flex;
+        gap: 18px;
+        margin-bottom: 30px;
+    }
+
+    .goal-tab{
+        padding: 12px 22px;
+        border-radius: 999px;
+        text-decoration: none;
+        font-weight: 700;
+        color: #6b7280;
+        background: white;
+        transition: 0.2s;
+        border: 1px solid #ede9fe;
+    }
+
+    .goal-tab.active{
+        background: #6f2cff;
+        color: white;
+        box-shadow: 0 8px 20px rgba(111,44,255,0.2);
+    }
+
+    .goal-card{
+        background: white;
+        border-radius: 30px;
+        padding: 28px;
+        box-shadow: 0 10px 30px rgba(111,44,255,0.08);
+        margin-bottom: 25px;
+        transition: 0.3s;
+        border: 1px solid #ede9fe;
+    }
+
+    .goal-card:hover{
+        transform: translateY(-3px);
+    }
+
+    .goal-img{
+        width: 70px;
+        height: 70px;
+        object-fit: cover;
+        border-radius: 20px;
+        background: #f3e8ff;
+        padding: 10px;
+    }
+
+    .goal-title{
+        font-size: 22px;
+        font-weight: 800;
+        color: #111827;
+    }
+
+    .goal-target{
+        color: #6b7280;
+        font-size: 14px;
     }
 
     .progress{
-        height: 10px;
-        border-radius: 20px;
+        height: 12px;
+        border-radius: 999px;
+        background: #ede9fe;
     }
 
     .progress-bar{
-        background: #7c3aed;
+        background: linear-gradient(
+            90deg,
+            #7c3aed,
+            #a855f7
+        );
+        border-radius: 999px;
+    }
+
+    .saved-amount{
+        font-size: 24px;
+        font-weight: 800;
+        color: #111827;
+    }
+
+    .goal-status{
+        background: #f3e8ff;
+        color: #6f2cff;
+        padding: 6px 14px;
+        border-radius: 999px;
+        font-size: 13px;
+        font-weight: 700;
+        display: inline-block;
+    }
+
+    .detail-btn{
+        border-radius: 12px;
+        padding: 10px 18px;
+        font-weight: 700;
+    }
+
+    .edit-btn{
+        background: #6f2cff;
+        color: white;
+        border-radius: 12px;
+        padding: 10px 18px;
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+    .edit-btn:hover{
+        background: #5b21b6;
+        color: white;
+    }
+
+    .empty-img{
+        width: 180px;
     }
 
 </style>
 
-<div class="container-fluid">
+<div class="container-fluid py-4">
 
-    {{-- header --}}
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-5">
 
         <div>
 
-            <h2 class="fw-bold">
+            <h1 class="page-title">
                 My Goals
-            </h2>
+            </h1>
 
-            <p class="text-secondary">
-                Plan your dreams, track your progress, achieve more.
+            <p class="page-subtitle">
+                Plan smarter, save consistently, and achieve your dreams.
             </p>
 
         </div>
 
-        <div class="d-flex align-items-center gap-3">
+        <a href="{{ route('goals.create') }}"
+           class="goal-btn">
 
-            <a href="{{ route('goals.create') }}"
-               class="purple-btn text-decoration-none">
+            + New Goal
 
-                + New Goal
+        </a>
 
-            </a>
+    </div>
 
-            <img src="https://cdn-icons-png.flaticon.com/512/616/616408.png"
-                 width="50"
-                 class="rounded-circle">
+    <div class="row g-4 mb-5">
+
+        <div class="col-lg-3">
+
+            <div class="summary-card">
+
+                <div class="d-flex justify-content-between align-items-center">
+
+                    <div>
+
+                        <p class="summary-title mb-2">
+                            Total Goals
+                        </p>
+
+                        <h3 class="summary-value">
+                            {{ $totalGoals }}
+                        </h3>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3">
+
+            <div class="summary-card">
+
+                <div class="d-flex justify-content-between align-items-center">
+
+                    <div>
+
+                        <p class="summary-title mb-2">
+                            Total Target
+                        </p>
+
+                        <h3 class="summary-value">
+
+                            Rp {{ number_format($totalTarget,0,',','.') }}
+
+                        </h3>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3">
+
+            <div class="summary-card">
+
+                <div class="d-flex justify-content-between align-items-center">
+
+                    <div>
+
+                        <p class="summary-title mb-2">
+                            Total Saved
+                        </p>
+
+                        <h3 class="summary-value">
+
+                            Rp {{ number_format($totalSaved,0,',','.') }}
+
+                        </h3>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3">
+
+            <div class="summary-card">
+
+                <div class="d-flex justify-content-between align-items-center">
+
+                    <div>
+
+                        <p class="summary-title mb-2">
+                            Goals Achieved
+                        </p>
+
+                        <h3 class="summary-value text-success">
+
+                            {{ $completedGoals }}
+
+                        </h3>
+
+                    </div>
+
+                </div>
+
+            </div>
 
         </div>
 
     </div>
 
-    {{-- statistics --}}
-    <div class="row mb-4">
-
-        <div class="col-md-3">
-
-            <x-ui.card.default>
-
-                <small>
-                    Total Goals
-                </small>
-
-                <h3 class="fw-bold">
-                    {{ $totalGoals }}
-                </h3>
-
-            </x-ui.card.default>
-
-        </div>
-
-        <div class="col-md-3">
-
-            <x-ui.card.default>
-
-                <small>
-                    Total Target
-                </small>
-
-                <h3 class="fw-bold">
-
-                    Rp {{ number_format(
-                        $totalTarget,
-                        0,
-                        ',',
-                        '.'
-                    ) }}
-
-                </h3>
-
-            </x-ui.card.default>
-
-        </div>
-
-        <div class="col-md-3">
-
-            <x-ui.card.default>
-
-                <small>
-                    Total Saved
-                </small>
-
-                <h3 class="fw-bold">
-
-                    Rp {{ number_format(
-                        $totalSaved,
-                        0,
-                        ',',
-                        '.'
-                    ) }}
-
-                </h3>
-
-            </x-ui.card.default>
-
-        </div>
-
-        <div class="col-md-3">
-
-            <x-ui.card.default>
-
-                <small>
-                    Goals Achieved
-                </small>
-
-                <h3 class="fw-bold text-success">
-                    {{ $completedGoals }}
-                </h3>
-
-            </x-ui.card.default>
-
-        </div>
-
-    </div>
-
-    <hr class="mt-4 mb-4"
-        style="border:5px solid #a855f7; border-radius:10px">
-
-    {{-- tabs --}}
-    <div class="d-flex gap-4 mb-4 fw-semibold">
+    <div class="tabs-wrapper">
 
         <a href="{{ route('goals.index') }}"
-           class="text-decoration-none
-           {{ request('tab') == null ? 'text-primary border-bottom border-3 border-primary pb-2' : 'text-dark' }}">
+           class="goal-tab {{ request('tab') == null ? 'active' : '' }}">
 
             All Goals
 
         </a>
 
         <a href="{{ route('goals.index', ['tab' => 'ongoing']) }}"
-           class="text-decoration-none
-           {{ request('tab') == 'ongoing' ? 'text-primary border-bottom border-3 border-primary pb-2' : 'text-dark' }}">
+           class="goal-tab {{ request('tab') == 'ongoing' ? 'active' : '' }}">
 
-            In Progress
+            Ongoing
 
         </a>
 
         <a href="{{ route('goals.index', ['tab' => 'completed']) }}"
-           class="text-decoration-none
-           {{ request('tab') == 'completed' ? 'text-primary border-bottom border-3 border-primary pb-2' : 'text-dark' }}">
+           class="goal-tab {{ request('tab') == 'completed' ? 'active' : '' }}">
 
             Completed
 
@@ -177,7 +331,6 @@
 
     </div>
 
-    {{-- list goal --}}
     @forelse($goals as $goal)
 
         @php
@@ -197,41 +350,48 @@
 
         @endphp
 
-        <x-ui.card.default>
+        <div class="goal-card">
 
-            <div class="d-flex justify-content-between align-items-center">
+            <div class="row align-items-center">
 
-                <div class="d-flex align-items-center gap-3">
+                <div class="col-lg-7">
 
-                    {{-- icon --}}
-                    <img src="https://cdn-icons-png.flaticon.com/512/1048/1048953.png"
-                         width="60">
+                    <div class="d-flex align-items-center gap-4">
 
-                    <div>
+                        @if($goal->image)
 
-                        <h5 class="fw-bold mb-1">
+                            <img src="{{ asset('storage/' . $goal->image) }}"
+                                 class="goal-img">
 
-                            {{ $goal->title }}
+                        @else
 
-                        </h5>
+                            <img src="https://cdn-icons-png.flaticon.com/512/1048/1048953.png"
+                                 class="goal-img">
 
-                        <small class="text-secondary">
+                        @endif
 
-                            Target
-                            Rp {{ number_format(
-                                $goal->target_amount,
-                                0,
-                                ',',
-                                '.'
-                            ) }}
+                        <div class="w-100">
 
-                        </small>
+                            <h3 class="goal-title mb-1">
 
-                        <div class="progress mt-2"
-                             style="width:250px;">
+                                {{ $goal->title }}
 
-                            <div class="progress-bar"
-                                 style="width:{{ $percentage }}%">
+                            </h3>
+
+                            <p class="goal-target mb-3">
+
+                                Target:
+                                Rp {{ number_format($goal->target_amount,0,',','.') }}
+
+                            </p>
+
+                            <div class="progress">
+
+                                <div class="progress-bar"
+                                     style="width:{{ $percentage }}%">
+
+                                </div>
+
                             </div>
 
                         </div>
@@ -240,51 +400,37 @@
 
                 </div>
 
-                <div class="text-end">
+                <div class="col-lg-5 text-lg-end mt-4 mt-lg-0">
 
-                    <h6 class="fw-bold">
+                    <h2 class="saved-amount mb-2">
 
-                        Rp {{ number_format(
-                            $goal->current_amount,
-                            0,
-                            ',',
-                            '.'
-                        ) }}
+                        Rp {{ number_format($goal->current_amount,0,',','.') }}
 
-                    </h6>
+                    </h2>
 
-                    <small class="text-secondary d-block">
+                    <p class="text-secondary mb-2">
 
-                        {{ $percentage }}%
+                        {{ $percentage }}% completed
 
-                    </small>
+                    </p>
 
-                    <small class="text-secondary d-block mb-3">
+                    <span class="goal-status mb-4">
 
                         {{ ucfirst($goal->status) }}
 
-                    </small>
+                    </span>
 
-                    <div class="d-flex gap-2 justify-content-end">
+                    <div class="d-flex justify-content-lg-end gap-2 mt-4">
 
-                        {{-- detail --}}
-                        <a href="{{ route(
-                            'goals.detail',
-                            $goal->id
-                        ) }}"
-                        class="btn btn-sm btn-outline-primary rounded-pill px-3">
+                        <a href="{{ route('goals.detail', $goal->id) }}"
+                           class="btn btn-outline-primary detail-btn">
 
                             Detail
 
                         </a>
 
-                        {{-- edit --}}
-                        <a href="{{ route(
-                            'goals.edit',
-                            $goal->id
-                        ) }}"
-                        class="btn btn-sm text-white rounded-pill px-3"
-                        style="background:#6f2cff;">
+                        <a href="{{ route('goals.edit', $goal->id) }}"
+                           class="edit-btn">
 
                             Edit
 
@@ -296,25 +442,24 @@
 
             </div>
 
-        </x-ui.card.default>
+        </div>
 
     @empty
 
-        <x-ui.card.default>
+        <div class="goal-card text-center py-5">
 
-            <div class="text-center py-5">
+            <img src="https://cdn-icons-png.flaticon.com/512/4076/4076549.png"
+                 class="empty-img mb-4">
 
-                <h5 class="fw-bold">
-                    No Goals Yet
-                </h5>
+            <h4 class="fw-bold">
+                No Goals Yet
+            </h4>
 
-                <p class="text-secondary">
-                    Start creating your first saving goal.
-                </p>
+            <p class="text-muted">
+                Create your first financial goal and start saving today.
+            </p>
 
-            </div>
-
-        </x-ui.card.default>
+        </div>
 
     @endforelse
 

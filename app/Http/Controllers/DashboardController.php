@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use App\Models\Expense;
 use App\Models\Saving;
 use App\Models\Goal;

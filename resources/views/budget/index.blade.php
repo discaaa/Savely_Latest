@@ -4,326 +4,441 @@
 
 <style>
 
-    .stats-card{
-        background: #f8f6ff;
+    body{
+        background: #f5f3ff;
+    }
+
+    .page-title{
+        font-weight: 800;
+        color: #5b21b6;
+    }
+
+    .page-subtitle{
+        color: #6b7280;
+    }
+
+    .new-btn{
+        position: fixed;
+        bottom: 30px;
+        right: 35px;
+        background: #6f2cff;
+        color: white;
+        padding: 14px 24px;
         border-radius: 18px;
-        padding: 20px;
-        border: 2px solid #6f2cff;
-        box-shadow: 0 10px 12px rgba(169,108,255,0.1);
+        text-decoration: none;
+        font-weight: 700;
+        box-shadow: 0 8px 24px rgba(111,44,255,0.2);
+        transition: 0.3s;
+    }
+
+    .summary-card{
+        background: white;
+        border-radius: 24px;
+        padding: 24px;
+        border: 1px solid #ede9fe;
+        box-shadow: 0 10px 24px rgba(111,44,255,0.08);
+        height: 100%;
     }
 
     .budget-card{
-        border: 2px solid #a855f7;
-        border-radius: 20px;
         background: white;
+        border-radius: 24px;
+        padding: 22px;
+        border: 1px solid #ede9fe;
+        box-shadow: 0 10px 24px rgba(111,44,255,0.08);
+        transition: 0.3s;
+        height: 100%;
+    }
+
+    .budget-card:hover{
+        transform: translateY(-3px);
     }
 
     .purple-btn{
         background: #6f2cff;
         color: white;
-        border-radius: 15px;
-        padding: 10px 20px;
         border: none;
+        border-radius: 16px;
+        padding: 12px 28px;
         font-weight: bold;
+        transition: 0.3s;
+        box-shadow: 0 8px 20px rgba(111,44,255,0.18);
     }
 
-    .circular-progress{
-    width: 220px;
-    height: 220px;
-    border-radius: 50%;
-
-    background:
-    conic-gradient(
-        #8b5cf6 0% 53%,
-        #e9dfff 53% 100%
-    );
-
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        position: relative;
+    .purple-btn:hover{
+        background: #5b21b6;
+        transform: translateY(-2px);
     }
 
-    .progress-inner{
-        width: 170px;
-        height: 170px;
-        background: white;
+    .progress{
+        height: 16px;
+        border-radius: 999px;
+        background: #ede9fe;
+        overflow: hidden;
+    }
+
+    .progress-bar{
+        background: linear-gradient(
+            90deg,
+            #6f2cff,
+            #a855f7
+        );
+        font-weight: 700;
+    }
+
+    .section-title{
+        font-weight: 800;
+        color: #5b21b6;
+    }
+
+    .circle-progress{
+        width: 220px;
+        height: 220px;
         border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: auto;
+    }
+
+    .circle-inner{
+        width: 165px;
+        height: 165px;
+        border-radius: 50%;
+        background: white;
 
         display: flex;
         justify-content: center;
         align-items: center;
-
         text-align: center;
     }
 
-    .small-progress{
-    height: 10px;
-    border-radius: 20px;
-    overflow: hidden;
-    background-color: #ece8ff;
+    .budget-badge{
+        background: #f3e8ff;
+        color: #6f2cff;
+        padding: 6px 14px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 700;
     }
 
-    .category-icon{
-        width: 35px;
-        height: 35px;
-        border-radius: 12px;
-        background: #f3eeff;
+    .small-progress{
+        height: 12px;
+    }
 
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        font-size: 18px;
+    .action-btn{
+        border-radius: 999px;
+        padding: 8px 16px;
+        font-size: 13px;
+        font-weight: 600;
     }
 
 </style>
 
-<div class="container-fluid">
-    {{-- header --}}
-    <div class="d-flex justify-content-between align-items-center mb-4">
+<div class="container-fluid py-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-5">
 
         <div>
-            <h2 class="fw-bold">My Budgets</h2>
-            <p class="text-secondary">
-                Plan your spending, stay on track.
+
+            <h2 class="section-title mb-1">
+                My Budgets
+            </h2>
+
+            <p class="text-muted mb-0">
+                Plan your spending and monitor every budget easily.
             </p>
+
         </div>
 
         <div class="d-flex align-items-center gap-3">
 
-            <a href="budget/create"
+            <a href="{{ route('budget.create') }}"
                class="purple-btn text-decoration-none">
+
                 + New Budget
+
             </a>
 
-            <img src="https://cdn-icons-png.flaticon.com/512/616/616408.png"
-                 width="50">
+            <img src="https://cdn-icons-png.flaticon.com/512/616/616408.png" width="55" class="rounded-circle border p-1 bg-white">
+            
+        </div>
+
+    </div>
+
+    <div class="row g-4 mb-5">
+
+        <div class="col-md-3">
+
+            <div class="summary-card">
+
+                <p class="text-muted fw-semibold mb-2">
+                    Total Budget
+                </p>
+
+                <h3 class="fw-bold mb-0">
+                    Rp {{ number_format($totalBudget, 0, ',', '.') }}
+                </h3>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3">
+
+            <div class="summary-card">
+
+                <p class="text-muted fw-semibold mb-2">
+                    Total Spent
+                </p>
+
+                <h3 class="fw-bold mb-0">
+                    Rp {{ number_format($totalSpent, 0, ',', '.') }}
+                </h3>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3">
+
+            <div class="summary-card">
+
+                <p class="text-muted fw-semibold mb-2">
+                    Remaining
+                </p>
+
+                <h3 class="fw-bold mb-0">
+                    Rp {{ number_format($remainingBudget, 0, ',', '.') }}
+                </h3>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3">
+
+            <div class="summary-card">
+
+                <p class="text-muted fw-semibold mb-2">
+                    Budgets
+                </p>
+
+                <h3 class="fw-bold mb-0">
+                    {{ $budgets->count() }}
+                </h3>
+
+            </div>
 
         </div>
 
     </div>
 
-    {{-- stats --}}
-    <div class="row mb-5">
+    <div class="row g-4">
 
-        <div class="col-md-3">
-            <x-ui.card.default>
-                <small>Total Budget</small>
-                <h3 class="fw-bold">Rp 8.000.000</h3>
-            </x-ui.card.default>
-        </div>
-
-        <div class="col-md-3">
-            <x-ui.card.default>
-                <small>Total Spent</small>
-                <h3 class="fw-bold">Rp 4.250.000</h3>
-            </x-ui.card.default>
-        </div>
-
-        <div class="col-md-3">
-            <x-ui.card.default>
-                <small>Remaining</small>
-                <h3 class="fw-bold">Rp 3.750.000</h3>
-            </x-ui.card.default>
-        </div>
-
-        <div class="col-md-3">
-            <x-ui.card.default>
-                <small>Categories</small>
-                <h3 class="fw-bold">6</h3>
-            </x-ui.card.default>
-        </div>
-        <hr class="mt-4" style="border:5px solid #a855f7; border-radius:10px">
-    </div>
-    
-
-    {{-- main content --}}
-    <div class="row">
-
-        {{-- kiri --}}
         <div class="col-lg-5">
 
-            <div class="budget-card p-4">
-                <div class="text-center">
+            <div class="summary-card">
 
-                    <div class="circular-progress mx-auto mb-3">
+                <div class="text-center mb-5">
 
-                        <div class="progress-inner">
+                    <div class="circle-progress"
+                         style="
+                         background:
+                         conic-gradient(
+                            #6f2cff 0% {{ $overallPercentage }}%,
+                            #ede9fe {{ $overallPercentage }}% 100%
+                         );
+                    ">
+
+                        <div class="circle-inner">
+
                             <div>
-                                <h1 class="fw-bold mb-0">53%</h1>
-                                <small>of budget used</small>
+
+                                <h1 class="fw-bold mb-1">
+                                    {{ $overallPercentage }}%
+                                </h1>
+
+                                <small class="text-muted">
+                                    Budget Used
+                                </small>
+
                             </div>
+
                         </div>
 
                     </div>
 
                 </div>
 
-                <div class="mt-4 d-flex flex-column gap-4">
-                    {{-- food --}}
+                <div class="d-flex flex-column gap-4">
+
+                    @foreach($budgets->take(3) as $budget)
+
                     <div>
 
                         <div class="d-flex justify-content-between align-items-center mb-2">
 
-                            <div class="d-flex align-items-center gap-2">
-                                <span class="category-icon">🍔</span>
-                                <span class="fw-semibold">Food</span>
+                            <div class="d-flex align-items-center gap-3">
+
+                                <div>
+
+                                    <h6 class="fw-bold mb-0">
+                                        {{ $budget->budget_name }}
+                                    </h6>
+
+                                    <small class="text-muted">
+                                        Rp {{ number_format($budget->spent, 0, ',', '.') }} spent
+                                    </small>
+
+                                </div>
+
                             </div>
 
-                            <span class="fw-bold text-danger">62%</span>
-
-                        </div>
-                        <div class="progress small-progress">
-                            <div class="progress-bar bg-danger"
-                                style="width:62%">
-                            </div>
-                        </div>
-
-                    </div>
-
-                    {{-- transport --}}
-                    <div>
-
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-
-                            <div class="d-flex align-items-center gap-2">
-                                <span class="category-icon">🚗</span>
-                                <span class="fw-semibold">Transport</span>
-                            </div>
-
-                            <span class="fw-bold text-warning">50%</span>
+                            <span class="budget-badge">
+                                {{ $budget->percentage }}%
+                            </span>
 
                         </div>
 
                         <div class="progress small-progress">
-                            <div class="progress-bar bg-warning"
-                                style="width:50%">
+
+                            <div class="progress-bar"
+                                 style="width:{{ $budget->percentage }}%">
+
                             </div>
+
                         </div>
 
                     </div>
 
-                    {{-- entertainment --}}
-                    <div>
+                    @endforeach
 
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-
-                            <div class="d-flex align-items-center gap-2">
-                                <span class="category-icon">🎮</span>
-                                <span class="fw-semibold">Entertainment</span>
-                            </div>
-
-                            <span class="fw-bold text-success">40%</span>
-
-                        </div>
-
-                        <div class="progress small-progress">
-                            <div class="progress-bar bg-success"
-                                style="width:40%">
-                            </div>
-                        </div>
-
-                    </div>
-
-                    {{-- other spending --}}
-                    <div>
-
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-
-                            <div class="d-flex align-items-center gap-2">
-                                <span class="category-icon">🐣</span>
-                                <span class="fw-semibold">Others</span>
-                            </div>
-
-                            <span class="fw-bold text-success">20%</span>
-
-                        </div>
-
-                        <div class="progress small-progress">
-                            <div class="progress-bar bg-success"
-                                style="width:20%">
-                            </div>
-                        </div>
-
-                    </div>
                 </div>
 
             </div>
 
         </div>
 
-        {{-- kanan --}}
         <div class="col-lg-7">
 
-            <h4 class="fw-bold mb-4">
-                Budget Categories
-            </h4>
+            <div class="summary-card">
 
-            <div class="row">
-                {{-- nanti diganti sesuai kategori database --}}
-                @for($i = 0; $i < 4; $i++)
+                <div class="d-flex justify-content-between align-items-center mb-4">
 
-                <div class="col-md-6 mb-4">
+                    <h3 class="fw-bold mb-0">
+                        Budget List
+                    </h3>
 
-                    <div class="budget-card p-3">
+                    <span class="budget-badge">
+                        {{ $budgets->count() }} Budgets
+                    </span>
 
-                        <div class="d-flex justify-content-between">
+                </div>
 
-                            <h5 class="fw-bold">
-                                Food
-                            </h5>
+                <div class="row">
 
-                            <span>50%</span>
+                    @foreach($budgets as $budget)
 
-                        </div>
+                    <div class="col-12 mb-4">
 
-                        <p class="text-secondary">
-                            Rp 750.000 spent
-                        </p>
+                        <div class="budget-card">
 
-                        <div class="progress"
-                             style="height:10px;">
+                            <div class="d-flex justify-content-between align-items-start mb-4">
 
-                            <div class="progress-bar bg-primary"
-                                 style="width:50%">
+                                <div class="d-flex gap-3">
+
+                                    <div>
+
+                                        <h5 class="fw-bold mb-1">
+                                            {{ $budget->budget_name }}
+                                        </h5>
+
+                                        <small class="text-muted">
+                                            {{ ucfirst($budget->period) }}
+                                        </small>
+
+                                    </div>
+
+                                </div>
+
+                                <span class="budget-badge">
+                                    Rp {{ number_format($budget->limit_amount, 0, ',', '.') }}
+                                </span>
+
                             </div>
 
-                        </div>
+                            <div class="progress mb-4">
 
-                        <div class="mt-3 d-flex gap-2">
+                                <div class="progress-bar"
+                                     style="width:{{ $budget->percentage }}%">
 
-                            <a href="budget/detail"
-                               class="btn btn-sm btn-outline-primary rounded-pill">
-                                Detail
-                            </a>
+                                </div>
 
-                            <a href="budget/historybudget"
-                                class="btn btn-sm btn-outline-secondary rounded-pill px-3">
-                                History
-                            </a>
+                            </div>
 
-                            <a href="budget/edit"
-                               class="btn btn-sm text-white rounded-pill"
-                               style="background:#6f2cff;">
-                                Edit
-                            </a>
+                            <div class="d-flex flex-wrap gap-2">
+
+                                <a href="{{ route('budget.edit', $budget->id) }}"
+                                   class="btn text-white action-btn"
+                                   style="background:#6f2cff;">
+
+                                    Edit
+
+                                </a>
+
+                                <a href="{{ route('budget.detail', $budget->id) }}"
+                                   class="btn text-white action-btn"
+                                   style="background:#6f2cff;">
+
+                                    Detail
+
+                                </a>
+
+                                <a href="{{ route('budget.history', $budget->id) }}"
+                                   class="btn text-white action-btn"
+                                   style="background:#6f2cff;">
+
+                                    History
+
+                                </a>                                
+
+                                <form action="{{ route('budget.destroy', $budget->id) }}"
+                                      method="POST">
+
+                                    @csrf
+                                    @method('DELETE')
+
+                                    <button type="submit"
+                                            class="btn btn-danger action-btn">
+
+                                        Delete
+
+                                    </button>
+
+                                </form>
+
+                            </div>
 
                         </div>
 
                     </div>
 
-                </div>
+                    @endforeach
 
-                @endfor
+                </div>
 
             </div>
 
         </div>
 
     </div>
+    <a href="{{ route('expense.create') }}"
+       class="new-btn">
 
+        + Add Spending
+
+    </a>
 </div>
 
 @endsection

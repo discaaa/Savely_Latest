@@ -4,45 +4,108 @@
 
 <style>
 
+    body{
+        background: #f5f3ff;
+    }
+
+    .edit-card{
+        background: white;
+        border-radius: 30px;
+        padding: 40px;
+        box-shadow: 0 10px 30px rgba(111,44,255,0.08);
+        border: 1px solid #ede9fe;
+    }
+
+    .page-title{
+        font-weight: 800;
+        color: #5b21b6;
+    }
+
+    .page-subtitle{
+        color: #6b7280;
+    }
+
+    .form-label{
+        font-weight: 700;
+        color: #374151;
+        margin-bottom: 10px;
+    }
+
+    .form-control,
+    .form-select{
+        border-radius: 16px;
+        padding: 14px 18px;
+        border: 1px solid #ddd6fe;
+        background: #fafaff;
+    }
+
+    .form-control:focus,
+    .form-select:focus{
+        border-color: #6f2cff;
+        box-shadow: 0 0 0 0.2rem rgba(111,44,255,0.12);
+    }
+
     .purple-btn{
         background: #6f2cff;
         color: white;
         border: none;
-        border-radius: 12px;
-        padding: 10px 25px;
+        border-radius: 16px;
+        padding: 12px 28px;
+        font-weight: bold;
+        transition: 0.3s;
+        box-shadow: 0 8px 20px rgba(111,44,255,0.18);
+    }
+
+    .purple-btn:hover{
+        background: #5b21b6;
+        transform: translateY(-2px);
+    }
+
+    .delete-btn{
+        border-radius: 16px;
+        padding: 14px 28px;
         font-weight: bold;
     }
 
     .goal-img{
-        width: 120px;
-        height: 120px;
+        width: 140px;
+        height: 140px;
         object-fit: cover;
+        border-radius: 50%;
+        border: 5px solid #ede9fe;
+        padding: 6px;
+        background: white;
+    }
+
+    .upload-text{
+        color: #6f2cff;
+        font-weight: 700;
     }
 
 </style>
 
 <div class="container py-4">
 
-    <x-ui.card.default>
+    <div class="mb-4">
 
-        <div class="d-flex justify-content-between mb-4">
+        <h2 class="page-title">
+            Edit Goal
+        </h2>
 
-            <h2 class="fw-bold">
-                Edit Goal
-            </h2>
+        <p class="page-subtitle">
+            Update your financial goal details
+        </p>
 
-            <img src="https://cdn-icons-png.flaticon.com/512/616/616408.png"
-                 width="50">
+    </div>
 
-        </div>
+    <div class="edit-card">
 
-        {{-- Current Image --}}
-        <div class="text-center mb-4">
+        <div class="text-center mb-5">
 
             @if($goal->image)
 
                 <img src="{{ asset('storage/' . $goal->image) }}"
-                     class="goal-img rounded-circle">
+                     class="goal-img">
 
             @else
 
@@ -51,8 +114,8 @@
 
             @endif
 
-            <p class="text-primary fw-bold mt-3">
-                Change Image
+            <p class="upload-text mt-3">
+                Change Goal Image
             </p>
 
         </div>
@@ -64,8 +127,7 @@
             @csrf
             @method('PUT')
 
-            {{-- Goal Name --}}
-            <div class="mb-3">
+            <div class="mb-4">
 
                 <label class="form-label">
                     Goal Name
@@ -79,8 +141,7 @@
 
             </div>
 
-            {{-- Target Amount --}}
-            <div class="mb-3">
+            <div class="mb-4">
 
                 <label class="form-label">
                     Target Amount
@@ -94,8 +155,7 @@
 
             </div>
 
-            {{-- Current Amount --}}
-            <div class="mb-3">
+            <div class="mb-4">
 
                 <label class="form-label">
                     Current Amount
@@ -109,8 +169,7 @@
 
             </div>
 
-            {{-- Target Date --}}
-            <div class="mb-3">
+            <div class="mb-4">
 
                 <label class="form-label">
                     Target Date
@@ -123,8 +182,7 @@
 
             </div>
 
-            {{-- Status --}}
-            <div class="mb-3">
+            <div class="mb-4">
 
                 <label class="form-label">
                     Status
@@ -151,8 +209,7 @@
 
             </div>
 
-            {{-- Upload Image --}}
-            <div class="mb-3">
+            <div class="mb-4">
 
                 <label class="form-label">
                     Goal Image
@@ -164,7 +221,6 @@
 
             </div>
 
-            {{-- Description --}}
             <div class="mb-4">
 
                 <label class="form-label">
@@ -177,26 +233,16 @@
 
             </div>
 
-            {{-- Buttons --}}
-            <div class="d-flex justify-content-between">
+            <div class="d-flex justify-content-between mt-5">
 
-                {{-- Delete --}}
-                <form action="{{ route('goals.destroy', $goal->id) }}"
-                      method="POST">
+                <button type="button"
+                        class="btn btn-outline-danger delete-btn"
+                        onclick="document.getElementById('delete-form').submit();">
 
-                    @csrf
-                    @method('DELETE')
+                    Delete Goal
 
-                    <button type="submit"
-                            class="btn btn-outline-danger">
+                </button>
 
-                        Delete Goal
-
-                    </button>
-
-                </form>
-
-                {{-- Update --}}
                 <button type="submit"
                         class="purple-btn">
 
@@ -208,7 +254,17 @@
 
         </form>
 
-    </x-ui.card.default>
+        <form id="delete-form"
+              action="{{ route('goals.destroy', $goal->id) }}"
+              method="POST"
+              class="d-none">
+
+            @csrf
+            @method('DELETE')
+
+        </form>
+
+    </div>
 
 </div>
 

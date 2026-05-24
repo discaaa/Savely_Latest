@@ -42,8 +42,11 @@
 
     .hero-image{
         width: 100%;
-        max-width: 500px;
-        animation: floating 3s ease-in-out infinite;
+        max-width: 550px;
+        border-radius: 50%;
+        background: #d8b4fe;
+        padding: 6px;
+        animation: float 3s ease-in-out infinite;
     }
 
     @keyframes floating{
@@ -204,7 +207,7 @@
 
             <div class="glass-card">
 
-                <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+                <img src="https://static.vecteezy.com/system/resources/previews/034/892/685/non_2x/illustration-graphic-cartoon-character-of-budget-vector.jpg"
                      class="hero-image">
 
             </div>
@@ -302,7 +305,7 @@
 
     </div>
 
-    {{-- TEAM --}}
+    {{-- Teams --}}
     <div class="text-center mt-5 mb-5">
 
         <h1 class="section-title">
@@ -325,15 +328,15 @@
 
             <div class="team-card">
 
-                <img src="https://cdn-icons-png.flaticon.com/512/4140/4140048.png"
+                <img src="https://stbm7resourcesprod.blob.core.windows.net/profilepicture/149390ff-2f5b-4a87-8082-27bcd7d30470.jpg"
                      class="team-img">
 
                 <h4 class="team-name">
-                    Alicia
+                    Adisca Gandawidjaja
                 </h4>
 
                 <p class="team-role">
-                    UI/UX Designer
+                    Frontend and Backend Developer
                 </p>
 
             </div>
@@ -345,15 +348,15 @@
 
             <div class="team-card">
 
-                <img src="https://cdn-icons-png.flaticon.com/512/4140/4140061.png"
+                <img src="https://stbm7resourcesprod.blob.core.windows.net/profilepicture/23816dfb-7754-4154-827d-91051dcd82d8.jpg"
                      class="team-img">
 
                 <h4 class="team-name">
-                    Jonathan
+                    Alicia Angelina Jusup
                 </h4>
 
                 <p class="team-role">
-                    Backend Developer
+                    Frontend Developer
                 </p>
 
             </div>
@@ -365,18 +368,59 @@
 
             <div class="team-card">
 
-                <img src="https://cdn-icons-png.flaticon.com/512/4140/4140051.png"
+                <img src="https://stbm7resourcesprod.blob.core.windows.net/profilepicture/17c9feb4-7c77-45c2-a66f-98ed6b8408b2.jpg"
                      class="team-img">
 
                 <h4 class="team-name">
-                    Michelle
+                    Jolin Takeshia
                 </h4>
 
                 <p class="team-role">
-                    Frontend Developer
+                    Frontend and Backend Developer
                 </p>
 
             </div>
+
+        </div>
+
+    </div>
+
+    <div class="row g-4 mt-2 justify-content-center">
+
+        {{-- Team 4 --}}
+        <div class="col-lg-4">
+
+            <div class="team-card">
+
+                <img src="https://stbm7resourcesprod.blob.core.windows.net/profilepicture/165064bc-9a6b-4826-8fb0-ecbf08704af7.jpg"
+                    class="team-img">
+
+                <h4 class="team-name">
+                    Ivan Novanto Bastian
+                </h4>
+
+                <p class="team-role">
+                    Database and Backend Developer
+                </p>
+
+            </div>
+
+        </div>
+
+            <div class="col-lg-4">
+
+        <div class="team-card">
+
+            <img src="https://stbm7resourcesprod.blob.core.windows.net/profilepicture/ee39594b-9e92-485b-9633-4368bec30325.jpg"
+                 class="team-img">
+
+            <h4 class="team-name">
+                Howard James Winatra
+            </h4>
+
+            <p class="team-role">
+                Backend Developer
+            </p>
 
         </div>
 

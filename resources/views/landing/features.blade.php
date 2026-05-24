@@ -67,6 +67,15 @@
         font-size: 17px;
     }
 
+    .hero-image{
+        width: 100%;
+        max-width: 550px;
+        border-radius: 20%;
+        background: lightskyblue;
+        padding: 6px;
+        animation: float 3s ease-in-out infinite;
+    }
+
     .highlight-section{
         margin-top: 100px;
     }
@@ -317,8 +326,8 @@
 
                 <div class="col-lg-6 text-center">
 
-                    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
-                         width="420">
+                    <img src="https://static.vecteezy.com/system/resources/previews/016/145/788/non_2x/cartoon-business-and-finance-management-icon-in-comic-style-time-is-money-concept-illustration-pictogram-financial-strategy-business-splash-effect-concept-vector.jpg"
+                         class="hero-image">
 
                 </div>
 

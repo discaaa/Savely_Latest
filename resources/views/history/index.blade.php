@@ -2,44 +2,128 @@
 
 @section('content')
 
+<style>
+
+    body{
+        background: #f5f3ff;
+    }
+
+    .history-card{
+        background: white;
+        border-radius: 24px;
+        padding: 28px;
+        border: 1px solid #ede9fe;
+        box-shadow: 0 8px 24px rgba(111,44,255,0.08);
+    }
+
+    .filter-box{
+        background: white;
+        border-radius: 20px;
+        padding: 20px;
+        border: 1px solid #ede9fe;
+        box-shadow: 0 8px 24px rgba(111,44,255,0.08);
+    }
+
+    .section-title{
+        font-weight: 800;
+        color: #5b21b6;
+    }
+
+    .table th{
+        color: #6b7280;
+        font-weight: 700;
+        border-bottom: 1px solid #ede9fe;
+        padding-bottom: 16px;
+    }
+
+    .table td{
+        vertical-align: middle;
+        border-bottom: 1px solid #f3f4f6;
+        padding-top: 18px;
+        padding-bottom: 18px;
+    }
+
+    .status-badge{
+        padding: 7px 16px;
+        border-radius: 999px;
+        font-size: 13px;
+        font-weight: 700;
+        display: inline-block;
+    }
+
+    .expense-badge{
+        background: #fee2e2;
+        color: #dc2626;
+    }
+
+    .goal-badge{
+        background: #ede9fe;
+        color: #6f2cff;
+    }
+
+    .challenge-badge{
+        background: #dcfce7;
+        color: #16a34a;
+    }
+
+    .completed-text{
+        color: #16a34a;
+        font-weight: 700;
+    }
+
+    .updated-text{
+        color: #6f2cff;
+        font-weight: 700;
+    }
+
+    .active-text{
+        color: #f59e0b;
+        font-weight: 700;
+    }
+
+    .filter-input{
+        border-radius: 14px;
+        border: 1px solid #ddd6fe;
+        padding: 12px 16px;
+        box-shadow: none;
+    }
+
+</style>
+
 <div class="container-fluid py-4">
 
-    {{-- HEADER --}}
-    <div class="mb-4">
+    <div class="mb-5">
 
-        <h2 class="fw-bold mb-1">
+        <h2 class="section-title mb-1">
             History
         </h2>
 
         <p class="text-muted mb-0">
-            View all your recent activities
+            View all your recent financial activities.
         </p>
 
     </div>
 
-    {{-- FILTER --}}
-    <x-ui.card.default class="mb-4">
+    <div class="filter-box mb-4">
 
         <div class="row g-3">
 
-            {{-- SEARCH --}}
             <div class="col-md-4">
 
                 <input
                     type="text"
                     id="searchInput"
-                    class="form-control"
+                    class="form-control filter-input"
                     placeholder="Search activity..."
                 >
 
             </div>
 
-            {{-- CATEGORY FILTER --}}
             <div class="col-md-4">
 
                 <select
                     id="categoryFilter"
-                    class="form-select"
+                    class="form-select filter-input"
                 >
 
                     <option value="all">
@@ -62,23 +146,37 @@
 
             </div>
 
-            {{-- DATE --}}
             <div class="col-md-4">
 
                 <input
                     type="date"
                     id="dateFilter"
-                    class="form-control"
+                    class="form-control filter-input"
                 >
 
             </div>
 
         </div>
 
-    </x-ui.card.default>
+    </div>
 
-    {{-- HISTORY TABLE --}}
-    <x-ui.card.default>
+    <div class="history-card">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+
+            <div>
+
+                <h4 class="fw-bold mb-1">
+                    Recent Activities
+                </h4>
+
+                <p class="text-muted mb-0">
+                    Your latest transactions and updates.
+                </p>
+
+            </div>
+
+        </div>
 
         <div class="table-responsive">
 
@@ -87,174 +185,164 @@
                 <thead>
 
                     <tr>
-                        <th>Activity</th>
-                        <th>Category</th>
-                        <th>Date</th>
-                        <th>Status</th>
+
+                        <th>
+                            Activity
+                        </th>
+
+                        <th>
+                            Category
+                        </th>
+
+                        <th>
+                            Date
+                        </th>
+
+                        <th>
+                            Status
+                        </th>
+
                     </tr>
 
                 </thead>
 
                 <tbody id="historyTableBody">
 
-                    {{-- ========================= --}}
-                    {{-- EXPENSE HISTORY --}}
-                    {{-- ========================= --}}
-
                     @forelse($expenses as $expense)
 
-                    <tr
-                        class="history-row"
-                        data-category="expense"
-                        data-date="{{ \Carbon\Carbon::parse($expense->date)->format('Y-m-d') }}"
-                    >
+                        <tr
+                            class="history-row"
+                            data-category="expense"
+                            data-date="{{ \Carbon\Carbon::parse($expense->date)->format('Y-m-d') }}"
+                        >
 
-                        <td>
-                            Added {{ $expense->category }} Expense
-                        </td>
+                            <td class="fw-semibold">
 
-                        <td>
+                                Added {{ $expense->category }} Expense
 
-                            <x-ui.badge.expense>
-                                Expense
-                            </x-ui.badge.expense>
+                            </td>
 
-                        </td>
+                            <td>
 
-                        <td>
-                            {{ \Carbon\Carbon::parse($expense->date)->format('d M Y') }}
-                        </td>
+                                <span class="status-badge expense-badge">
 
-                        <td>
+                                    Expense
 
-                            <span class="text-success fw-semibold">
-                                Completed
-                            </span>
+                                </span>
 
-                        </td>
+                            </td>
 
-                    </tr>
+                            <td class="text-muted">
+
+                                {{ \Carbon\Carbon::parse($expense->date)->format('d M Y') }}
+
+                            </td>
+
+                            <td>
+
+                                <span class="completed-text">
+
+                                    Completed
+
+                                </span>
+
+                            </td>
+
+                        </tr>
 
                     @empty
 
-                    <tr>
-
-                        <td colspan="4"
-                            class="text-center text-muted py-3">
-
-                            No expense history found
-
-                        </td>
-
-                    </tr>
-
                     @endforelse
-
-
-                    {{-- ========================= --}}
-                    {{-- GOAL HISTORY --}}
-                    {{-- ========================= --}}
 
                     @forelse($goals as $goal)
 
-                    <tr
-                        class="history-row"
-                        data-category="goal"
-                        data-date="{{ $goal->created_at->format('Y-m-d') }}"
-                    >
+                        <tr
+                            class="history-row"
+                            data-category="goal"
+                            data-date="{{ $goal->created_at->format('Y-m-d') }}"
+                        >
 
-                        <td>
-                            Goal "{{ $goal->title }}" Updated
-                        </td>
+                            <td class="fw-semibold">
 
-                        <td>
+                                Goal "{{ $goal->title }}" Updated
 
-                            <x-ui.badge.income>
-                                Goal
-                            </x-ui.badge.income>
+                            </td>
 
-                        </td>
+                            <td>
 
-                        <td>
-                            {{ $goal->created_at->format('d M Y') }}
-                        </td>
+                                <span class="status-badge goal-badge">
 
-                        <td>
+                                    Goal
 
-                            <span class="text-primary fw-semibold">
-                                Updated
-                            </span>
+                                </span>
 
-                        </td>
+                            </td>
 
-                    </tr>
+                            <td class="text-muted">
+
+                                {{ $goal->created_at->format('d M Y') }}
+
+                            </td>
+
+                            <td>
+
+                                <span class="updated-text">
+
+                                    Updated
+
+                                </span>
+
+                            </td>
+
+                        </tr>
 
                     @empty
-
-                    <tr>
-
-                        <td colspan="4"
-                            class="text-center text-muted py-3">
-
-                            No goal history found
-
-                        </td>
-
-                    </tr>
 
                     @endforelse
 
-
-                    {{-- ========================= --}}
-                    {{-- CHALLENGE HISTORY --}}
-                    {{-- ========================= --}}
-
                     @forelse($challenges as $challenge)
 
-                    <tr
-                        class="history-row"
-                        data-category="challenge"
-                        data-date="{{ $challenge->created_at->format('Y-m-d') }}"
-                    >
+                        <tr
+                            class="history-row"
+                            data-category="challenge"
+                            data-date="{{ $challenge->created_at->format('Y-m-d') }}"
+                        >
 
-                        <td>
-                            {{ $challenge->title }}
-                        </td>
+                            <td class="fw-semibold">
 
-                        <td>
+                                {{ $challenge->title }}
 
-                            <x-ui.badge.saving>
-                                Challenge
-                            </x-ui.badge.saving>
+                            </td>
 
-                        </td>
+                            <td>
 
-                        <td>
-                            {{ $challenge->created_at->format('d M Y') }}
-                        </td>
+                                <span class="status-badge challenge-badge">
 
-                        <td>
+                                    Challenge
 
-                            <span class="text-warning fw-semibold">
-                                {{ ucfirst($challenge->status) }}
-                            </span>
+                                </span>
 
-                        </td>
+                            </td>
 
-                    </tr>
+                            <td class="text-muted">
+
+                                {{ $challenge->created_at->format('d M Y') }}
+
+                            </td>
+
+                            <td>
+
+                                <span class="active-text">
+
+                                    {{ ucfirst($challenge->status) }}
+
+                                </span>
+
+                            </td>
+
+                        </tr>
 
                     @empty
-
-                    <tr>
-
-                        <td colspan="4"
-                            class="text-center text-muted py-3">
-
-                            No challenge history found
-
-                        </td>
-
-                    </tr>
 
                     @endforelse
 
@@ -262,13 +350,26 @@
 
             </table>
 
+            @if(
+                $expenses->count() == 0 &&
+                $goals->count() == 0 &&
+                $challenges->count() == 0
+            )
+
+                <div class="text-center py-5 text-muted">
+
+                    No history found.
+
+                </div>
+
+            @endif
+
         </div>
 
-    </x-ui.card.default>
+    </div>
 
 </div>
 
-{{-- FILTER SCRIPT --}}
 <script>
 
     const categoryFilter = document.getElementById('categoryFilter');
@@ -300,11 +401,11 @@
                 !selectedDate ||
                 rowDate === selectedDate;
 
-            if(categoryMatch && searchMatch && dateMatch) {
+            if(categoryMatch && searchMatch && dateMatch){
 
                 row.style.display = '';
 
-            } else {
+            }else{
 
                 row.style.display = 'none';
 

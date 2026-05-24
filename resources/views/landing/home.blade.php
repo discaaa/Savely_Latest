@@ -55,6 +55,9 @@
     .hero-image{
         width: 100%;
         max-width: 550px;
+        border-radius: 50%;
+        background: pink;
+        padding: 6px;
         animation: float 3s ease-in-out infinite;
     }
 
@@ -125,12 +128,10 @@
 
 </style>
 
-{{-- HERO SECTION --}}
 <div class="container-fluid hero-section">
 
     <div class="row align-items-center">
 
-        {{-- LEFT --}}
         <div class="col-lg-6">
 
             <h1 class="hero-title">
@@ -159,12 +160,11 @@
 
         </div>
 
-        {{-- RIGHT --}}
         <div class="col-lg-6 text-center">
 
             <div class="glass-card">
 
-                <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+                <img src="https://getpennies.com/wp-content/uploads/2025/08/daily-expense-tracker-app-guide.jpeg"
                      class="hero-image">
 
             </div>

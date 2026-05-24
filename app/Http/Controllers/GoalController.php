@@ -6,6 +6,7 @@ use App\Models\Goal;
 use Illuminate\Http\Request;
 use App\Services\GoalService;
 use Illuminate\Support\Facades\Auth;
+use App\Models\SavingTransaction;
 
 class GoalController extends Controller
 {
@@ -116,9 +117,16 @@ class GoalController extends Controller
             Auth::id()
         )->findOrFail($id);
 
+        $transactions = SavingTransaction::where(
+                'goal_id',
+                $goal->id
+            )
+            ->latest()
+            ->get();
+
         return view(
             'goals.detail',
-            compact('goal')
+            compact('goal', 'transactions')
         );
     }
 
