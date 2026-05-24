@@ -9,7 +9,11 @@ class Expense extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'user_id', 'category_id', 'amount', 'note', 'date'
+        'category',
+        'description',
+        'date',
+        'amount',
+        'purpose'
     ];
 
     protected $casts = [
@@ -22,8 +26,9 @@ class Expense extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function category()
-    {
-        return $this->belongsTo(ExpenseCategory::class, 'category_id');
-    }
+    // public function category()
+    // {
+    //     return $this->belongsTo(ExpenseCategory::class, 'category');
+    // }
+
 }

@@ -10,14 +10,14 @@ class ChallengeController extends Controller
 {
     public function index()
     {
-        $challenges = Challenge::all();
+        $challenges = Challenge::latest()->get();
 
         $rewards = Reward::all();
 
         $activities = Activity::latest()->get();
 
         return view(
-            'expense.index',
+            'challenges.index',
             compact(
                 'challenges',
                 'rewards',

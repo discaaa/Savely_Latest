@@ -64,6 +64,9 @@ Route::middleware('auth')->group(function () {
     Route::put('/expense/update/{id}', [ExpenseController::class, 'update'])
         ->name('expense.update');
 
+    Route::delete('/expense/delete/{id}', [ExpenseController::class, 'destroy'])
+    ->name('expense.delete');
+    
     Route::get('/budget', function () {
         return view('budget.index');
     })->name('budget');
@@ -133,9 +136,8 @@ Route::middleware('auth')->group(function () {
             ->name('goals.history');
     });
 
-    Route::get('/history', function () {
-        return view('history.index');
-    })->name('history.index');
+    Route::get('/history', [HistoryController::class, 'index'])
+    ->name('history.index');
 
     /* EXPENSE TEST */
     Route::get('/expense-test', function () {
@@ -143,8 +145,7 @@ Route::middleware('auth')->group(function () {
     });
 
     /* CHALLENGES */
-    Route::get('/challenges', function () {
-        return view('challenges.index');
-    })->name('challenges.index');
+    Route::get('/challenges', [ChallengeController::class, 'index'])
+    ->name('challenges.index');
 
 });

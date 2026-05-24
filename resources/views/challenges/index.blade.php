@@ -20,6 +20,7 @@
     {{-- SUMMARY --}}
     <div class="row g-4 mb-4">
 
+        {{-- ACTIVE CHALLENGES --}}
         <div class="col-md-4">
 
             <x-ui.card.default>
@@ -29,13 +30,14 @@
                 </p>
 
                 <h3 class="fw-bold">
-                    3
+                    {{ $challenges->where('status', 'active')->count() }}
                 </h3>
 
             </x-ui.card.default>
 
         </div>
 
+        {{-- CURRENT STREAK --}}
         <div class="col-md-4">
 
             <x-ui.card.default>
@@ -52,6 +54,7 @@
 
         </div>
 
+        {{-- REWARD POINTS --}}
         <div class="col-md-4">
 
             <x-ui.card.default>
@@ -61,7 +64,7 @@
                 </p>
 
                 <h3 class="fw-bold">
-                    450 Points
+                    {{ $challenges->sum('reward_points') }} Points
                 </h3>
 
             </x-ui.card.default>
@@ -73,73 +76,47 @@
     {{-- ACTIVE CHALLENGES --}}
     <div class="row g-4 mb-4">
 
-        {{-- CARD 1 --}}
-        <div class="col-md-6">
+        @foreach($challenges->where('status', 'active') as $challenge)
 
-            <x-ui.card.default>
+            <div class="col-md-6">
 
-                <div class="d-flex justify-content-between align-items-center mb-3">
+                <x-ui.card.default>
 
-                    <h5 class="fw-bold mb-0">
-                        Save Money Challenge
-                    </h5>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
 
-                    <x-ui.badge.saving>
-                        Active
-                    </x-ui.badge.saving>
+                        <h5 class="fw-bold mb-0">
+                            {{ $challenge->title }}
+                        </h5>
 
-                </div>
+                        <x-ui.badge.saving>
+                            Active
+                        </x-ui.badge.saving>
 
-                <p class="text-muted">
-                    Save money for 7 days continuously
-                </p>
+                    </div>
 
-                <x-ui.progress.progress
-                    value="70"
-                    color="success"
-                />
+                    <p class="text-muted">
+                        {{ $challenge->description }}
+                    </p>
 
-                <small class="text-muted">
-                    5 / 7 Days Completed
-                </small>
+                    <div class="fw-semibold text-success mb-2">
+                        Reward:
+                        {{ $challenge->reward_points }} Points
+                    </div>
 
-            </x-ui.card.default>
+                    <x-ui.progress.progress
+                        value="70"
+                        color="success"
+                    />
 
-        </div>
+                    <small class="text-muted">
+                        Challenge in Progress
+                    </small>
 
-        {{-- CARD 2 --}}
-        <div class="col-md-6">
+                </x-ui.card.default>
 
-            <x-ui.card.default>
+            </div>
 
-                <div class="d-flex justify-content-between align-items-center mb-3">
-
-                    <h5 class="fw-bold mb-0">
-                        Budget Control
-                    </h5>
-
-                    <x-ui.badge.expense>
-                        Ongoing
-                    </x-ui.badge.expense>
-
-                </div>
-
-                <p class="text-muted">
-                    Stay below your weekly budget
-                </p>
-
-                <x-ui.progress.progress
-                    value="45"
-                    color="warning"
-                />
-
-                <small class="text-muted">
-                    45% Budget Used
-                </small>
-
-            </x-ui.card.default>
-
-        </div>
+        @endforeach
 
     </div>
 
@@ -175,53 +152,33 @@
 
                 <tbody>
 
-                    <tr>
+                    @foreach($challenges->where('status', 'completed') as $challenge)
 
-                        <td>
-                            Daily Saving Challenge
-                        </td>
+                        <tr>
 
-                        <td>
-                            +100 Points
-                        </td>
+                            <td>
+                                {{ $challenge->title }}
+                            </td>
 
-                        <td>
-                            10 Mei 2026
-                        </td>
+                            <td>
+                                +{{ $challenge->reward_points }} Points
+                            </td>
 
-                        <td>
+                            <td>
+                                {{ $challenge->created_at->format('d M Y') }}
+                            </td>
 
-                            <span class="text-success fw-semibold">
-                                Completed
-                            </span>
+                            <td>
 
-                        </td>
+                                <span class="text-success fw-semibold">
+                                    Completed
+                                </span>
 
-                    </tr>
+                            </td>
 
-                    <tr>
+                        </tr>
 
-                        <td>
-                            Weekly Budget Challenge
-                        </td>
-
-                        <td>
-                            +150 Points
-                        </td>
-
-                        <td>
-                            5 Mei 2026
-                        </td>
-
-                        <td>
-
-                            <span class="text-success fw-semibold">
-                                Completed
-                            </span>
-
-                        </td>
-
-                    </tr>
+                    @endforeach
 
                 </tbody>
 

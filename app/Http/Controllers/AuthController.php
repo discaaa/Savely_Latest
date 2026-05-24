@@ -30,8 +30,7 @@ class AuthController extends Controller
 
             $request->session()->regenerate();
 
-            return redirect()
-                ->route('dashboard');
+            return redirect()->route('dashboard');
         }
 
         return back()->withErrors([
@@ -40,22 +39,24 @@ class AuthController extends Controller
     }
 
     public function registerStore(Request $request)
-    {
-        $request->validate([
-            'username' => 'required|max:50|unique:users',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|min:6|confirmed'
-        ]);
+{
+    $request->validate([
+        'username' => 'required|max:50|unique:users',
+        'email' => 'required|email|unique:users',
+        'password' => 'required|min:6|confirmed'
+    ]);
 
-        $user = User::create([
-            'username' => $request->username,
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
-            'role' => 'user'
-        ]);
-        Auth::login($user);
-        return redirect()->route('dashboard');
-    }
+    $user = User::create([
+        'username' => $request->username,
+        'email' => $request->email,
+        'password' => bcrypt($request->password),
+        'role' => 'user'
+    ]);
+
+    Auth::login($user);
+
+    return redirect()->route('dashboard');
+}
 
     public function logout(Request $request)
     {

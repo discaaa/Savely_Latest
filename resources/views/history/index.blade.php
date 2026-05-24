@@ -22,48 +22,54 @@
 
         <div class="row g-3">
 
+            {{-- SEARCH --}}
             <div class="col-md-4">
 
-                <x-ui.input.input
+                <input
                     type="text"
+                    id="searchInput"
+                    class="form-control"
                     placeholder="Search activity..."
-                />
+                >
 
             </div>
 
+            {{-- CATEGORY FILTER --}}
             <div class="col-md-4">
 
-                <x-ui.input.select>
+                <select
+                    id="categoryFilter"
+                    class="form-select"
+                >
 
-                    <option>
+                    <option value="all">
                         All Activities
                     </option>
 
-                    <option>
+                    <option value="expense">
                         Expense
                     </option>
 
-                    <option>
-                        Saving
-                    </option>
-
-                    <option>
+                    <option value="goal">
                         Goal
                     </option>
 
-                    <option>
+                    <option value="challenge">
                         Challenge
                     </option>
 
-                </x-ui.input.select>
+                </select>
 
             </div>
 
+            {{-- DATE --}}
             <div class="col-md-4">
 
-                <x-ui.input.input
+                <input
                     type="date"
-                />
+                    id="dateFilter"
+                    class="form-control"
+                >
 
             </div>
 
@@ -89,13 +95,22 @@
 
                 </thead>
 
-                <tbody>
+                <tbody id="historyTableBody">
 
-                    {{-- EXPENSE --}}
-                    <tr>
+                    {{-- ========================= --}}
+                    {{-- EXPENSE HISTORY --}}
+                    {{-- ========================= --}}
+
+                    @forelse($expenses as $expense)
+
+                    <tr
+                        class="history-row"
+                        data-category="expense"
+                        data-date="{{ \Carbon\Carbon::parse($expense->date)->format('Y-m-d') }}"
+                    >
 
                         <td>
-                            Added Food Expense
+                            Added {{ $expense->category }} Expense
                         </td>
 
                         <td>
@@ -107,7 +122,7 @@
                         </td>
 
                         <td>
-                            10 Mei 2026
+                            {{ \Carbon\Carbon::parse($expense->date)->format('d M Y') }}
                         </td>
 
                         <td>
@@ -120,40 +135,36 @@
 
                     </tr>
 
-                    {{-- SAVING --}}
+                    @empty
+
                     <tr>
 
-                        <td>
-                            Added Weekly Saving
-                        </td>
+                        <td colspan="4"
+                            class="text-center text-muted py-3">
 
-                        <td>
-
-                            <x-ui.badge.saving>
-                                Saving
-                            </x-ui.badge.saving>
-
-                        </td>
-
-                        <td>
-                            9 Mei 2026
-                        </td>
-
-                        <td>
-
-                            <span class="text-success fw-semibold">
-                                Completed
-                            </span>
+                            No expense history found
 
                         </td>
 
                     </tr>
 
-                    {{-- GOAL --}}
-                    <tr>
+                    @endforelse
+
+
+                    {{-- ========================= --}}
+                    {{-- GOAL HISTORY --}}
+                    {{-- ========================= --}}
+
+                    @forelse($goals as $goal)
+
+                    <tr
+                        class="history-row"
+                        data-category="goal"
+                        data-date="{{ $goal->created_at->format('Y-m-d') }}"
+                    >
 
                         <td>
-                            Goal Progress Updated
+                            Goal "{{ $goal->title }}" Updated
                         </td>
 
                         <td>
@@ -165,7 +176,7 @@
                         </td>
 
                         <td>
-                            8 Mei 2026
+                            {{ $goal->created_at->format('d M Y') }}
                         </td>
 
                         <td>
@@ -178,34 +189,74 @@
 
                     </tr>
 
-                    {{-- CHALLENGE --}}
+                    @empty
+
                     <tr>
 
+                        <td colspan="4"
+                            class="text-center text-muted py-3">
+
+                            No goal history found
+
+                        </td>
+
+                    </tr>
+
+                    @endforelse
+
+
+                    {{-- ========================= --}}
+                    {{-- CHALLENGE HISTORY --}}
+                    {{-- ========================= --}}
+
+                    @forelse($challenges as $challenge)
+
+                    <tr
+                        class="history-row"
+                        data-category="challenge"
+                        data-date="{{ $challenge->created_at->format('Y-m-d') }}"
+                    >
+
                         <td>
-                            Challenge Completed
+                            {{ $challenge->title }}
                         </td>
 
                         <td>
 
-                            <x-ui.badge.income>
+                            <x-ui.badge.saving>
                                 Challenge
-                            </x-ui.badge.income>
+                            </x-ui.badge.saving>
 
                         </td>
 
                         <td>
-                            7 Mei 2026
+                            {{ $challenge->created_at->format('d M Y') }}
                         </td>
 
                         <td>
 
                             <span class="text-warning fw-semibold">
-                                Reward Earned
+                                {{ ucfirst($challenge->status) }}
                             </span>
 
                         </td>
 
                     </tr>
+
+                    @empty
+
+                    <tr>
+
+                        <td colspan="4"
+                            class="text-center text-muted py-3">
+
+                            No challenge history found
+
+                        </td>
+
+                    </tr>
+
+                    @endforelse
 
                 </tbody>
 
@@ -216,5 +267,59 @@
     </x-ui.card.default>
 
 </div>
+
+{{-- FILTER SCRIPT --}}
+<script>
+
+    const categoryFilter = document.getElementById('categoryFilter');
+    const searchInput = document.getElementById('searchInput');
+    const dateFilter = document.getElementById('dateFilter');
+
+    const rows = document.querySelectorAll('.history-row');
+
+    function filterHistory() {
+
+        const selectedCategory = categoryFilter.value.toLowerCase();
+        const searchText = searchInput.value.toLowerCase();
+        const selectedDate = dateFilter.value;
+
+        rows.forEach(row => {
+
+            const category = row.dataset.category;
+            const rowDate = row.dataset.date;
+            const text = row.innerText.toLowerCase();
+
+            let categoryMatch =
+                selectedCategory === 'all' ||
+                category === selectedCategory;
+
+            let searchMatch =
+                text.includes(searchText);
+
+            let dateMatch =
+                !selectedDate ||
+                rowDate === selectedDate;
+
+            if(categoryMatch && searchMatch && dateMatch) {
+
+                row.style.display = '';
+
+            } else {
+
+                row.style.display = 'none';
+
+            }
+
+        });
+
+    }
+
+    categoryFilter.addEventListener('change', filterHistory);
+
+    searchInput.addEventListener('keyup', filterHistory);
+
+    dateFilter.addEventListener('change', filterHistory);
+
+</script>
 
 @endsection
