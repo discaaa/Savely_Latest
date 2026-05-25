@@ -350,7 +350,7 @@
                 <div class="d-flex gap-3 flex-wrap">
 
                     <a href="{{ route('saving.create') }}"
-                       class="purple-btn">
+                       class="purple-btn text-decoration-none">
 
                         + Add Saving
 

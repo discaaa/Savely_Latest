@@ -42,6 +42,12 @@ class BudgetController extends Controller
 
                 : 0;
             $totalSpent += $budget->spent;
+            if($budget->percentage >= 100){
+                session()->flash('error', 'Warning! One of your budgets has exceeded the limit.');
+            }
+            elseif($budget->percentage >= 80){
+                session()->flash('warning', 'You have used 80% of your budget.');
+            }
         }
         $remainingBudget =
             $totalBudget - $totalSpent;

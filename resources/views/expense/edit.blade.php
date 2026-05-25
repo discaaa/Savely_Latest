@@ -83,7 +83,24 @@
 </style>
 
 <div class="container-fluid py-4">
+    @if ($errors->any())
 
+    <div class="alert alert-danger mb-4">
+
+        <ul class="mb-0">
+
+            @foreach ($errors->all() as $error)
+
+                <li>{{ $error }}</li>
+
+            @endforeach
+
+        </ul>
+
+    </div>
+
+    @endif
+    
     <div class="d-flex justify-content-between align-items-center mb-4">
 
         <div>

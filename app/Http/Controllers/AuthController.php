@@ -30,12 +30,12 @@ class AuthController extends Controller
 
             $request->session()->regenerate();
 
-            return redirect()->route('dashboard');
+            return redirect()->route('dashboard')->with('success', 'Welcome Back !');
         }
 
         return back()->withErrors([
-            'email' => 'Invalid email or password'
-        ]);
+            'email' => 'Invalid email or password.'
+        ])->withInput();
     }
 
     public function registerStore(Request $request)
@@ -53,9 +53,7 @@ class AuthController extends Controller
         'role' => 'user'
     ]);
 
-    Auth::login($user);
-
-    return redirect()->route('dashboard');
+    return redirect()->route('login')->with('success', 'Account created successfully! Please Login.');
 }
 
     public function logout(Request $request)
@@ -63,6 +61,6 @@ class AuthController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect('/home');
+        return redirect('/home')->with('success', 'Logged out successfully.');
     }
 }

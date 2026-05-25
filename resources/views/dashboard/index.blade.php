@@ -173,24 +173,14 @@
             <div class="summary-card">
 
                 <p class="summary-title">
-                    Saving Progress
+                    Total Saving
                 </p>
 
                 <h2 class="summary-value">
 
-                    {{ $savingProgress ?? 0 }}%
+                    Rp {{ number_format($totalSaving ?? 0,0,',','.') }}
 
                 </h2>
-
-                <div class="progress mt-3"
-                     style="height:18px;">
-
-                    <div class="progress-bar"
-                         style="width: {{ $savingProgress ?? 0 }}%">
-
-                    </div>
-
-                </div>
 
             </div>
 

@@ -4,38 +4,74 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use App\Models\Expense;
-use App\Models\Saving;
 use App\Models\Goal;
 use App\Models\Challenge;
+use App\Models\Saving;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        $totalExpense = Expense::sum('amount');
-        $totalSaving = Saving::sum('amount');
+        $totalExpense = Expense::where(
+            'user_id', Auth::id()
+        )->sum('amount');
 
-        $totalGoal = Goal::sum('target_amount');
+        $totalSaving = Goal::where(
+            'user_id', Auth::id()
+        )->sum('current_amount');
 
-        $savingProgress = $totalGoal > 0
-            ? round(($totalSaving / $totalGoal) * 100)
-            : 0;
+        $activeChallenges = Challenge::where('status', 'active')->count();
 
-        $activeChallenges = Challenge::count();
+        $goals = Goal::where('user_id', Auth::id())
+        ->latest()
+        ->take(3)
+        ->get();
 
-        $recentExpenses = Expense::latest()->take(3)->get()->map(function ($e) {
+        $recentExpenses = Expense::where(
+            'user_id',
+            Auth::id()
+        )
+        ->latest()
+        ->take(3)
+        ->get()
+        ->map(function ($expense) {
+
             return [
-                'type' => 'expense',
-                'title' => 'Added ' . $e->category . ' Expense',
-                'date' => $e->date,
+
+                'type' =>
+                    'expense',
+
+                'title' =>
+                    'Added ' .
+                    $expense->category .
+                    ' Expense',
+
+                'date' =>
+                    $expense->date,
+
             ];
         });
 
-        $recentSavings = Saving::latest()->take(3)->get()->map(function ($s) {
+        $recentSavings = Saving::where(
+            'user_id',
+            Auth::id()
+        )
+        ->latest()
+        ->take(3)
+        ->get()
+        ->map(function ($saving) {
+
             return [
-                'type' => 'saving',
-                'title' => 'Saving Added',
-                'date' => $s->date,
+
+                'type' =>
+                    'saving',
+
+                'title' =>
+                    'Saving Added',
+
+                'date' =>
+                    $saving->date,
+
             ];
         });
 
@@ -47,8 +83,8 @@ class DashboardController extends Controller
         return view('dashboard.index', compact(
             'totalExpense',
             'totalSaving',
-            'savingProgress',
             'activeChallenges',
+            'goals',
             'recentActivities'
         ));
     }

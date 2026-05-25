@@ -416,65 +416,6 @@
 
         <div class="col-lg-5">
 
-            <div class="summary-card mb-4">
-
-                <h3 class="fw-bold mb-4">
-                    Saving Summary
-                </h3>
-
-                @foreach($goals as $goal)
-
-                    @php
-
-                        $percentage = 0;
-
-                        if($goal->target_amount > 0){
-
-                            $percentage = min(
-                                100,
-                                round(
-                                    ($goal->current_amount /
-                                    $goal->target_amount) * 100
-                                )
-                            );
-                        }
-
-                    @endphp
-
-                    <div class="mb-4">
-
-                        <div class="d-flex justify-content-between mb-2">
-
-                            <h6 class="fw-bold mb-0">
-
-                                {{ $goal->title }}
-
-                            </h6>
-
-                            <small class="text-primary fw-bold">
-
-                                {{ $percentage }}%
-
-                            </small>
-
-                        </div>
-
-                        <div class="progress"
-                             style="height:16px;">
-
-                            <div class="progress-bar"
-                                 style="width: {{ $percentage }}%">
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                @endforeach
-
-            </div>
-
             <div class="summary-card">
 
                 <h3 class="fw-bold mb-4">

@@ -114,10 +114,6 @@
 
             @endif
 
-            <p class="upload-text mt-3">
-                Change Goal Image
-            </p>
-
         </div>
 
         <form action="{{ route('goals.update', $goal->id) }}"
@@ -206,18 +202,6 @@
                     </option>
 
                 </select>
-
-            </div>
-
-            <div class="mb-4">
-
-                <label class="form-label">
-                    Goal Image
-                </label>
-
-                <input type="file"
-                       name="image"
-                       class="form-control">
 
             </div>
 

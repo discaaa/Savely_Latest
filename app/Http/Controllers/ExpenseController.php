@@ -92,13 +92,28 @@ class ExpenseController extends Controller
         }
 
         Expense::create([
+
             'user_id' =>
                 Auth::id(),
-            'budget_id' => $request->budget_id,
-            'category'=>$request->category,
-            'amount'=>$request->amount,
-            'date'=>$request->date,
-            'description'=>$request->description
+
+            'budget_id' =>
+                $request->budget_id,
+
+            'category' =>
+                $request->category,
+
+            'amount' =>
+                $request->amount,
+
+            'date' =>
+                $request->date,
+
+            'description' =>
+                $request->description,
+
+            'purpose' =>
+                $request->purpose
+
         ]);
 
         return redirect()
@@ -145,16 +160,16 @@ class ExpenseController extends Controller
         $validated = $request->validate([
 
             'category' =>
-                'required|string',
+                'required|string|max:255',
+
+            'description' =>
+                'nullable|string',
 
             'date' =>
                 'required|date',
 
             'amount' =>
                 'required|numeric|min:1',
-
-            'description' =>
-                'nullable|string',
 
             'purpose' =>
                 'nullable|string',
@@ -166,14 +181,21 @@ class ExpenseController extends Controller
 
         if ($expense->budget_id) {
 
-            $oldBudget = Budget::find(
-                $expense->budget_id
-            );
+            $oldBudget = Budget::where(
+                'user_id',
+                Auth::id()
+            )
+            ->find($expense->budget_id);
 
             if ($oldBudget) {
 
                 $oldBudget->spent -=
                     $expense->amount;
+
+                if ($oldBudget->spent < 0) {
+
+                    $oldBudget->spent = 0;
+                }
 
                 $oldBudget->save();
             }
@@ -195,17 +217,33 @@ class ExpenseController extends Controller
             $newBudget->save();
         }
 
-        $expense->update(
-            $validated
-        );
+        $expense->update([
+
+            'budget_id' =>
+                $request->budget_id,
+
+            'category' =>
+                $request->category,
+
+            'amount' =>
+                $request->amount,
+
+            'date' =>
+                $request->date,
+
+            'description' =>
+                $request->description,
+
+            'purpose' =>
+                $request->purpose
+
+        ]);
 
         return redirect()
-            ->route(
-                'expense.index'
-            )
+            ->route('expense.index')
             ->with(
                 'success',
-                'Expense updated'
+                'Expense updated successfully'
             );
     }
 
@@ -219,18 +257,19 @@ class ExpenseController extends Controller
 
         if ($expense->budget_id) {
 
-            $budget = Budget::find(
-                $expense->budget_id
-            );
+            $budget = Budget::where(
+                'user_id',
+                Auth::id()
+            )
+            ->find($expense->budget_id);
 
             if ($budget) {
 
                 $budget->spent -=
                     $expense->amount;
 
-                if (
-                    $budget->spent < 0
-                ) {
+                if ($budget->spent < 0) {
+
                     $budget->spent = 0;
                 }
 
@@ -241,9 +280,7 @@ class ExpenseController extends Controller
         $expense->delete();
 
         return redirect()
-            ->route(
-                'expense.index'
-            )
+            ->route('expense.index')
             ->with(
                 'success',
                 'Expense deleted successfully'
