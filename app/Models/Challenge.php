@@ -7,10 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 class Challenge extends Model
 {
     protected $fillable = [
+        'user_id',
         'title',
         'description',
+        'target',
         'reward_points',
-        'status'
+        'type'
     ];
-}
 
+    public function userChallenges()
+    {
+        return $this->hasMany(UserChallenge::class);
+    }
+}

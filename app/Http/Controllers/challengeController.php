@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
-use App\Models\Challenge;
+
+use App\Models\UserChallenge;
 use App\Models\Reward;
 use App\Models\Activity;
 
@@ -11,7 +12,11 @@ class ChallengeController extends Controller
 {
     public function index()
     {
-        $challenges = Challenge::latest()->get();
+        $challenges = UserChallenge::with('challenge')
+            ->where('user_id', Auth::id())
+            ->latest()
+            ->get();
+
 
         $rewards = Reward::all();
 

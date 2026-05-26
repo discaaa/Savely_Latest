@@ -140,7 +140,7 @@
 
                 <h2 class="summary-value">
 
-                    {{ $challenges->where('status', 'active')->count() }}
+                    {{ $challenges->where('status', 'ongoing')->count() }}
 
                 </h2>
 
@@ -158,7 +158,7 @@
 
                 <h2 class="summary-value">
 
-                    7 Days 🔥
+                    0 Days 
 
                 </h2>
 
@@ -176,7 +176,10 @@
 
                 <h2 class="summary-value">
 
-                    {{ $challenges->sum('reward_points') }}
+                    {{ $challenges
+                        ->where('status', 'completed')
+                        ->sum(fn($c) => $c->challenge->reward_points)
+                    }}
 
                 </h2>
 
@@ -188,7 +191,7 @@
 
     <div class="row g-4 mb-5">
 
-        @forelse($challenges->where('status', 'active') as $challenge)
+        @forelse($challenges->where('status', 'ongoing') as $challenge)
 
             <div class="col-lg-6">
 
@@ -200,13 +203,12 @@
 
                             <h4 class="fw-bold mb-2">
 
-                                {{ $challenge->title }}
-
+                                {{ $challenge->challenge->title }}
                             </h4>
 
                             <p class="text-muted mb-0">
 
-                                {{ $challenge->description }}
+                                {{ $challenge->challenge->description }}
 
                             </p>
 
@@ -221,11 +223,16 @@
                     </div>
 
                     <div class="reward-box mb-4">
-
-                        + {{ $challenge->reward_points }} Points
+                        {{ $challenge->challenge->title }}
+                        
+                        + {{ $challenge->challenge->reward_points }} Points
 
                     </div>
-
+                    @php
+                        $percentage =
+                            ($challenge->progress /
+                            $challenge->challenge->target) * 100;
+                    @endphp
                     <div class="d-flex justify-content-between mb-2">
 
                         <small class="fw-semibold text-muted">
@@ -236,7 +243,7 @@
 
                         <small class="fw-bold text-primary">
 
-                            70%
+                            {{ round($percentage) }}%
 
                         </small>
 
@@ -245,9 +252,9 @@
                     <div class="progress mb-3">
 
                         <div class="progress-bar"
-                             style="width:70%">
+                            style="width:{{ $percentage }}%">
 
-                            70%
+                            {{ round($percentage) }}%
 
                         </div>
 
@@ -350,7 +357,7 @@
 
                             <td class="fw-semibold">
 
-                                {{ $challenge->title }}
+                                {{ $challenge->challenge->title }}
 
                             </td>
 

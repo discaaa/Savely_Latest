@@ -16,9 +16,15 @@ return new class extends Migration
 
             $table->text('description');
 
+            $table->integer('target');
+
             $table->integer('reward_points');
 
-            $table->string('status')->default('ongoing');
+            $table->enum('type', [
+                'saving_streak',
+                'budget_control',
+                'goal_complete'
+            ]);
 
             $table->timestamps();
 
