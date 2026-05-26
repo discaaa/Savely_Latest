@@ -123,7 +123,7 @@
         </div>
 
         <a href="{{ route('budget.edit', $budget->id) }}"
-           class="purple-btn">
+           class="purple-btn text-decoration-none">
 
             Edit Budget
 

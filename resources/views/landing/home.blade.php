@@ -284,7 +284,7 @@
 
         </p>
 
-        <a href="/login"
+        <a href="/register"
            class="hero-btn">
 
             Create Account

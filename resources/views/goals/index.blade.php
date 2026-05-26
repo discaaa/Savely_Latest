@@ -191,12 +191,13 @@
 
         </div>
 
-        <a href="{{ route('goals.create') }}"
-           class="goal-btn">
-
-            + New Goal
-
-        </a>
+        <div class="d-flex align-items-center gap-3">
+            <a href="{{ route('goals.create') }}"
+            class="goal-btn">
+                + New Goal
+            </a>
+            <img src="https://cdn-icons-png.flaticon.com/512/616/616408.png" width="55" class="rounded-circle border p-1 bg-white">
+        </div>
 
     </div>
 
