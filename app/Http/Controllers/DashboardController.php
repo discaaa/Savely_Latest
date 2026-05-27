@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Expense;
 use App\Models\Goal;
-use App\Models\Challenge;
+use App\Models\UserChallenge;
 use App\Models\Saving;
 
 class DashboardController extends Controller
@@ -20,7 +20,7 @@ class DashboardController extends Controller
             'user_id', Auth::id()
         )->sum('current_amount');
 
-        $activeChallenges = Challenge::where('status', 'active')->count();
+        $activeChallenges = UserChallenge::where('status', 'ongoing')->count();
 
         $goals = Goal::where('user_id', Auth::id())
         ->latest()

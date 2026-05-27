@@ -117,7 +117,7 @@
 
         <div class="text-center mb-5">
 
-            <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+            <img src="https://img.magnific.com/premium-photo/png-business-report-chart-doodle-element-transparent-background_53876-988313.jpg?semt=ais_hybrid&w=740&q=80"
                  class="saving-icon mb-3">
 
             <h5 class="fw-bold text-primary">

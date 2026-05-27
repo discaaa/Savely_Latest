@@ -124,7 +124,7 @@
 
         <div class="text-center mb-4">
 
-            <img src="https://cdn-icons-png.flaticon.com/512/1829/1829586.png"
+            <img src="https://img.magnific.com/free-vector/doodle-style-goal-dartboard_78370-9504.jpg?semt=ais_hybrid&w=740&q=80"
                  class="goal-icon">
 
             <h5 class="fw-bold text-primary mt-3">

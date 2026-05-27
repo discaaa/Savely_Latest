@@ -193,6 +193,10 @@
 
         @forelse($challenges->where('status', 'ongoing') as $challenge)
 
+            @php
+                $percentage = ($challenge->progress/$challenge->challenge->target) * 100;
+            @endphp
+            
             <div class="col-lg-6">
 
                 <div class="challenge-card">
@@ -228,11 +232,11 @@
                         + {{ $challenge->challenge->reward_points }} Points
 
                     </div>
-                    @php
+                    {{-- @php
                         $percentage =
                             ($challenge->progress /
                             $challenge->challenge->target) * 100;
-                    @endphp
+                    @endphp --}}
                     <div class="d-flex justify-content-between mb-2">
 
                         <small class="fw-semibold text-muted">
@@ -261,8 +265,10 @@
                     </div>
 
                     <small class="text-muted">
-
-                        Challenge in progress
+                        {{ $challenge->progress }}
+                        /
+                        {{ $challenge->challenge->target }}
+                        {{-- Challenge in progress --}}
 
                     </small>
 
@@ -363,7 +369,7 @@
 
                             <td class="text-primary fw-bold">
 
-                                +{{ $challenge->reward_points }} Points
+                                +{{ $challenge->challenge->reward_points }} Points
 
                             </td>
 

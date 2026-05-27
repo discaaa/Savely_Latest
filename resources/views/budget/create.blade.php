@@ -101,9 +101,6 @@
 
             </div>
 
-            <img src="https://cdn-icons-png.flaticon.com/512/2331/2331941.png"
-                 class="budget-icon">
-
         </div>
 
         <div class="text-center mb-5">
