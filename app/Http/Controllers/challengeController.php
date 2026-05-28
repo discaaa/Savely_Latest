@@ -38,7 +38,22 @@ class ChallengeController extends Controller
             'duration_type',
             'daily'
         )
-        ->inRandomOrder()
+        ->whereIn(
+            'id',
+            function($query){
+
+                $query->select('challenge_id')
+                    ->from('user_challenges')
+                    ->where(
+                        'user_id',
+                        Auth::id()
+                    )
+                    ->whereDate(
+                        'challenge_date',
+                        today()
+                    );
+            }
+        )
         ->take(3)
         ->get();
 
@@ -57,7 +72,23 @@ class ChallengeController extends Controller
             'duration_type',
             'weekly'
         )
-        ->inRandomOrder()
+        ->whereIn(
+            'id',
+            function($query){
+
+                $query->select('challenge_id')
+                    ->from('user_challenges')
+                    ->where(
+                        'user_id',
+                        Auth::id()
+                    )
+                    ->whereDate(
+                        'challenge_date',
+                        '>=',
+                        now()->startOfWeek()
+                    );
+            }
+        )
         ->take(3)
         ->get();
 

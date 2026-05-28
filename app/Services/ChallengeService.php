@@ -2,6 +2,10 @@
 
 namespace App\Services;
 
+use App\Models\Budget;
+use App\Models\Expense;
+use App\Models\Goal;
+use App\Models\Saving;
 use App\Models\Challenge;
 use App\Models\UserChallenge;
 use App\Models\UserPoint;
@@ -177,15 +181,41 @@ class ChallengeService
             'user_id',
             $user->id
         )
-        ->whereNotNull('expires_at')
-        ->where(
+        ->whereHas('challenge', function ($query) {
+
+            $query->where(
+                'duration_type',
+                'daily'
+            );
+
+        })
+        ->whereDate(
             'expires_at',
-            '<',
+            '<=',
             now()
         )
         ->delete();
 
-        $dailyCount = UserChallenge::where(
+        UserChallenge::where(
+            'user_id',
+            $user->id
+        )
+        ->whereHas('challenge', function ($query) {
+
+            $query->where(
+                'duration_type',
+                'weekly'
+            );
+
+        })
+        ->whereDate(
+            'expires_at',
+            '<=',
+            now()
+        )
+        ->delete();
+
+        $hasDaily = UserChallenge::where(
             'user_id',
             $user->id
         )
@@ -197,16 +227,20 @@ class ChallengeService
             );
 
         })
-        ->count();
+        ->whereDate(
+            'challenge_date',
+            today()
+        )
+        ->exists();
 
-        if ($dailyCount < 3) {
+        if (!$hasDaily) {
 
             $dailyChallenges = Challenge::where(
                 'duration_type',
                 'daily'
             )
             ->inRandomOrder()
-            ->take(3 - $dailyCount)
+            ->take(3)
             ->get();
 
             foreach ($dailyChallenges as $challenge) {
@@ -219,7 +253,7 @@ class ChallengeService
 
                     'challenge_date' => today(),
 
-                    'expires_at' => now()->addDay(),
+                    'expires_at' => now()->endOfDay(),
 
                     'progress' => 0,
 
@@ -231,7 +265,7 @@ class ChallengeService
             }
         }
 
-        $weeklyCount = UserChallenge::where(
+        $hasWeekly = UserChallenge::where(
             'user_id',
             $user->id
         )
@@ -243,16 +277,21 @@ class ChallengeService
             );
 
         })
-        ->count();
+        ->whereDate(
+            'challenge_date',
+            '>=',
+            now()->startOfWeek()
+        )
+        ->exists();
 
-        if ($weeklyCount < 3) {
+        if (!$hasWeekly) {
 
             $weeklyChallenges = Challenge::where(
                 'duration_type',
                 'weekly'
             )
             ->inRandomOrder()
-            ->take(3 - $weeklyCount)
+            ->take(3)
             ->get();
 
             foreach ($weeklyChallenges as $challenge) {
@@ -265,7 +304,7 @@ class ChallengeService
 
                     'challenge_date' => today(),
 
-                    'expires_at' => now()->addDays(7),
+                    'expires_at' => now()->endOfWeek(),
 
                     'progress' => 0,
 
@@ -293,9 +332,19 @@ class ChallengeService
 
         if ($achievementCount < 3) {
 
+            $usedIds = UserChallenge::where(
+                'user_id',
+                $user->id
+            )
+            ->pluck('challenge_id');
+
             $achievementChallenges = Challenge::where(
                 'duration_type',
                 'achievement'
+            )
+            ->whereNotIn(
+                'id',
+                $usedIds
             )
             ->inRandomOrder()
             ->take(3 - $achievementCount)
@@ -321,7 +370,7 @@ class ChallengeService
 
                 ]);
             }
-        }        
+        }
     }
     
     public static function updateExpenseChallenge($user)
