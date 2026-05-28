@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Budget;
 use Illuminate\Http\Request;
 use App\Models\Expense;
+use App\Models\Activity;
+use App\Services\ChallengeService;
 
 class BudgetController extends Controller
 {
@@ -91,7 +93,7 @@ class BudgetController extends Controller
                 'nullable|string',
         ]);
 
-        Budget::create([
+        $budget = Budget::create([
 
             'user_id' =>
                 auth()->id(),
@@ -110,6 +112,16 @@ class BudgetController extends Controller
 
             'description' =>
                 $request->description
+        ]);
+
+        Activity::create([
+
+            'title' => 'Budget Created',
+
+            'description' =>
+                'You created budget: '
+                . $budget->budget_name
+
         ]);
 
         return redirect()
@@ -188,6 +200,16 @@ class BudgetController extends Controller
             ),
         ]);
 
+        Activity::create([
+
+            'title' => 'Budget Updated',
+
+            'description' =>
+                'You updated budget: '
+                . $budget->budget_name
+
+        ]);
+
         return redirect()
             ->route('budget.index')
             ->with(
@@ -203,12 +225,12 @@ class BudgetController extends Controller
             auth()->id()
         )->findOrFail($id);
 
-        $spent = 0;
+        $spent = $budget->expenses->sum('amount');
 
         $remaining =
             $budget->limit_amount - $spent;
 
-        $percentage = 0;
+        $percentage = $budget->limit_amount > 0 ? round($spent/$budget->limit_amount) * 100 : 0;
 
         return view(
             'budget.detail',
@@ -233,6 +255,16 @@ class BudgetController extends Controller
     )->update([
 
         'budget_id' => null
+
+    ]);
+
+    Activity::create([
+
+        'title' => 'Budget Deleted',
+
+        'description' =>
+            'You deleted budget: '
+            . $budget->budgetName
 
     ]);
 

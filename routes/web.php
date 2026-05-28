@@ -11,6 +11,7 @@ use App\Http\Controllers\SavingTransactionController;
 use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BudgetController;
+use App\Http\Controllers\RewardController;
 
 Route::view('/home', 'landing.home')
     ->name('home');
@@ -157,6 +158,21 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/history', [HistoryController::class, 'index'])
     ->name('history.index');
+
+    Route::get(
+        '/rewards',
+        [RewardController::class, 'index']
+    )->name('rewards.index');
+
+    Route::post(
+        '/rewards/claim/{id}',
+        [RewardController::class, 'claim']
+    )->name('rewards.claim');
+
+    Route::post(
+        '/challenge/{id}/claim',
+        [ChallengeController::class, 'claim']
+    )->name('challenge.claim');
 
     /* EXPENSE TEST */
     Route::get('/expense-test', function () {

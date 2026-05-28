@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Goal;
 use Illuminate\Support\Facades\Auth;
 use App\Models\SavingTransaction;
+use App\Models\Activity;
+use App\Services\ChallengeService;
 
 class GoalSavingController extends Controller
 {

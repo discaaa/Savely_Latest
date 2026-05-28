@@ -66,6 +66,15 @@
         font-weight: 700;
     }
 
+    .notstarted-badge{
+        background: #e5e7eb;
+        color: #374151;
+        padding: 7px 16px;
+        border-radius: 999px;
+        font-size: 13px;
+        font-weight: 700;
+    }
+
     .progress{
         border-radius: 999px;
         background: #ede9fe;
@@ -140,7 +149,7 @@
 
                 <h2 class="summary-value">
 
-                    {{ $challenges->where('status', 'ongoing')->count() }}
+                    {{ $activeCount }}
 
                 </h2>
 
@@ -158,7 +167,7 @@
 
                 <h2 class="summary-value">
 
-                    0 Days 
+                    {{ $currentStreak }} days
 
                 </h2>
 
@@ -176,10 +185,7 @@
 
                 <h2 class="summary-value">
 
-                    {{ $challenges
-                        ->where('status', 'completed')
-                        ->sum(fn($c) => $c->challenge->reward_points)
-                    }}
+                    {{ $userPoints->points }}
 
                 </h2>
 
@@ -189,14 +195,36 @@
 
     </div>
 
+    <h3 class="fw-bold text-primary mb-4">
+        🔥 Daily Challenges
+    </h3>
+
     <div class="row g-4 mb-5">
 
-        @forelse($challenges->where('status', 'ongoing') as $challenge)
+        @forelse($dailyChallenges as $challenge)
 
             @php
-                $percentage = ($challenge->progress/$challenge->challenge->target) * 100;
+
+                $userChallenge =
+                    $challenge->userChallenges->first();
+
+                $progress =
+                    $userChallenge?->progress ?? 0;
+
+                $status =
+                    $userChallenge?->status ?? 'not_started';
+
+                $percentage =
+                    $challenge->target > 0
+                    ? ($progress / $challenge->target) * 100
+                    : 0;
+
+                if($percentage > 100){
+                    $percentage = 100;
+                }
+
             @endphp
-            
+
             <div class="col-lg-6">
 
                 <div class="challenge-card">
@@ -207,36 +235,60 @@
 
                             <h4 class="fw-bold mb-2">
 
-                                {{ $challenge->challenge->title }}
+                                {{ $challenge->title }}
+
                             </h4>
 
                             <p class="text-muted mb-0">
 
-                                {{ $challenge->challenge->description }}
+                                {{ $challenge->description }}
 
                             </p>
 
                         </div>
 
-                        <span class="challenge-badge">
+                        @if ($status == 'completed')
 
-                            Active
+                            <span class="completed-badge">
 
-                        </span>
+                                Completed
+
+                            </span>
+
+                        @elseif($status == 'ongoing')
+
+                            <span class="challenge-badge">
+
+                                Ongoing
+
+                            </span>
+                
+                        @elseif($status == 'failed')
+
+                            <span class="bg-danger text-white px-3 py-2 rounded-pill">
+
+                                Failed
+
+                            </span>
+
+                        @else
+
+                            <span class="notstarted-badge">
+
+                                Not Started
+
+                            </span>
+
+                        @endif
 
                     </div>
 
                     <div class="reward-box mb-4">
-                        {{ $challenge->challenge->title }}
-                        
-                        + {{ $challenge->challenge->reward_points }} Points
+
+                        + {{ $challenge->reward_points }} Points
 
                     </div>
-                    {{-- @php
-                        $percentage =
-                            ($challenge->progress /
-                            $challenge->challenge->target) * 100;
-                    @endphp --}}
+
                     <div class="d-flex justify-content-between mb-2">
 
                         <small class="fw-semibold text-muted">
@@ -255,8 +307,10 @@
 
                     <div class="progress mb-3">
 
-                        <div class="progress-bar"
-                            style="width:{{ $percentage }}%">
+                        <div
+                            class="progress-bar"
+                            style="width:{{ $percentage }}%"
+                        >
 
                             {{ round($percentage) }}%
 
@@ -265,12 +319,51 @@
                     </div>
 
                     <small class="text-muted">
-                        {{ $challenge->progress }}
+
+                        {{ $progress }}
                         /
-                        {{ $challenge->challenge->target }}
-                        {{-- Challenge in progress --}}
+                        {{ $challenge->target }}
 
                     </small>
+
+                    @if(
+                        $status == 'completed'
+                        &&
+                        !$userChallenge->reward_claimed
+                    )
+
+                        <form
+                            action="{{ route('challenge.claim', $challenge->id) }}"
+                            method="POST"
+                            class="mt-3"
+                        >
+
+                            @csrf
+
+                            <button class="btn btn-primary w-100">
+
+                                Claim Reward
+
+                            </button>
+
+                        </form>
+
+                    @elseif(
+                        $status == 'completed'
+                        &&
+                        $userChallenge->reward_claimed
+                    )
+
+                        <button
+                            class="btn btn-success w-100 mt-3"
+                            disabled
+                        >
+
+                            Reward Claimed
+
+                        </button>
+
+                    @endif
 
                 </div>
 
@@ -278,25 +371,367 @@
 
         @empty
 
-            <div class="col-12">
+            <p class="text-muted">
 
-                <div class="challenge-card text-center py-5">
+                No daily challenges.
 
-                    <img src="https://cdn-icons-png.flaticon.com/512/4076/4076549.png"
-                         width="170"
-                         class="mb-4">
+            </p>
 
-                    <h4 class="fw-bold">
-                        No Active Challenges
-                    </h4>
+        @endforelse
 
-                    <p class="text-muted mb-0">
-                        Start a new challenge to earn rewards.
-                    </p>
+    </div> 
+    
+    <h3 class="fw-bold text-primary mb-4">
+        ⭐ Weekly Challenges
+    </h3>
+
+    <div class="row g-4 mb-5">
+
+        @forelse($weeklyChallenges as $challenge)
+
+            @php
+
+                $userChallenge =
+                    $challenge->userChallenges->first();
+
+                $progress =
+                    $userChallenge?->progress ?? 0;
+
+                $status =
+                    $userChallenge?->status ?? 'not_started';
+
+                $percentage =
+                    $challenge->target > 0
+                    ? ($progress / $challenge->target) * 100
+                    : 0;
+
+                if($percentage > 100){
+                    $percentage = 100;
+                }
+
+            @endphp
+
+            <div class="col-lg-6">
+
+                <div class="challenge-card">
+
+                    <div class="d-flex justify-content-between align-items-start mb-4">
+
+                        <div>
+
+                            <h4 class="fw-bold mb-2">
+
+                                {{ $challenge->title }}
+
+                            </h4>
+
+                            <p class="text-muted mb-0">
+
+                                {{ $challenge->description }}
+
+                            </p>
+
+                        </div>
+
+                        @if ($status == 'completed')
+
+                            <span class="completed-badge">
+
+                                Completed
+
+                            </span>
+
+                        @elseif($status == 'ongoing')
+
+                            <span class="challenge-badge">
+
+                                Ongoing
+
+                            </span>
+
+                        @else
+
+                            <span class="notstarted-badge">
+
+                                Not Started
+
+                            </span>
+
+                        @endif
+
+                    </div>
+
+                    <div class="reward-box mb-4">
+
+                        + {{ $challenge->reward_points }} Points
+
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-2">
+
+                        <small class="fw-semibold text-muted">
+
+                            Challenge Progress
+
+                        </small>
+
+                        <small class="fw-bold text-primary">
+
+                            {{ round($percentage) }}%
+
+                        </small>
+
+                    </div>
+
+                    <div class="progress mb-3">
+
+                        <div
+                            class="progress-bar"
+                            style="width:{{ $percentage }}%"
+                        >
+
+                            {{ round($percentage) }}%
+
+                        </div>
+
+                    </div>
+
+                    <small class="text-muted">
+
+                        {{ $progress }}
+                        /
+                        {{ $challenge->target }}
+
+                    </small>
+
+                    @if(
+                        $status == 'completed'
+                        &&
+                        !$userChallenge->reward_claimed
+                    )
+
+                        <form
+                            action="{{ route('challenge.claim', $challenge->id) }}"
+                            method="POST"
+                            class="mt-3"
+                        >
+
+                            @csrf
+
+                            <button class="btn btn-primary w-100">
+
+                                Claim Reward
+
+                            </button>
+
+                        </form>
+
+                    @elseif(
+                        $status == 'completed'
+                        &&
+                        $userChallenge->reward_claimed
+                    )
+
+                        <button
+                            class="btn btn-success w-100 mt-3"
+                            disabled
+                        >
+
+                            Reward Claimed
+
+                        </button>
+
+                    @endif
 
                 </div>
 
             </div>
+
+        @empty
+
+            <p class="text-muted">
+
+                No weekly challenges.
+
+            </p>
+
+        @endforelse
+
+    </div>
+
+    <h3 class="fw-bold text-primary mb-4">
+        🔥 Achievements
+    </h3>
+
+    <div class="row g-4 mb-5">
+
+        @forelse($achievementChallenges as $challenge)
+
+            @php
+
+                $userChallenge =
+                    $challenge->userChallenges->first();
+
+                $progress =
+                    $userChallenge?->progress ?? 0;
+
+                $status =
+                    $userChallenge?->status ?? 'not_started';
+
+                $percentage =
+                    $challenge->target > 0
+                    ? ($progress / $challenge->target) * 100
+                    : 0;
+
+                if($percentage > 100){
+                    $percentage = 100;
+                }
+
+            @endphp
+
+            <div class="col-lg-6">
+
+                <div class="challenge-card">
+
+                    <div class="d-flex justify-content-between align-items-start mb-4">
+
+                        <div>
+
+                            <h4 class="fw-bold mb-2">
+
+                                {{ $challenge->title }}
+
+                            </h4>
+
+                            <p class="text-muted mb-0">
+
+                                {{ $challenge->description }}
+
+                            </p>
+
+                        </div>
+
+                        @if ($status == 'completed')
+
+                            <span class="completed-badge">
+
+                                Completed
+
+                            </span>
+
+                        @elseif($status == 'ongoing')
+
+                            <span class="challenge-badge">
+
+                                Ongoing
+
+                            </span>
+
+                        @else
+
+                            <span class="notstarted-badge">
+
+                                Not Started
+
+                            </span>
+
+                        @endif
+
+                    </div>
+
+                    <div class="reward-box mb-4">
+
+                        + {{ $challenge->reward_points }} Points
+
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-2">
+
+                        <small class="fw-semibold text-muted">
+
+                            Challenge Progress
+
+                        </small>
+
+                        <small class="fw-bold text-primary">
+
+                            {{ round($percentage) }}%
+
+                        </small>
+
+                    </div>
+
+                    <div class="progress mb-3">
+
+                        <div
+                            class="progress-bar"
+                            style="width:{{ $percentage }}%"
+                        >
+
+                            {{ round($percentage) }}%
+
+                        </div>
+
+                    </div>
+
+                    <small class="text-muted">
+
+                        {{ $progress }}
+                        /
+                        {{ $challenge->target }}
+
+                    </small>
+
+                    @if(
+                        $status == 'completed'
+                        &&
+                        !$userChallenge->reward_claimed
+                    )
+
+                        <form
+                            action="{{ route('challenge.claim', $challenge->id) }}"
+                            method="POST"
+                            class="mt-3"
+                        >
+
+                            @csrf
+
+                            <button class="btn btn-primary w-100">
+
+                                Claim Reward
+
+                            </button>
+
+                        </form>
+
+                    @elseif(
+                        $status == 'completed'
+                        &&
+                        $userChallenge->reward_claimed
+                    )
+
+                        <button
+                            class="btn btn-success w-100 mt-3"
+                            disabled
+                        >
+
+                            Reward Claimed
+
+                        </button>
+
+                    @endif
+
+                </div>
+
+            </div>
+
+        @empty
+
+            <p class="text-muted">
+
+                No achievements to do.
+
+            </p>
 
         @endforelse
 
@@ -320,7 +755,7 @@
 
             <span class="challenge-badge">
 
-                {{ $challenges->where('status', 'completed')->count() }}
+                {{ $completedCount }}
                 Completed
 
             </span>
@@ -357,54 +792,50 @@
 
                 <tbody>
 
-                    @forelse($challenges->where('status', 'completed') as $challenge)
+                    @foreach(collect($dailyChallenges)->merge($weeklyChallenges)->merge($achievementChallenges) as $challenge)
 
-                        <tr>
+                        @php
+                            $userChallenge =
+                                $challenge->userChallenges->first();
+                        @endphp
 
-                            <td class="fw-semibold">
+                        @if($userChallenge && $userChallenge->status == 'completed')
 
-                                {{ $challenge->challenge->title }}
+                            <tr>
 
-                            </td>
+                                <td class="fw-semibold">
 
-                            <td class="text-primary fw-bold">
+                                    {{ $challenge->title }}
 
-                                +{{ $challenge->challenge->reward_points }} Points
+                                </td>
 
-                            </td>
+                                <td class="text-primary fw-bold">
 
-                            <td class="text-muted">
+                                    +{{ $challenge->reward_points }} Points
 
-                                {{ $challenge->created_at->format('d M Y') }}
+                                </td>
 
-                            </td>
+                                <td class="text-muted">
 
-                            <td>
+                                    {{ $userChallenge->updated_at->format('d M Y') }}
 
-                                <span class="completed-badge">
+                                </td>
 
-                                    Completed
+                                <td>
 
-                                </span>
+                                    <span class="completed-badge">
 
-                            </td>
+                                        Completed
 
-                        </tr>
+                                    </span>
 
-                    @empty
+                                </td>
 
-                        <tr>
+                            </tr>
 
-                            <td colspan="4"
-                                class="text-center text-muted py-5">
+                        @endif
 
-                                No completed challenges yet.
-
-                            </td>
-
-                        </tr>
-
-                    @endforelse
+                    @endforeach
 
                 </tbody>
 

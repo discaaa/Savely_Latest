@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\SavingTransaction;
 use App\Services\SavingTransactionService;
 use Illuminate\Support\Facades\Auth;
+use App\Services\ChallengeService;
+use App\Models\Activity;
 
 class DailySavingController extends Controller
 {
@@ -82,6 +84,31 @@ class DailySavingController extends Controller
                 'saving_date' => $request->saving_date,
 
             ]);
+
+        ChallengeService::updateSavingChallenge(
+            Auth::user(), $request->amount
+        );
+        $goal->refresh();
+
+        if ($goal->current_amount >= $goal->target_amount) {
+
+            ChallengeService::completeGoalChallenge(
+                Auth::user()
+            );
+
+        }
+
+        Activity::create([
+
+            'title' => 'Saving Added',
+
+            'description' =>
+                'You added Rp'
+                . number_format($request->amount)
+                . ' to '
+                . $goal->title
+
+        ]);
 
         return redirect()
             ->route('saving.daily')

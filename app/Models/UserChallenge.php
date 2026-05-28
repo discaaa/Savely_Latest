@@ -9,8 +9,16 @@ class UserChallenge extends Model
     protected $fillable = [
         'user_id',
         'challenge_id',
+        'challenge_date',
         'progress',
-        'status'
+        'status',
+        'reward_claimed',
+    ];
+
+    protected $attributes = [
+        'progress' => 0,
+        'status' => 'ongoing',
+        'reward_claimed' => false,
     ];
 
     public function challenge()

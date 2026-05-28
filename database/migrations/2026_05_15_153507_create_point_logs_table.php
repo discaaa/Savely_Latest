@@ -14,8 +14,9 @@ return new class extends Migration
         Schema::create('point_logs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->integer('amount');
-            $table->string('description');
+            $table->integer('points');
+            $table->string('type');
+            $table->string('description')->nullable();
             $table->timestamps();
         });
     }

@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Services\GoalService;
 use Illuminate\Support\Facades\Auth;
 use App\Models\SavingTransaction;
+use App\Models\Activity;
+use App\Services\ChallengeService;
 
 class GoalController extends Controller
 {
@@ -103,11 +105,20 @@ class GoalController extends Controller
 
         $data['user_id'] = Auth::id();
 
-        $this->goalService
-            ->createGoal($data);
+        $goal = $this->goalService->createGoal($data);
+
+        Activity::create([
+
+            'title' => 'Goal Created',
+
+            'description' =>
+                'You created a new goal: '
+                . $goal->title
+
+        ]);
 
         return redirect()
-            ->route('goals.index');
+            ->route('goals.index')->with('success', 'Goal created successfully!');
     }
 
     public function show($id)
@@ -152,15 +163,46 @@ class GoalController extends Controller
             'user_id',
             Auth::id()
         )->findOrFail($id);
-
+        $oldStatus = $goal->status;
         $this->goalService
             ->updateGoal(
                 $goal,
                 $request->all()
             );
+        $goal->refresh();
+        if (
+            $oldStatus != 'completed'
+            &&
+            $goal->status == 'completed'
+        ) {
+
+            ChallengeService::completeGoalChallenge(
+                Auth::user()
+            );
+
+            Activity::create([
+
+                'title' => 'Goal Completed',
+
+                'description' =>
+                    'You completed goal: '
+                    . $goal->title
+
+            ]);
+        }
+
+        Activity::create([
+
+            'title' => 'Goal Updated',
+
+            'description' =>
+                'You updated goal: '
+                . $goal->title
+
+        ]);        
 
         return redirect()
-            ->route('goals.index');
+            ->route('goals.index')->with('success', 'Goal updated successfully!');
     }
 
     public function destroy($id)

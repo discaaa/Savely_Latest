@@ -7,6 +7,9 @@ use App\Models\Expense;
 use App\Models\Goal;
 use App\Models\UserChallenge;
 use App\Models\Saving;
+use App\Models\Activity;
+use App\Services\ChallengeService;
+use App\Models\UserPoint;
 
 class DashboardController extends Controller
 {
@@ -20,7 +23,10 @@ class DashboardController extends Controller
             'user_id', Auth::id()
         )->sum('current_amount');
 
-        $activeChallenges = UserChallenge::where('status', 'ongoing')->count();
+        $activeChallenges = UserChallenge::where('user_id', Auth::id())->where('status', 'ongoing')->count();
+        $completedChallenges = UserChallenge::where('user_id', Auth::id())->where('status', 'completed')->count();
+        $userPoints = UserPoint::where('user_id', Auth::id())->first();
+        $totalPoints = $userPoints->points ?? 0;        
 
         $goals = Goal::where('user_id', Auth::id())
         ->latest()
@@ -75,6 +81,8 @@ class DashboardController extends Controller
             ];
         });
 
+        $activities = Activity::latest()->take(5)->get();
+
         $recentActivities = $recentExpenses
             ->merge($recentSavings)
             ->sortByDesc('date')
@@ -84,8 +92,11 @@ class DashboardController extends Controller
             'totalExpense',
             'totalSaving',
             'activeChallenges',
+            'completedChallenges',
+            'totalPoints',
             'goals',
-            'recentActivities'
+            'recentActivities',
+            'activities'
         ));
     }
 }

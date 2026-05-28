@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Auth;
 
 use App\Models\Expense;
 use App\Models\Budget;
+use App\Models\Activity;
+use App\Services\ChallengeService;
 
 class ExpenseController extends Controller
 {
@@ -91,8 +93,7 @@ class ExpenseController extends Controller
             $budget->save();
         }
 
-        Expense::create([
-
+        $expense = Expense::create([
             'user_id' =>
                 Auth::id(),
 
@@ -115,6 +116,27 @@ class ExpenseController extends Controller
                 $request->purpose
 
         ]);
+        ChallengeService::updateExpenseChallenge(
+            Auth::user()
+        );
+        ChallengeService::updateBudgetChallenge(
+            Auth::user()
+        );
+        ChallengeService::failNoSpendChallenge(
+            Auth::user()
+        );
+
+        Activity::create([
+
+            'title' => 'Expense Added',
+
+            'description' =>
+                'You added expense Rp'
+                . number_format($expense->amount)
+                . ' for '
+                . $expense->category
+
+        ]);        
 
         return redirect()
             ->route('expense.index')
@@ -239,6 +261,16 @@ class ExpenseController extends Controller
 
         ]);
 
+        Activity::create([
+
+            'title' => 'Expense Updated',
+
+            'description' =>
+                'You updated expense in '
+                . $expense->category
+
+        ]);
+
         return redirect()
             ->route('expense.index')
             ->with(
@@ -278,6 +310,18 @@ class ExpenseController extends Controller
         }
 
         $expense->delete();
+
+        Activity::create([
+
+            'title' => 'Expense Deleted',
+
+            'description' =>
+                'Deleted expense Rp'
+                . number_format($expense->amount)
+                . ' from '
+                . $expense->category
+
+        ]);
 
         return redirect()
             ->route('expense.index')
