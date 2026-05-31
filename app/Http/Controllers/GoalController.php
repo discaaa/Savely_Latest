@@ -218,4 +218,5 @@ class GoalController extends Controller
         return redirect()
             ->route('goals.index');
     }
+
 }

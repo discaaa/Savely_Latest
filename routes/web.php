@@ -153,8 +153,9 @@ Route::middleware('auth')->group(function () {
         Route::delete('/delete/{id}', [GoalController::class, 'destroy'])
             ->name('goals.destroy');
 
-        Route::get('/history', [GoalController::class, 'history'])
+        Route::get('/goals/{id}/history', [GoalSavingController::class, 'history'])
             ->name('goals.history');
+
     });
 
     Route::get('/history', [HistoryController::class, 'index'])

@@ -66,4 +66,27 @@ class GoalSavingController extends Controller
             )
         );
     }
+    public function history($id)
+{
+$goal = Goal::where(
+'user_id',
+Auth::id()
+)->findOrFail($id);
+
+$transactions = SavingTransaction::where(
+    'goal_id',
+    $goal->id
+)
+->latest()
+->get();
+
+return view(
+    'saving.historysaving',
+    compact(
+        'goal',
+        'transactions'
+    )
+);
+
+}
 }

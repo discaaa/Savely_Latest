@@ -148,22 +148,8 @@
 
                         <div>
 
-                            <h4 class="
-                                {{ $trx->type == 'income'
-                                    ? 'income-text'
-                                    : 'expense-text'
-                                }}
-                                mb-2
-                            ">
-
-                                {{ $trx->type == 'income' ? '+' : '-' }}
-
-                                Rp {{ number_format(
-                                    $trx->amount,
-                                    0,
-                                    ',',
-                                    '.'
-                                ) }}
+                            <h4 class="income-text mb-2">
+                                + Rp {{ number_format($trx->amount,0,',','.') }}
 
                             </h4>
 
