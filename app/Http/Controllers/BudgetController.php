@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Budget;
 use Illuminate\Http\Request;
+use App\Models\Budget;
 use App\Models\Expense;
 use App\Models\Activity;
 use App\Services\ChallengeService;
@@ -12,49 +12,53 @@ class BudgetController extends Controller
 {
     public function index()
     {
-        $budgets = Budget::where(
-            'user_id',
-            auth()->id()
-        )
-        ->latest()
-        ->get();
+        $budgets = Budget::where('user_id', auth()->id())
+            ->latest()
+            ->get();
 
-        $totalBudget =
-            $budgets->sum('limit_amount');
-
+        $totalBudget = $budgets->sum('limit_amount');
         $totalSpent = 0;
 
-        foreach($budgets as $budget){
+        foreach ($budgets as $budget) {
 
-            $budget->spent =
-                $budget->expenses->sum('amount');
+            $budget->spent = $budget->expenses->sum('amount');
 
             $budget->remaining =
                 $budget->limit_amount - $budget->spent;
 
-            $budget->percentage =
-                $budget->limit_amount > 0
-
+            $budget->percentage = $budget->limit_amount > 0
                 ? min(
                     100,
                     round(
                         ($budget->spent / $budget->limit_amount) * 100
                     )
                 )
-
                 : 0;
+
             $totalSpent += $budget->spent;
-            if($budget->percentage >= 100){
-                session()->flash('error', 'Warning! One of your budgets has exceeded the limit.');
-            }
-            elseif($budget->percentage >= 80){
-                session()->flash('warning', 'You have used 80% of your budget.');
+
+            if ($budget->percentage >= 100) {
+
+                session()->flash(
+                    'error',
+                    'Warning! One of your budgets has exceeded the limit.'
+                );
+
+            } elseif ($budget->percentage >= 80) {
+
+                session()->flash(
+                    'warning',
+                    'You have used 80% of your budget.'
+                );
             }
         }
+
         $remainingBudget =
             $totalBudget - $totalSpent;
 
-        $overallPercentage = $totalBudget > 0 ? round(($totalSpent/$totalBudget) * 100) : 0;
+        $overallPercentage = $totalBudget > 0
+            ? round(($totalSpent / $totalBudget) * 100)
+            : 0;
 
         return view(
             'budget.index',
@@ -76,52 +80,28 @@ class BudgetController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-
-            'budget_name' =>
-                'required|string|max:255',
-
-            'limit_amount' =>
-                'required|numeric|min:1',
-
-            'period' =>
-                'required|in:weekly,monthly,yearly',
-
-            'start_date' =>
-                'required|date',
-
-            'description' =>
-                'nullable|string',
+            'budget_name' => 'required|string|max:255',
+            'limit_amount' => 'required|numeric|min:1',
+            'period' => 'required|in:weekly,monthly,yearly',
+            'start_date' => 'required|date',
+            'description' => 'nullable|string',
         ]);
 
         $budget = Budget::create([
-
-            'user_id' =>
-                auth()->id(),
-
-            'budget_name' =>
-                $request->budget_name,
-
-            'limit_amount' =>
-                $request->limit_amount,
+            'user_id' => auth()->id(),
+            'budget_name' => $request->budget_name,
+            'limit_amount' => $request->limit_amount,
             'spent' => 0,
-            'period' =>
-                $request->period,
-
-            'start_date' =>
-                $request->start_date,
-
-            'description' =>
-                $request->description
+            'period' => $request->period,
+            'start_date' => $request->start_date,
+            'description' => $request->description,
         ]);
 
         Activity::create([
-
             'title' => 'Budget Created',
-
             'description' =>
-                'You created budget: '
-                . $budget->budget_name
-
+                'You created budget: ' .
+                $budget->budget_name,
         ]);
 
         return redirect()
@@ -145,26 +125,14 @@ class BudgetController extends Controller
         );
     }
 
-    public function update(
-        Request $request,
-        $id
-    ){
+    public function update(Request $request, $id)
+    {
         $request->validate([
-
-            'budget_name' =>
-                'required|string|max:255',
-
-            'limit_amount' =>
-                'required|numeric|min:1',
-
-            'period' =>
-                'required|in:weekly,monthly,yearly',
-
-            'start_date' =>
-                'required|date',
-
-            'description' =>
-                'nullable|string',
+            'budget_name' => 'required|string|max:255',
+            'limit_amount' => 'required|numeric|min:1',
+            'period' => 'required|in:weekly,monthly,yearly',
+            'start_date' => 'required|date',
+            'description' => 'nullable|string',
         ]);
 
         $budget = Budget::where(
@@ -173,27 +141,15 @@ class BudgetController extends Controller
         )->findOrFail($id);
 
         $budget->update([
-
-            'budget_name' =>
-                $request->budget_name,
-
-            'limit_amount' =>
-                $request->limit_amount,
-
-            'period' =>
-                $request->period,
-
-            'start_date' =>
-                $request->start_date,
-
-            'description' =>
-                $request->description,
-
+            'budget_name' => $request->budget_name,
+            'limit_amount' => $request->limit_amount,
+            'period' => $request->period,
+            'start_date' => $request->start_date,
+            'description' => $request->description,
             'month' => date(
                 'm',
                 strtotime($request->start_date)
             ),
-
             'year' => date(
                 'Y',
                 strtotime($request->start_date)
@@ -201,13 +157,10 @@ class BudgetController extends Controller
         ]);
 
         Activity::create([
-
             'title' => 'Budget Updated',
-
             'description' =>
-                'You updated budget: '
-                . $budget->budget_name
-
+                'You updated budget: ' .
+                $budget->budget_name,
         ]);
 
         return redirect()
@@ -225,58 +178,72 @@ class BudgetController extends Controller
             auth()->id()
         )->findOrFail($id);
 
-        $spent = $budget->expenses->sum('amount');
+        $budget->spent =
+            $budget->expenses->sum('amount');
 
-        $remaining =
-            $budget->limit_amount - $spent;
+        $budget->remaining =
+            $budget->limit_amount - $budget->spent;
 
-        $percentage = $budget->limit_amount > 0 ? round($spent/$budget->limit_amount) * 100 : 0;
+        $budget->percentage =
+            $budget->limit_amount > 0
+            ? round(
+                ($budget->spent / $budget->limit_amount) * 100
+            )
+            : 0;
 
         return view(
             'budget.detail',
-            compact(
-                'budget',
-                'spent',
-                'remaining',
-                'percentage'
-            )
+            compact('budget')
         );
     }
+
     public function destroy($id)
     {
-    $budget = Budget::where(
-        'user_id',
-        auth()->id()
-    )->findOrFail($id);
+        $budget = Budget::where(
+            'user_id',
+            auth()->id()
+        )->findOrFail($id);
 
-    Expense::where(
-        'budget_id',
-        $budget->id
-    )->update([
+        Expense::where(
+            'budget_id',
+            $budget->id
+        )->update([
+            'budget_id' => null,
+        ]);
 
-        'budget_id' => null
+        Activity::create([
+            'title' => 'Budget Deleted',
+            'description' =>
+                'You deleted budget: ' .
+                $budget->budget_name,
+        ]);
 
-    ]);
+        $budget->delete();
 
-    Activity::create([
-
-        'title' => 'Budget Deleted',
-
-        'description' =>
-            'You deleted budget: '
-            . $budget->budgetName
-
-    ]);
-
-    $budget->delete();
-
-    return redirect()
-        ->route(
-            'budget.index'
-        )
-        ->with(
-            'success',
-            'Budget deleted'
-        );
+        return redirect()
+            ->route('budget.index')
+            ->with(
+                'success',
+                'Budget deleted successfully.'
+            );
     }
+    public function history($id)
+    {
+        $budget = Budget::where(
+        'user_id',
+        auth()->id())->findOrFail($id);
+
+        $transactions = Expense::where(
+        'budget_id', $budget->id
+        )->latest()->get();
+
+        return view('budget.historybudget',
+            compact(
+            'budget',
+            'transactions'
+            )
+        );
+
+    }
+
 }

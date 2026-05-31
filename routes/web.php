@@ -92,8 +92,9 @@ Route::middleware('auth')->group(function () {
         Route::delete('/delete/{id}', [BudgetController::class, 'destroy'])
             ->name('budget.destroy');
 
-        Route::get('/history', [BudgetController::class, 'history'])
+        Route::get('/budget/{id}/history', [BudgetController::class, 'history'])
             ->name('budget.history');
+
     });
 
     Route::prefix('saving')->group(function () {
